@@ -60,6 +60,16 @@ describe('traduzirCard', () => {
     expect(a.vendasTotal).toBeNull()
     expect(a.criadoEm).toBeNull()
   })
+  it('itemid com aspas não vira anúncio', () => {
+    const item = structuredClone(busca.items[0]) as any
+    item.item_data.itemid = '1"]'
+    expect(traduzirCard(item)).toBeNull()
+  })
+  it('shopid não numérico não vira anúncio', () => {
+    const item = structuredClone(busca.items[0]) as any
+    item.item_data.shopid = 'abc'
+    expect(traduzirCard(item)).toBeNull()
+  })
 })
 
 describe('formato inesperado', () => {
@@ -91,6 +101,14 @@ describe('traduzirProduto com amostra real', () => {
   it('formato inesperado devolve null', () => {
     const aviso = vi.spyOn(console, 'warn').mockImplementation(() => {})
     expect(traduzirProduto({ data: {} })).toBeNull()
+    aviso.mockRestore()
+  })
+  it('item_id não numérico devolve null', () => {
+    const aviso = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    const item = structuredClone(produto) as any
+    item.data.item.item_id = 'x'
+    expect(traduzirProduto(item)).toBeNull()
+    expect(aviso.mock.calls[0][0]).toContain('[FCS SPY]')
     aviso.mockRestore()
   })
 })

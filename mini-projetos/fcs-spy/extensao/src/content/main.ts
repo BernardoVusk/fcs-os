@@ -75,7 +75,11 @@ async function iniciar(): Promise<void> {
     else return // teto de 1 s: deixa o timer pendente disparar em vez de esticar de novo
     timerDesenho = setTimeout(() => {
       timerDesenho = null
-      desenhar()
+      try {
+        desenhar()
+      } catch (e) {
+        console.warn('[FCS SPY] desenho', e)
+      }
     }, 250)
   }
 

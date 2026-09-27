@@ -9,6 +9,14 @@ function num(v: unknown): number | null {
   return typeof v === 'number' && Number.isFinite(v) ? v : null
 }
 
+// Um id de fora tem que ser só dígitos: evita que um valor hostil quebre o seletor CSS mais adiante.
+const ID_VALIDO = /^\d+$/
+
+function idValido(v: unknown): string | null {
+  const s = String(v)
+  return ID_VALIDO.test(s) ? s : null
+}
+
 // Sinal de ads ainda não confirmado com amostra de anúncio pago:
 // só afirma quando o tracking diz true, senão fica null.
 function adsDe(tracking: unknown): boolean | null {
@@ -25,14 +33,17 @@ export function traduzirCard(item: unknown): Anuncio | null {
   const d = i?.item_data
   const a = i?.item_card_displayed_asset
   if (!d || d.itemid == null || d.shopid == null) return null
+  const itemId = idValido(d.itemid)
+  const shopId = idValido(d.shopid)
+  if (itemId === null || shopId === null) return null
   const precoBruto = num(d.item_card_display_price?.price)
   if (precoBruto === null) return null
   const vendas = d.item_card_display_sold_count ?? {}
   const ctime = num(d.ctime)
   const flag = a?.seller_flag?.name
   return {
-    itemId: String(d.itemid),
-    shopId: String(d.shopid),
+    itemId,
+    shopId,
     titulo: typeof a?.name === 'string' ? a.name : '',
     loja: typeof d.shop_data?.shop_name === 'string' ? d.shop_data.shop_name : null,
     preco: precoBruto / ESCALA_PRECO,
@@ -68,7 +79,8 @@ export function traduzirVitrine(json: unknown): Anuncio[] {
 
 export function traduzirProduto(json: unknown): Variacoes | null {
   const item = (json as Bruto)?.data?.item
-  if (!item || item.item_id == null || !Array.isArray(item.models)) {
+  const itemId = item ? idValido(item.item_id) : null
+  if (!item || item.item_id == null || !Array.isArray(item.models) || itemId === null) {
     console.warn('[FCS SPY] formato inesperado em produto')
     return null
   }
@@ -77,5 +89,5 @@ export function traduzirProduto(json: unknown): Variacoes | null {
     const preco = num(m?.price)
     if (preco !== null) opcoes.push({ nome: String(m.name ?? ''), preco: preco / ESCALA_PRECO })
   }
-  return { itemId: String(item.item_id), opcoes }
+  return { itemId, opcoes }
 }
