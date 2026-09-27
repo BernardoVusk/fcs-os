@@ -51,6 +51,20 @@ describe('montarPainel', () => {
     const raiz = montarPainel({ config: CONFIG_PADRAO, preco: 5, variacoes: null, leitura: null }).shadowRoot!
     expect(valor(raiz, 'roasMinimo')).toBe('prejuízo mesmo sem ads')
   })
+  it('preço ausente mostra sem dado', () => {
+    const raiz = montarPainel({ config: cfg, preco: null, variacoes: null, leitura: null }).shadowRoot!
+    const preco = raiz.querySelector<HTMLInputElement>('input[name="preco"]')!
+    expect(preco.value).toBe('')
+    expect(preco.placeholder).toBe('sem dado, digite o preço')
+    expect(valor(raiz, 'lucro')).toBe('sem dado')
+    expect(valor(raiz, 'roasMinimo')).toBe('sem dado')
+  })
+  it('digitar o preço depois de vazio volta a calcular', () => {
+    const raiz = montarPainel({ config: cfg, preco: null, variacoes: null, leitura: null }).shadowRoot!
+    preencher(raiz, 'preco', '15,9')
+    preencher(raiz, 'gramas', '48')
+    expect(valor(raiz, 'custoProducao')).toBe('R$ 5,00')
+  })
   it('variação preenche o preço', () => {
     const raiz = montarPainel({
       config: cfg, preco: null, leitura: null,

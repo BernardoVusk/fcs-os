@@ -1,6 +1,6 @@
 import type { Config, Leitura, Variacoes } from '../nucleo/tipos'
 import { calcular } from '../nucleo/calculadora'
-import { reais, inteiro, pct } from '../nucleo/formato'
+import { reais, inteiro, pct, SEM_DADO } from '../nucleo/formato'
 import { ESTILO_BASE } from './estilo'
 
 export const ATRIBUTO_PAINEL = 'data-fcs-spy-painel'
@@ -29,6 +29,13 @@ select { width: 100%; }
 function numero(v: string): number {
   const n = parseFloat(v.replace(',', '.'))
   return Number.isFinite(n) ? n : 0
+}
+
+function precoValido(v: string): number | null {
+  const t = v.trim()
+  if (t === '') return null
+  const n = parseFloat(t.replace(',', '.'))
+  return Number.isFinite(n) ? n : null
 }
 
 export function textoLeitura(l: Leitura | null): string {
@@ -103,8 +110,9 @@ export function montarPainel(d: DadosPainel): HTMLElement {
     corpo.append(select)
   }
 
-  const precoInicial = d.preco ?? (opcoes.length ? opcoes[0].preco : 0)
-  const preco = campo(corpo, 'Preço de venda (R$)', 'preco', String(precoInicial))
+  const precoInicial = d.preco ?? (opcoes.length ? opcoes[0].preco : null)
+  const preco = campo(corpo, 'Preço de venda (R$)', 'preco', precoInicial === null ? '' : String(precoInicial))
+  preco.placeholder = 'sem dado, digite o preço'
   const gramas = campo(corpo, 'Filamento (g)', 'gramas', '0')
   const horas = campo(corpo, 'Impressão (h)', 'horas', '0')
   const minutos = campo(corpo, 'Acabamento (min)', 'minutos', '0')
@@ -120,8 +128,21 @@ export function montarPainel(d: DadosPainel): HTMLElement {
   corpo.append(resultado)
 
   function recalcular() {
+    const precoNum = precoValido(preco.value)
+    if (precoNum === null) {
+      resultado.replaceChildren(
+        linhaResultado('custoProducao', 'Custo de produção', SEM_DADO),
+        linhaResultado('taxa', 'Taxa Shopee', SEM_DADO),
+        linhaResultado('imposto', 'Imposto', SEM_DADO),
+        linhaResultado('ads', 'Ads', SEM_DADO),
+        linhaResultado('lucro', 'Lucro por unidade', SEM_DADO),
+        linhaResultado('margem', 'Margem', SEM_DADO),
+        linhaResultado('roasMinimo', 'ROAS mínimo', SEM_DADO),
+      )
+      return
+    }
     const r = calcular({
-      preco: numero(preco.value),
+      preco: precoNum,
       gramas: numero(gramas.value),
       horas: numero(horas.value),
       minutosAcabamento: numero(minutos.value),
