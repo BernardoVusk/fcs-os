@@ -1,0 +1,33 @@
+// @vitest-environment jsdom
+import { describe, it, expect, vi } from 'vitest'
+import { ouvirEscuta } from '../src/content/ponte'
+
+const enviar = (data: unknown, source: Window | null = window) =>
+  window.dispatchEvent(new MessageEvent('message', { data, source }))
+
+describe('ouvirEscuta', () => {
+  it('entrega mensagem válida da escuta', () => {
+    const recebido = vi.fn()
+    const parar = ouvirEscuta(window, recebido)
+    const msg = { marca: 'fcs-spy', rota: 'busca', url: 'u', corpo: { items: [] } }
+    enviar(msg)
+    expect(recebido).toHaveBeenCalledWith(msg)
+    parar()
+  })
+  it('ignora outra marca, rota inválida e outra janela', () => {
+    const recebido = vi.fn()
+    const parar = ouvirEscuta(window, recebido)
+    enviar({ marca: 'outra', rota: 'busca' })
+    enviar({ marca: 'fcs-spy', rota: 'carrinho' })
+    enviar(null)
+    enviar({ marca: 'fcs-spy', rota: 'busca', url: 'u', corpo: {} }, null)
+    expect(recebido).not.toHaveBeenCalled()
+    parar()
+  })
+  it('parar remove o ouvinte', () => {
+    const recebido = vi.fn()
+    ouvirEscuta(window, recebido)()
+    enviar({ marca: 'fcs-spy', rota: 'busca', url: 'u', corpo: {} })
+    expect(recebido).not.toHaveBeenCalled()
+  })
+})
