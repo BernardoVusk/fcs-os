@@ -200,7 +200,7 @@ Reordena só os cards já carregados na página. Anúncio sem o dado vai para o 
 
 ## Visual
 
-Segue `identidade/design-guide.md`: fundo preto, destaque ciano, sem emoji, sem travessão. O card fica embaixo do card original da Shopee, sem esconder nada dele. Um botão liga e desliga a camada FCS SPY.
+Segue `identidade/design-guide.md`: card, barra e painel em `#141414` com borda `#1F1F1F`, destaque ciano, sem emoji, sem travessão. O card fica embaixo do card original da Shopee, sem esconder nada dele. Um botão liga e desliga a camada FCS SPY.
 
 ## Erros
 
