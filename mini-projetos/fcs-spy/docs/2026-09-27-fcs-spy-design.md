@@ -86,7 +86,7 @@ Cada unidade tem uma função e pode ser testada isolada.
 | Tradução | `src/shopee/traduzir.ts` | Converte JSON da Shopee no tipo `Anuncio` | nada (função pura) |
 | Métricas | `src/nucleo/metricas.ts` | Contas do card | Configurações (valores, não armazenamento) |
 | Calculadora | `src/nucleo/calculadora.ts` | Contas de lucro com impressão 3D | idem |
-| Histórico | `src/dados/historico.ts` | Grava e lê leituras em IndexedDB | nada |
+| Histórico | `src/dados/historico.ts` | Grava e lê leituras em `chrome.storage.local` | nada |
 | Configurações | `src/dados/config.ts` + `src/opcoes/` | Lê e grava em `chrome.storage.local`, tela de opções | nada |
 | Card | `src/ui/card.ts` | Desenha o painel sob cada produto | Métricas, Histórico |
 | Ordenação | `src/ui/ordenar.ts` | Botão e reordenação dos cards carregados | Tradução |
@@ -141,7 +141,9 @@ Comissão configurável: `comissaoPct` (padrão 20%) e `taxaFixa` (padrão R$ 4,
 
 "Estimativa" aparece com marcação visual discreta no card, porque o faturamento usa o menor preço atual para todo o período e para todas as variações.
 
-Na página de produto, o card usa os números guardados no Histórico da última vez que o anúncio apareceu numa busca ou vitrine, com a data da leitura. Se nunca apareceu, mostra "abra pela busca para ver vendas".
+Na página de produto, o topo do painel da calculadora mostra os números guardados no Histórico da última vez que o anúncio apareceu numa busca ou vitrine, com a data da leitura. Se nunca apareceu, mostra "abra pela busca para ver vendas".
+
+O card é localizado pelo link do produto, que segue o padrão `-i.<shopId>.<itemId>` (confirmado na captura).
 
 Se qualquer entrada da fórmula for `null`, o resultado é `null`.
 
@@ -177,15 +179,16 @@ Contas:
 - Ads = preço / ROAS, se ligado
 - Lucro = preço menos taxa, imposto, ads e custo de produção
 - Margem = lucro / preço
-- ROAS mínimo = preço / (preço menos taxa, imposto e custo de produção). Se o denominador for zero ou negativo, mostra "não fecha sem ads".
+- ROAS mínimo = preço / (preço menos taxa, imposto e custo de produção). Se o denominador for zero ou negativo, mostra "prejuízo mesmo sem ads".
 
 Conferência obrigatória (valores do print do Ziem, com filamento, energia, desgaste e acabamento somando 4,80, embalagem 0,20, logo custo de produção 5,00, imposto 4%, comissão 20% + 4): preço 15,90 dá taxa 7,18, imposto 0,64 e ROAS mínimo 5,16.
 
 ## Histórico
 
-- Armazenamento: IndexedDB, banco `fcs-spy`, store `leituras`.
-- Leitura: `{ itemId, data, preco, vendas30d, vendasTotal }`.
-- Uma leitura por anúncio por dia. Se o anúncio aparecer de novo no mesmo dia, a leitura do dia é substituída.
+- Armazenamento: `chrome.storage.local`, chave `h:<itemId>` com a lista de leituras do anúncio, permissão `unlimitedStorage`. Não usar IndexedDB: dentro do content script ele pertence à origem shopee.com.br, onde a Shopee pode ler e apagar.
+- Leitura: `{ itemId, data, preco, vendas30d, vendasTotal }`, com `data` no formato `AAAA-MM-DD` local.
+- Uma leitura por anúncio por dia. Se o anúncio aparecer de novo no mesmo dia, a leitura do dia é substituída. Guarda no máximo 90 leituras por anúncio.
+- Uma resposta de busca vira uma leitura em lote: um `get` e um `set` para os 60 itens.
 - O card compara com a leitura anterior mais recente de outro dia e mostra: diferença de vendas 30D, diferença de preço, dias desde a última leitura, seta subindo/caindo/estável.
 - Sem leitura anterior: o card mostra "primeira leitura".
 
@@ -203,7 +206,7 @@ Segue `identidade/design-guide.md`: fundo preto, destaque ciano, sem emoji, sem 
 
 - Resposta com formato inesperado: a Tradução devolve lista vazia e registra no console com o prefixo `[FCS SPY]`. O card não aparece. A Shopee continua funcionando.
 - Card sem correspondência na resposta (por exemplo, anúncio injetado depois): fica sem painel.
-- IndexedDB indisponível: card funciona sem histórico, mostrando "histórico indisponível".
+- Armazenamento indisponível: card funciona sem histórico, mostrando "histórico indisponível".
 - A escuta está envolvida em try/catch. Nenhum erro dela pode quebrar a página da Shopee.
 
 ## Testes
