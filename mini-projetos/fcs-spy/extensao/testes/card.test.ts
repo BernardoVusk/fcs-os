@@ -91,6 +91,29 @@ describe('localizar e anexar', () => {
   })
 })
 
+describe('containerDoCard', () => {
+  it('li com um produto só devolve o li', () => {
+    document.body.innerHTML = `<ul><li id="um"><a href="/Produto-i.2.1">p</a></li></ul>`
+    const link = document.querySelector('a')!
+    expect(containerDoCard(link)!.id).toBe('um')
+  })
+  it('li com dois produtos distintos devolve o parentElement do link', () => {
+    document.body.innerHTML = `
+      <ul><li id="dupla">
+        <div id="cont-a"><a id="a" href="/Produto-i.2.1">p</a></div>
+        <div id="cont-b"><a id="b" href="/Outro-i.2.2">q</a></div>
+      </li></ul>`
+    const linkA = document.getElementById('a') as HTMLAnchorElement
+    expect(containerDoCard(linkA)).toBe(linkA.parentElement)
+    expect(containerDoCard(linkA)!.id).toBe('cont-a')
+  })
+  it('sem li devolve o parentElement', () => {
+    document.body.innerHTML = `<div id="pai"><a href="/Produto-i.2.1">p</a></div>`
+    const link = document.querySelector('a')!
+    expect(containerDoCard(link)!.id).toBe('pai')
+  })
+})
+
 describe('chaveDoProduto', () => {
   it('junta shopId e itemId com ponto', () => {
     expect(chaveDoProduto({ shopId: '2', itemId: '1' })).toBe('2.1')

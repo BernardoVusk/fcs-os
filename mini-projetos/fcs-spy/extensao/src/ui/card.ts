@@ -1,7 +1,7 @@
 import type { Anuncio, Tendencia } from '../nucleo/tipos'
 import type { Metricas } from '../nucleo/metricas'
 import { reais, inteiro, pct, SEM_DADO } from '../nucleo/formato'
-import { idDaUrl, seletorDoLink } from '../shopee/url'
+import { idDaUrl, seletorDoLink, type IdProduto } from '../shopee/url'
 import { ESTILO_BASE } from './estilo'
 
 export const ATRIBUTO_CARD = 'data-fcs-spy-card'
@@ -142,8 +142,18 @@ export function mapaDeLinks(raiz: ParentNode): Map<string, HTMLAnchorElement> {
 }
 
 // Hipótese a validar na checagem manual: o card da busca é o <li> que contém o link.
+// Só usa o <li> quando ele tem um produto só: se tiver outro produto dentro,
+// duas grades diferentes disputariam o mesmo container e o card ficaria trocando para sempre.
 export function containerDoCard(link: HTMLElement): HTMLElement | null {
-  return link.closest('li') ?? link.parentElement
+  const li = link.closest('li')
+  if (!li) return link.parentElement
+  const id = idDaUrl(link.getAttribute('href') ?? '')
+  if (!id) return link.parentElement
+  const outroProduto = [...li.querySelectorAll<HTMLAnchorElement>(SELETOR_LINK_PRODUTO)]
+    .map(l => idDaUrl(l.getAttribute('href') ?? ''))
+    .filter((outro): outro is IdProduto => outro !== null)
+    .some(outro => outro.shopId !== id.shopId || outro.itemId !== id.itemId)
+  return outroProduto ? link.parentElement : li
 }
 
 export function anexarCard(container: HTMLElement, card: HTMLElement): void {
