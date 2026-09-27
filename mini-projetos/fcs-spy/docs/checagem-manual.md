@@ -49,6 +49,9 @@ Rodar a cada versão nova, com o Chrome logado na Shopee.
 - [ ] Console da aba sem erro vermelho vindo da extensão. Avisos `[FCS SPY]` só em caso de formato inesperado
 - [ ] Busca, carrinho e login da Shopee continuam funcionando normalmente
 - [ ] Página não fica lenta ao rolar
+- [ ] Aba Performance do DevTools por 60 s numa busca, depois de passar por 3 páginas de resultado: sem trecho longo amarelo repetido vindo de content.js
+- [ ] Nenhum captcha ou verificação nova na conta Shopee depois de instalar
+- [ ] Painel da calculadora não cobre o botão "Comprar agora"
 
 ## Pendências conhecidas
 

@@ -3,6 +3,7 @@
   "name": "FCS SPY",
   "version": "0.1.0",
   "description": "Estudo de mercado e produto na Shopee, da FCS 3D STUDIO.",
+  "minimum_chrome_version": "111",
   "permissions": ["storage", "unlimitedStorage"],
   "options_page": "opcoes.html",
   "content_scripts": [

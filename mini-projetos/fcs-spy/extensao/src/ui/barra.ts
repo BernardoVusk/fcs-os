@@ -1,5 +1,7 @@
 import { CRITERIOS, type Criterio } from './ordenar'
 import { ESTILO_BASE } from './estilo'
+import { ATRIBUTO_CARD } from './card'
+import { ATRIBUTO_PAINEL } from './painel'
 
 export const ATRIBUTO_BARRA = 'data-fcs-spy-barra'
 export const ATRIBUTO_DESLIGADO = 'data-fcs-spy-desligado'
@@ -54,6 +56,6 @@ export function instalarEstiloGlobal(doc: Document): void {
   if (doc.getElementById('fcs-spy-estilo')) return
   const s = doc.createElement('style')
   s.id = 'fcs-spy-estilo'
-  s.textContent = `[${ATRIBUTO_DESLIGADO}] [data-fcs-spy-card], [${ATRIBUTO_DESLIGADO}] [data-fcs-spy-painel] { display: none !important; }`
+  s.textContent = `[${ATRIBUTO_DESLIGADO}] [${ATRIBUTO_CARD}], [${ATRIBUTO_DESLIGADO}] [${ATRIBUTO_PAINEL}] { display: none !important; }`
   ;(doc.head ?? doc.documentElement).append(s)
 }

@@ -21,6 +21,7 @@ async function iniciar(): Promise<void> {
 
   const area = areaLocal()
   let config: Config = CONFIG_PADRAO
+  let configCarregada = false
   const vistos = new Map<string, Visto>()
   const desenhados = new Map<string, HTMLElement>()
   let variacoes: Variacoes | null = null
@@ -29,12 +30,14 @@ async function iniciar(): Promise<void> {
   let timerDesenho: ReturnType<typeof setTimeout> | null = null
   let inicioPendente = 0
 
-  // Registra antes de qualquer await para não perder a primeira resposta da busca.
+  // Logo no início, antes de ler a configuração, para não perder a primeira resposta da busca.
   ouvirEscuta(window, msg => {
     receber(msg).catch(e => console.warn('[FCS SPY] resposta', e))
   })
 
   config = await lerConfig(area)
+  configCarregada = true
+  agendar() // pega o que já chegou em vistos enquanto a configuração ainda carregava
   chrome.storage.onChanged.addListener((mudancas, nome) => {
     if (nome !== 'local' || !mudancas[CHAVE_CONFIG]) return
     lerConfig(area)
@@ -96,7 +99,7 @@ async function iniciar(): Promise<void> {
   }
 
   function desenhar() {
-    if (!document.body) return
+    if (!configCarregada || !document.body) return
     garantirBarra()
     const hoje = new Date()
     const links = mapaDeLinks(document) // um querySelectorAll só por ciclo, não um por item
