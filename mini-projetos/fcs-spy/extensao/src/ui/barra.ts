@@ -52,6 +52,19 @@ export function aplicarLigado(doc: Document, ligado: boolean): void {
   else doc.documentElement.setAttribute(ATRIBUTO_DESLIGADO, '')
 }
 
+// A barra só existe onde há card do FCS SPY para ordenar (some no carrinho, por exemplo).
+// Ao sumir, a camada volta a ficar ligada, porque a barra nova nasce em "Desligar".
+export function sincronizarBarra(doc: Document, criar: () => HTMLElement): void {
+  const barra = doc.querySelector(`[${ATRIBUTO_BARRA}]`)
+  const temCard = doc.querySelector(`[${ATRIBUTO_CARD}]`) !== null
+  if (temCard && !barra) {
+    doc.body.append(criar())
+  } else if (!temCard && barra) {
+    barra.remove()
+    aplicarLigado(doc, true)
+  }
+}
+
 export function instalarEstiloGlobal(doc: Document): void {
   if (doc.getElementById('fcs-spy-estilo')) return
   const s = doc.createElement('style')

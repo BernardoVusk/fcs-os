@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { describe, it, expect, vi } from 'vitest'
-import { montarBarra, aplicarLigado, instalarEstiloGlobal, ATRIBUTO_BARRA, ATRIBUTO_DESLIGADO } from '../src/ui/barra'
+import { montarBarra, aplicarLigado, instalarEstiloGlobal, sincronizarBarra, ATRIBUTO_BARRA, ATRIBUTO_DESLIGADO } from '../src/ui/barra'
 
 describe('montarBarra', () => {
   it('escolher critério chama aoOrdenar', () => {
@@ -46,5 +46,32 @@ describe('aplicarLigado e estilo global', () => {
     expect(css).toContain(':has(> [data-fcs-spy-card]) { display: flex !important; flex-direction: column !important; }')
     expect(css).toContain(':has(> [data-fcs-spy-card]) > :not([data-fcs-spy-card]) { height: auto !important; flex: 1 1 auto !important; }')
     expect(css).toContain('[data-fcs-spy-card] { display: block; }')
+  })
+})
+
+// Achado da checagem de 27/09/2026: a barra aparecia no carrinho, sem card para ordenar.
+describe('sincronizarBarra', () => {
+  const criar = () => montarBarra(vi.fn(), vi.fn())
+  const barras = () => document.querySelectorAll(`[${ATRIBUTO_BARRA}]`)
+
+  it('sem card na página, sem barra', () => {
+    document.body.innerHTML = '<ul><li>carrinho</li></ul>'
+    sincronizarBarra(document, criar)
+    expect(barras()).toHaveLength(0)
+  })
+  it('com card, cria a barra uma vez só', () => {
+    document.body.innerHTML = '<ul><li><div data-fcs-spy-card="1"></div></li></ul>'
+    sincronizarBarra(document, criar)
+    sincronizarBarra(document, criar)
+    expect(barras()).toHaveLength(1)
+  })
+  it('cards somem, barra some e a camada volta a ficar ligada', () => {
+    document.body.innerHTML = '<ul><li><div data-fcs-spy-card="1"></div></li></ul>'
+    sincronizarBarra(document, criar)
+    aplicarLigado(document, false)
+    document.querySelector('ul')!.remove()
+    sincronizarBarra(document, criar)
+    expect(barras()).toHaveLength(0)
+    expect(document.documentElement.hasAttribute(ATRIBUTO_DESLIGADO)).toBe(false)
   })
 })

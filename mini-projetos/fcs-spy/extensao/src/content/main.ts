@@ -9,7 +9,7 @@ import { areaLocal } from '../dados/area'
 import { gravarLeituras, leituraDe, ultimaLeitura } from '../dados/historico'
 import { montarCard, anexarCard, mapaDeLinks, chaveDoProduto, containerDoCard, ATRIBUTO_CARD, type EstadoHistorico } from '../ui/card'
 import { ordenar, reordenarNaPagina, type Criterio } from '../ui/ordenar'
-import { montarBarra, aplicarLigado, instalarEstiloGlobal, ATRIBUTO_BARRA } from '../ui/barra'
+import { montarBarra, aplicarLigado, instalarEstiloGlobal, sincronizarBarra } from '../ui/barra'
 import { montarPainel, ATRIBUTO_PAINEL } from '../ui/painel'
 import { licencaValida } from '../licenca/licenca'
 import { lembrar } from './vistos'
@@ -100,7 +100,7 @@ async function iniciar(): Promise<void> {
 
   function desenhar() {
     if (!configCarregada || !document.body) return
-    garantirBarra()
+    instalarEstiloGlobal(document)
     const hoje = new Date()
     const links = mapaDeLinks(document) // um querySelectorAll só por ciclo, não um por item
     for (const { anuncio, historico } of vistos.values()) {
@@ -113,13 +113,8 @@ async function iniciar(): Promise<void> {
       anexarCard(container, card)
       desenhados.set(anuncio.itemId, card)
     }
+    sincronizarBarra(document, () => montarBarra(ordenarPagina, ligado => aplicarLigado(document, ligado)))
     desenharPainel().catch(e => console.warn('[FCS SPY] painel', e))
-  }
-
-  function garantirBarra() {
-    if (document.querySelector(`[${ATRIBUTO_BARRA}]`)) return
-    instalarEstiloGlobal(document)
-    document.body.append(montarBarra(ordenarPagina, ligado => aplicarLigado(document, ligado)))
   }
 
   function ordenarPagina(c: Criterio) {
