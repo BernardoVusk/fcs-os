@@ -9,6 +9,7 @@ await build({
     escuta: 'src/page/entrada.ts',
     content: 'src/content/main.ts',
     opcoes: 'src/opcoes/entrada.ts',
+    fundo: 'src/fundo/entrada.ts',
   },
   bundle: true,
   format: 'iife',

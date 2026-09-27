@@ -6,6 +6,8 @@
   "minimum_chrome_version": "111",
   "permissions": ["storage", "unlimitedStorage"],
   "options_page": "opcoes.html",
+  "action": { "default_title": "FCS SPY: custos e configurações" },
+  "background": { "service_worker": "fundo.js" },
   "content_scripts": [
     {
       "matches": ["https://shopee.com.br/*"],

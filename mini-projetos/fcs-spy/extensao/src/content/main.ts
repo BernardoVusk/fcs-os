@@ -13,6 +13,7 @@ import { montarBarra, aplicarLigado, instalarEstiloGlobal, sincronizarBarra } fr
 import { montarPainel, ATRIBUTO_PAINEL } from '../ui/painel'
 import { licencaValida } from '../licenca/licenca'
 import { lembrar } from './vistos'
+import { MENSAGEM_ABRIR_OPCOES } from '../fundo/fundo'
 
 type Visto = { anuncio: Anuncio; historico: EstadoHistorico }
 
@@ -150,6 +151,9 @@ async function iniciar(): Promise<void> {
         preco: vistos.get(id.itemId)?.anuncio.preco ?? null,
         variacoes: variacoes?.itemId === id.itemId ? variacoes : null,
         leitura,
+        aoAbrirCustos: () => {
+          chrome.runtime.sendMessage({ tipo: MENSAGEM_ABRIR_OPCOES }).catch(e => console.warn('[FCS SPY] custos', e))
+        },
       }))
     } finally {
       desenhandoPainel = false

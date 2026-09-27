@@ -10,6 +10,7 @@ export type DadosPainel = {
   preco: number | null
   variacoes: Variacoes | null
   leitura: Leitura | null
+  aoAbrirCustos?: () => void
 }
 
 const ESTILO_PAINEL = `
@@ -84,7 +85,16 @@ export function montarPainel(d: DadosPainel): HTMLElement {
   titulo.textContent = 'FCS SPY calculadora'
   const recolher = document.createElement('button')
   recolher.textContent = 'Recolher'
-  topo.append(titulo, recolher)
+  topo.append(titulo)
+  if (d.aoAbrirCustos) {
+    const aoAbrirCustos = d.aoAbrirCustos
+    const custos = document.createElement('button')
+    custos.textContent = 'Custos'
+    custos.title = 'Editar custos de impressão, imposto e comissão'
+    custos.addEventListener('click', () => aoAbrirCustos())
+    topo.append(custos)
+  }
+  topo.append(recolher)
 
   const corpo = document.createElement('div')
   corpo.className = 'corpo'

@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import { montarPainel, textoLeitura, ATRIBUTO_PAINEL } from '../src/ui/painel'
 import { CONFIG_PADRAO } from '../src/dados/config'
 import { reais } from '../src/nucleo/formato'
@@ -24,6 +24,22 @@ describe('textoLeitura', () => {
   it('com leitura', () => {
     expect(textoLeitura({ itemId: '1', data: '2026-09-27', preco: 17.9, vendas30d: 196, vendasTotal: 1596 }))
       .toBe('vendas 30D 196, total 1.596 (leitura de 27/09/2026)')
+  })
+})
+
+describe('botão Custos', () => {
+  const botaoCustos = (raiz: ShadowRoot) =>
+    [...raiz.querySelectorAll('button')].find(b => b.textContent === 'Custos')
+
+  it('com callback, mostra o botão e chama ao clicar', () => {
+    const aoAbrirCustos = vi.fn()
+    const raiz = montarPainel({ config: cfg, preco: 10, variacoes: null, leitura: null, aoAbrirCustos }).shadowRoot!
+    botaoCustos(raiz)!.click()
+    expect(aoAbrirCustos).toHaveBeenCalledOnce()
+  })
+  it('sem callback, não mostra o botão', () => {
+    const raiz = montarPainel({ config: cfg, preco: 10, variacoes: null, leitura: null }).shadowRoot!
+    expect(botaoCustos(raiz)).toBeUndefined()
   })
 })
 

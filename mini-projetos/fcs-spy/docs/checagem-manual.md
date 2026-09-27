@@ -44,6 +44,8 @@ na busca "miniatura f1" (páginas 1 e 2) e no produto "Miniaturas Pneus Fórmula
 
 ## Configurações
 
+- [ ] Clique no ícone do FCS SPY na barra do Chrome: abre a tela preta de configurações
+- [ ] Na página de produto, botão "Custos" do painel da calculadora: abre a mesma tela
 - [ ] Clique direito no ícone da extensão, "Opções": abre a tela preta com os campos
 - [ ] Mudar a comissão para 18 e salvar. Na aba da Shopee, os cards recalculam sem recarregar
 
