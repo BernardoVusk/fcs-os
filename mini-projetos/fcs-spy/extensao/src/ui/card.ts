@@ -40,10 +40,13 @@ export function textoHistorico(h: EstadoHistorico): string {
   if (h === 'indisponivel') return 'histórico indisponível'
   if (h === null) return 'primeira leitura'
   const dias = `${h.dias} ${h.dias === 1 ? 'dia' : 'dias'}`
-  if (h.difVendas30d === null || h.seta === null) return `sem dado de vendas, última leitura há ${dias}`
+  const precoTexto = Math.abs(h.difPreco) >= 0.005
+    ? `, preço ${h.difPreco > 0 ? '+' : ''}${reais(h.difPreco)}`
+    : ''
+  if (h.difVendas30d === null || h.seta === null) return `sem dado de vendas, última leitura há ${dias}${precoTexto}`
   const palavra = { sobe: 'subindo', cai: 'caindo', estavel: 'estável' }[h.seta]
   const sinal = h.difVendas30d > 0 ? '+' : ''
-  return `${palavra}: ${sinal}${inteiro(h.difVendas30d)} vendas 30D em ${dias}`
+  return `${palavra}: ${sinal}${inteiro(h.difVendas30d)} vendas 30D em ${dias}${precoTexto}`
 }
 
 export function montarCard(d: DadosCard): HTMLElement {

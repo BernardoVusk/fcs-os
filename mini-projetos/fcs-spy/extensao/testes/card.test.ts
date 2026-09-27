@@ -59,6 +59,12 @@ describe('textoHistorico', () => {
       .toBe('estável: 0 vendas 30D em 2 dias')
     expect(textoHistorico({ dias: 3, difVendas30d: null, difPreco: 0, seta: null }))
       .toBe('sem dado de vendas, última leitura há 3 dias')
+    expect(textoHistorico({ dias: 7, difVendas30d: 120, difPreco: -2, seta: 'sobe' }))
+      .toBe('subindo: +120 vendas 30D em 7 dias, preço -R$ 2,00')
+    expect(textoHistorico({ dias: 1, difVendas30d: -5, difPreco: 1.5, seta: 'cai' }))
+      .toBe('caindo: -5 vendas 30D em 1 dia, preço +R$ 1,50')
+    expect(textoHistorico({ dias: 3, difVendas30d: null, difPreco: 0.9, seta: null }))
+      .toBe('sem dado de vendas, última leitura há 3 dias, preço +R$ 0,90')
   })
 })
 
