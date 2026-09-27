@@ -26,12 +26,8 @@ select { width: 100%; }
 [data-campo=lucro] .valor { color: #00D8FF; }
 `
 
-function numero(v: string): number {
-  const n = parseFloat(v.replace(',', '.'))
-  return Number.isFinite(n) ? n : 0
-}
-
-function precoValido(v: string): number | null {
+// null quando o campo está vazio ou não é número. Quem chama decide o padrão (0 ou sem dado).
+function lerNumero(v: string): number | null {
   const t = v.trim()
   if (t === '') return null
   const n = parseFloat(t.replace(',', '.'))
@@ -128,7 +124,7 @@ export function montarPainel(d: DadosPainel): HTMLElement {
   corpo.append(resultado)
 
   function recalcular() {
-    const precoNum = precoValido(preco.value)
+    const precoNum = lerNumero(preco.value)
     if (precoNum === null) {
       resultado.replaceChildren(
         linhaResultado('custoProducao', 'Custo de produção', SEM_DADO),
@@ -141,21 +137,24 @@ export function montarPainel(d: DadosPainel): HTMLElement {
       )
       return
     }
+    const roasNum = lerNumero(roas.value)
+    // Ads ligado sem ROAS utilizável: não dá para inventar o custo de ads, então essas três linhas ficam sem dado.
+    const roasSemDado = ads.checked && (roasNum === null || roasNum <= 0)
     const r = calcular({
       preco: precoNum,
-      gramas: numero(gramas.value),
-      horas: numero(horas.value),
-      minutosAcabamento: numero(minutos.value),
+      gramas: lerNumero(gramas.value) ?? 0,
+      horas: lerNumero(horas.value) ?? 0,
+      minutosAcabamento: lerNumero(minutos.value) ?? 0,
       ads: ads.checked,
-      roas: numero(roas.value),
+      roas: roasNum ?? 0,
     }, d.config)
     resultado.replaceChildren(
       linhaResultado('custoProducao', 'Custo de produção', reais(r.custoProducao)),
       linhaResultado('taxa', 'Taxa Shopee', reais(r.taxa)),
       linhaResultado('imposto', 'Imposto', reais(r.imposto)),
-      linhaResultado('ads', 'Ads', reais(r.ads)),
-      linhaResultado('lucro', 'Lucro por unidade', reais(r.lucro)),
-      linhaResultado('margem', 'Margem', pct(r.margem)),
+      linhaResultado('ads', 'Ads', roasSemDado ? SEM_DADO : reais(r.ads)),
+      linhaResultado('lucro', 'Lucro por unidade', roasSemDado ? SEM_DADO : reais(r.lucro)),
+      linhaResultado('margem', 'Margem', roasSemDado ? SEM_DADO : pct(r.margem)),
       linhaResultado('roasMinimo', 'ROAS mínimo',
         r.roasMinimo === null ? 'prejuízo mesmo sem ads' : `${r.roasMinimo.toFixed(2).replace('.', ',')}x`),
     )

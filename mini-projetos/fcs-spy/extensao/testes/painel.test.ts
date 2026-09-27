@@ -2,6 +2,7 @@
 import { describe, it, expect } from 'vitest'
 import { montarPainel, textoLeitura, ATRIBUTO_PAINEL } from '../src/ui/painel'
 import { CONFIG_PADRAO } from '../src/dados/config'
+import { reais } from '../src/nucleo/formato'
 import type { Config } from '../src/nucleo/tipos'
 
 const cfg: Config = {
@@ -83,5 +84,31 @@ describe('montarPainel', () => {
     botao.click()
     expect(raiz.querySelector<HTMLElement>('.corpo')!.hidden).toBe(true)
     expect(botao.textContent).toBe('Abrir')
+  })
+  it('ads marcado com roas vazio mostra sem dado em ads, lucro e margem, mas taxa normal', () => {
+    const raiz = montarPainel({ config: cfg, preco: 15.9, variacoes: null, leitura: null }).shadowRoot!
+    const ads = raiz.querySelector<HTMLInputElement>('input[name="ads"]')!
+    ads.checked = true
+    ads.dispatchEvent(new Event('change', { bubbles: true }))
+    preencher(raiz, 'roas', '')
+    expect(valor(raiz, 'ads')).toBe('sem dado')
+    expect(valor(raiz, 'lucro')).toBe('sem dado')
+    expect(valor(raiz, 'margem')).toBe('sem dado')
+    expect(valor(raiz, 'taxa')).toBe(reais(15.9 * cfg.comissaoPct + cfg.taxaFixa))
+  })
+  it('ads marcado com roas 0 também mostra sem dado', () => {
+    const raiz = montarPainel({ config: cfg, preco: 15.9, variacoes: null, leitura: null }).shadowRoot!
+    const ads = raiz.querySelector<HTMLInputElement>('input[name="ads"]')!
+    ads.checked = true
+    ads.dispatchEvent(new Event('change', { bubbles: true }))
+    preencher(raiz, 'roas', '0')
+    expect(valor(raiz, 'ads')).toBe('sem dado')
+    expect(valor(raiz, 'lucro')).toBe('sem dado')
+    expect(valor(raiz, 'margem')).toBe('sem dado')
+  })
+  it('ads desmarcado com roas vazio mostra ads real, não sem dado', () => {
+    const raiz = montarPainel({ config: cfg, preco: 15.9, variacoes: null, leitura: null }).shadowRoot!
+    preencher(raiz, 'roas', '')
+    expect(valor(raiz, 'ads')).toBe(reais(0))
   })
 })
