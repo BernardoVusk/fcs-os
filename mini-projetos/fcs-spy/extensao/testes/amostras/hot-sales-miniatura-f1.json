@@ -1,0 +1,1629 @@
+{
+ "data": {
+  "item_cards": [
+   {
+    "item_card_displayed_asset": {
+     "name": "McLaren Senna 1:36 Diecast Metal 12cm com Portas Borboleta, Fricção e Pneus de Borracha",
+     "image": "sg-11134201-824ha-mpsscvkzftvw6e",
+     "images": [
+      "sg-11134201-824ha-mpsscvkzftvw6e",
+      "sg-11134201-824ja-mpsscvexlla985",
+      "sg-11134201-824hh-mpsscvqtmpl70f",
+      "sg-11134201-824gu-mpsscvgavmz277",
+      "sg-11134201-824gv-mpsscvfqv1n215",
+      "sg-11134201-824jb-mpsscv6lwbnm5e",
+      "sg-11134201-824g9-mpsscvm7kgle9d",
+      "sg-11134201-824ij-mpsscvfywg7g80"
+     ],
+     "shop_location": null,
+     "highlight_videos": null,
+     "item_card_mask": {
+      "mask_type": null,
+      "mask_text": null,
+      "pre_kyc_text": "Verifique sua idade",
+      "post_kyc_text": "Item Restrito",
+      "enable_age_gate_label": true
+     },
+     "icon_in_image": {
+      "icon_type": null,
+      "ads_text": "Ad"
+     },
+     "image_overlay": null,
+     "seller_flag": null,
+     "promotion_label_list": null,
+     "icon_in_price": null,
+     "discount_tag": null,
+     "voucher_applied_icon": {
+      "can_display": true
+     },
+     "rating": {
+      "rating_text": "4.9",
+      "icon": {
+       "hash": "id-11134258-7r98o-ly1pxywrszyh0b",
+       "width": 10,
+       "height": 10
+      },
+      "rating_type": 1
+     },
+     "sold_count": {
+      "text": "41 Vendido(s)"
+     },
+     "estimated_delivery_time": null,
+     "free_badge": null,
+     "find_similar": null,
+     "long_image": null,
+     "long_images": null,
+     "top_product_badge": null,
+     "name_tr": null,
+     "shop_location_tr": null,
+     "display_price": {
+      "price": 2390000,
+      "strikethrough_price": null,
+      "hidden_price_display_text": null,
+      "display_price_type": 0,
+      "installment_price": null,
+      "display_price_asset": {
+       "strikethrough_price": null,
+       "price": null,
+       "hidden_price_display_text": null,
+       "final_price_hint_text": "com cupom"
+      }
+     },
+     "final_price_icon": {
+      "icon_type": 1,
+      "icon": {
+       "hash": "id-11134005-81ztm-mq5zs2sy7swe8e",
+       "width": 48,
+       "height": 48
+      }
+     },
+     "in_title_image_flags": null
+    },
+    "item_data": {
+     "itemid": 58213016622,
+     "shopid": 1762381981,
+     "is_adult": false,
+     "need_kyc": false,
+     "adult_age_threshold": null,
+     "item_card_display_price": {
+      "item_id": 58213016622,
+      "model_id": 219623360185,
+      "promotion_type": 301,
+      "promotion_id": 487558392008889,
+      "price": 2390000,
+      "strikethrough_price": 4990000,
+      "discount": 52,
+      "hidden_price_display_text": null,
+      "recommended_shop_voucher_promotion_id": null,
+      "recommended_platform_voucher_promotion_id": 1514576282005504,
+      "recommended_shop_voucher_info": null,
+      "recommended_platform_voucher_info": {
+       "promotion_id": 1514576282005504,
+       "voucher_code": "1448362222",
+       "voucher_discount": 500000,
+       "time_info": {
+        "start_time": 1789959600,
+        "end_time": 1790650799,
+        "valid_duration": null
+       },
+       "groups": [
+        "BR_FINAL_PRICE_WHITELIST"
+       ],
+       "min_spend": 2500000,
+       "signature": "7235f18f5d094f6184bcab35ab978f8b9409f0646d68afe5a7bfb671fcd9c451",
+       "signature_source": 16
+      },
+      "original_price": 4990000,
+      "model_selection_logic": null,
+      "promotion_price": 2890000,
+      "pix_discount_info": null,
+      "recommended_ads_voucher_info": null
+     },
+     "item_card_display_sold_count": {
+      "historical_sold_count": 41,
+      "monthly_sold_count": 8,
+      "historical_sold_count_text": "41 Vendido(s)",
+      "monthly_sold_count_text": "8 Vendido/Mês"
+     },
+     "is_sold_out": false,
+     "is_preview": false,
+     "label_ids": [
+      844931064601283,
+      1718388139,
+      2108629,
+      700065053,
+      700065054,
+      822062091122182,
+      595473041,
+      648011521,
+      835343123222554,
+      595968044
+     ],
+     "catid": 100639,
+     "shopee_verified": true,
+     "liked_count": 188,
+     "item_type": 0,
+     "reference_item_id": null,
+     "shop_data": {
+      "shop_name": "Importadora Zenit",
+      "shop_icon": null,
+      "shop_location": "São Paulo"
+     },
+     "status": 1,
+     "ctime": 1782181937,
+     "flag": 131072,
+     "item_status": "normal",
+     "global_cat": {
+      "catid": [
+       100639,
+       100737,
+       101388
+      ]
+     },
+     "overlay_images": null,
+     "item_rating": {
+      "rating_star": 4.9,
+      "rating_count": [
+       30,
+       0,
+       1,
+       0,
+       0,
+       29
+      ]
+     },
+     "global_brand": null,
+     "platform_voucher": null,
+     "video_info_list": null,
+     "tier_variations": [
+      {
+       "name": "Cor",
+       "options": [
+        "Branco",
+        "Vermelho",
+        "Laranja"
+       ],
+       "images": [
+        "sg-11134201-824gx-mpsscxonpgqp00",
+        "sg-11134201-824is-mpsscxj95rm36f",
+        "sg-11134201-824i9-mpsscxquk8wc04"
+       ],
+       "properties": null,
+       "type": 0
+      }
+     ],
+     "ad_voucher_signature": null,
+     "is_sexual": false,
+     "user_path_tokens": null
+    }
+   },
+   {
+    "item_card_displayed_asset": {
+     "name": "Miniatura Toyota Hilux 1:36 Metal – Abre Portas, Fricção, Pneus de Borracha | Pickup Colecionável (Kit ou Avulso)",
+     "image": "br-11134207-820l6-mplokgro2a6af7",
+     "images": [
+      "br-11134207-820l6-mplokgro2a6af7",
+      "sg-11134201-8260k-mm280x7ne13cb8",
+      "sg-11134201-8261t-mm280xbbb8qob7",
+      "sg-11134201-8261a-mm280x76c8i06a",
+      "sg-11134201-8260s-mm280x6f7y8f0f",
+      "sg-11134201-8262u-mm280xaoepdu93",
+      "sg-11134201-8262s-mm280x5qg16rb9"
+     ],
+     "shop_location": null,
+     "highlight_videos": null,
+     "item_card_mask": {
+      "mask_type": null,
+      "mask_text": null,
+      "pre_kyc_text": "Verifique sua idade",
+      "post_kyc_text": "Item Restrito",
+      "enable_age_gate_label": true
+     },
+     "icon_in_image": {
+      "icon_type": null,
+      "ads_text": "Ad"
+     },
+     "image_overlay": null,
+     "seller_flag": null,
+     "promotion_label_list": null,
+     "icon_in_price": null,
+     "discount_tag": null,
+     "voucher_applied_icon": null,
+     "rating": {
+      "rating_text": "4.8",
+      "icon": {
+       "hash": "id-11134258-7r98o-ly1pxywrszyh0b",
+       "width": 10,
+       "height": 10
+      },
+      "rating_type": 1
+     },
+     "sold_count": {
+      "text": "763 Vendido(s)"
+     },
+     "estimated_delivery_time": null,
+     "free_badge": null,
+     "find_similar": null,
+     "long_image": null,
+     "long_images": null,
+     "top_product_badge": null,
+     "name_tr": null,
+     "shop_location_tr": null,
+     "display_price": {
+      "price": 2290000,
+      "strikethrough_price": null,
+      "hidden_price_display_text": null,
+      "display_price_type": 0,
+      "installment_price": null,
+      "display_price_asset": null
+     },
+     "final_price_icon": null,
+     "in_title_image_flags": null
+    },
+    "item_data": {
+     "itemid": 58257318180,
+     "shopid": 1762381981,
+     "is_adult": false,
+     "need_kyc": false,
+     "adult_age_threshold": null,
+     "item_card_display_price": {
+      "item_id": 58257318180,
+      "model_id": 199187276385,
+      "promotion_type": 301,
+      "promotion_id": 487558392008889,
+      "price": 2290000,
+      "strikethrough_price": 3990000,
+      "discount": 43,
+      "hidden_price_display_text": null,
+      "recommended_shop_voucher_promotion_id": null,
+      "recommended_platform_voucher_promotion_id": null,
+      "recommended_shop_voucher_info": null,
+      "recommended_platform_voucher_info": null,
+      "original_price": 3990000,
+      "model_selection_logic": null,
+      "promotion_price": 2290000,
+      "pix_discount_info": null,
+      "recommended_ads_voucher_info": null
+     },
+     "item_card_display_sold_count": {
+      "historical_sold_count": 763,
+      "monthly_sold_count": 198,
+      "historical_sold_count_text": "763 Vendido(s)",
+      "monthly_sold_count_text": "198 Vendido/Mês"
+     },
+     "is_sold_out": false,
+     "is_preview": false,
+     "label_ids": [
+      844931064601283,
+      700065053,
+      700065054,
+      822062091122182,
+      1718388139,
+      595473041,
+      835343123222554,
+      648011521,
+      595968044
+     ],
+     "catid": 100639,
+     "shopee_verified": true,
+     "liked_count": 804,
+     "item_type": 0,
+     "reference_item_id": null,
+     "shop_data": {
+      "shop_name": "Importadora Zenit",
+      "shop_icon": null,
+      "shop_location": "São Paulo"
+     },
+     "status": 1,
+     "ctime": 1774036132,
+     "flag": 131072,
+     "item_status": "normal",
+     "global_cat": {
+      "catid": [
+       100639,
+       100737,
+       101388
+      ]
+     },
+     "overlay_images": null,
+     "item_rating": {
+      "rating_star": 4.799554565701559,
+      "rating_count": [
+       449,
+       5,
+       6,
+       14,
+       24,
+       400
+      ]
+     },
+     "global_brand": null,
+     "platform_voucher": null,
+     "video_info_list": null,
+     "tier_variations": [
+      {
+       "name": "Cor",
+       "options": [
+        "Branco",
+        "Preto",
+        "Cinza",
+        "Kit Com 3",
+        "1 Cor Aléatoria",
+        "Corolla Cross Branco",
+        "Corolla Cross Preto",
+        "Corolla Cross Prata",
+        "Corolla Cross Vermelho"
+       ],
+       "images": [
+        "sg-11134201-8261i-mm280yvomd4xbb",
+        "sg-11134201-82627-mm280y9r8lxk79",
+        "sg-11134201-8262c-mm280ykconbjf8",
+        "sg-11134201-8260q-mm280y3c4s90de",
+        "sg-11134201-82609-mm280y3loyyqe7",
+        "br-11134207-820lm-mpmt2mv6ls74a7",
+        "br-11134207-820mc-mpmt2mv6n6rk1d",
+        "br-11134207-820lf-mpmt2mv6olc084",
+        "br-11134207-820lj-mpmt2mv6pzwg77"
+       ],
+       "properties": null,
+       "type": 0
+      }
+     ],
+     "ad_voucher_signature": null,
+     "is_sexual": false,
+     "user_path_tokens": null
+    }
+   },
+   {
+    "item_card_displayed_asset": {
+     "name": "Dodge Ram 1500 Miniatura de Ferro Escala 1/46",
+     "image": "sg-11134201-823q1-mosoa9thdmhb3e",
+     "images": [
+      "sg-11134201-823q1-mosoa9thdmhb3e",
+      "sg-11134201-823rm-mosoab2q4idqb5",
+      "sg-11134201-823pc-mosoa9tipc7icf",
+      "sg-11134201-823qr-mosoaa8yelu679",
+      "sg-11134201-823oq-mosoa9tntclc32",
+      "sg-11134201-823r3-mosoab2ohgy374",
+      "sg-11134201-823qu-mosoab6uqvil20",
+      "sg-11134201-823on-mosoab0vr6dcbc"
+     ],
+     "shop_location": null,
+     "highlight_videos": null,
+     "item_card_mask": {
+      "mask_type": null,
+      "mask_text": null,
+      "pre_kyc_text": "Verifique sua idade",
+      "post_kyc_text": "Item Restrito",
+      "enable_age_gate_label": true
+     },
+     "icon_in_image": {
+      "icon_type": null,
+      "ads_text": "Ad"
+     },
+     "image_overlay": null,
+     "seller_flag": null,
+     "promotion_label_list": null,
+     "icon_in_price": null,
+     "discount_tag": null,
+     "voucher_applied_icon": {
+      "can_display": true
+     },
+     "rating": {
+      "rating_text": "4.9",
+      "icon": {
+       "hash": "id-11134258-7r98o-ly1pxywrszyh0b",
+       "width": 10,
+       "height": 10
+      },
+      "rating_type": 1
+     },
+     "sold_count": {
+      "text": "247 Vendido(s)"
+     },
+     "estimated_delivery_time": null,
+     "free_badge": null,
+     "find_similar": null,
+     "long_image": null,
+     "long_images": null,
+     "top_product_badge": null,
+     "name_tr": null,
+     "shop_location_tr": null,
+     "display_price": {
+      "price": 3490000,
+      "strikethrough_price": null,
+      "hidden_price_display_text": null,
+      "display_price_type": 0,
+      "installment_price": null,
+      "display_price_asset": {
+       "strikethrough_price": null,
+       "price": null,
+       "hidden_price_display_text": null,
+       "final_price_hint_text": "com cupom"
+      }
+     },
+     "final_price_icon": {
+      "icon_type": 1,
+      "icon": {
+       "hash": "id-11134005-81ztm-mq5zs2sy7swe8e",
+       "width": 48,
+       "height": 48
+      }
+     },
+     "in_title_image_flags": null
+    },
+    "item_data": {
+     "itemid": 58211590221,
+     "shopid": 1762381981,
+     "is_adult": false,
+     "need_kyc": false,
+     "adult_age_threshold": null,
+     "item_card_display_price": {
+      "item_id": 58211590221,
+      "model_id": 228806320969,
+      "promotion_type": 0,
+      "promotion_id": 0,
+      "price": 3490000,
+      "strikethrough_price": 3990000,
+      "discount": 13,
+      "hidden_price_display_text": null,
+      "recommended_shop_voucher_promotion_id": null,
+      "recommended_platform_voucher_promotion_id": 1514576282005504,
+      "recommended_shop_voucher_info": null,
+      "recommended_platform_voucher_info": {
+       "promotion_id": 1514576282005504,
+       "voucher_code": "1448362222",
+       "voucher_discount": 500000,
+       "time_info": {
+        "start_time": 1789959600,
+        "end_time": 1790650799,
+        "valid_duration": null
+       },
+       "groups": [
+        "BR_FINAL_PRICE_WHITELIST"
+       ],
+       "min_spend": 2500000,
+       "signature": "7235f18f5d094f6184bcab35ab978f8b9409f0646d68afe5a7bfb671fcd9c451",
+       "signature_source": 16
+      },
+      "original_price": 3990000,
+      "model_selection_logic": null,
+      "promotion_price": 3990000,
+      "pix_discount_info": null,
+      "recommended_ads_voucher_info": null
+     },
+     "item_card_display_sold_count": {
+      "historical_sold_count": 247,
+      "monthly_sold_count": 96,
+      "historical_sold_count_text": "247 Vendido(s)",
+      "monthly_sold_count_text": "96 Vendido/Mês"
+     },
+     "is_sold_out": false,
+     "is_preview": false,
+     "label_ids": [
+      844931064601283,
+      700065053,
+      700065054,
+      822062091122182,
+      1718388139,
+      595473041,
+      835343123222554,
+      648011521,
+      700960097,
+      595968044
+     ],
+     "catid": 100639,
+     "shopee_verified": true,
+     "liked_count": 539,
+     "item_type": 0,
+     "reference_item_id": null,
+     "shop_data": {
+      "shop_name": "Importadora Zenit",
+      "shop_icon": null,
+      "shop_location": "São Paulo"
+     },
+     "status": 1,
+     "ctime": 1779995852,
+     "flag": 131072,
+     "item_status": "normal",
+     "global_cat": {
+      "catid": [
+       100639,
+       100743
+      ]
+     },
+     "overlay_images": null,
+     "item_rating": {
+      "rating_star": 4.905511811023622,
+      "rating_count": [
+       127,
+       1,
+       0,
+       1,
+       6,
+       119
+      ]
+     },
+     "global_brand": null,
+     "platform_voucher": null,
+     "video_info_list": null,
+     "tier_variations": [
+      {
+       "name": "Color",
+       "options": [
+        "Branco",
+        "Preto",
+        "Vermelho",
+        "Azul",
+        "1 Aleatório"
+       ],
+       "images": [
+        "sg-11134201-823oi-mosoadhbgqa4fb",
+        "sg-11134201-823q7-mosoadjvwc24ae",
+        "sg-11134201-823p2-mosoad6r198ia8",
+        "sg-11134201-823og-mosoae632pe449",
+        "sg-11134201-823r6-mosoadx3dm3298"
+       ],
+       "properties": null,
+       "type": 0
+      }
+     ],
+     "ad_voucher_signature": null,
+     "is_sexual": false,
+     "user_path_tokens": null
+    }
+   },
+   {
+    "item_card_displayed_asset": {
+     "name": "Miniatura Toyota Corolla 1:32 Metal – Luz e Som, Abre Portas, Fricção, Pneus de Borracha | Carro Colecionável Premium",
+     "image": "sg-11134201-8260o-mm2a8ob0kcg4c3",
+     "images": [
+      "sg-11134201-8260o-mm2a8ob0kcg4c3",
+      "sg-11134201-8260t-mm2a8opfz6rl2a",
+      "sg-11134201-82605-mm2a8ow9k54yc1",
+      "sg-11134201-8260x-mm2a8ob5hc0f68",
+      "sg-11134201-82611-mm2a8oljv1fla0",
+      "sg-11134201-82627-mm2a8omzk7wkb7",
+      "sg-11134201-8262m-mm2a8op6knwl99",
+      "sg-11134201-8259n-mt03dzo9n9c0d8",
+      "sg-11134201-825ao-mt03dz3l69s0f5"
+     ],
+     "shop_location": null,
+     "highlight_videos": null,
+     "item_card_mask": {
+      "mask_type": null,
+      "mask_text": null,
+      "pre_kyc_text": "Verifique sua idade",
+      "post_kyc_text": "Item Restrito",
+      "enable_age_gate_label": true
+     },
+     "icon_in_image": {
+      "icon_type": null,
+      "ads_text": "Ad"
+     },
+     "image_overlay": null,
+     "seller_flag": null,
+     "promotion_label_list": null,
+     "icon_in_price": null,
+     "discount_tag": null,
+     "voucher_applied_icon": {
+      "can_display": true
+     },
+     "rating": {
+      "rating_text": "4.9",
+      "icon": {
+       "hash": "id-11134258-7r98o-ly1pxywrszyh0b",
+       "width": 10,
+       "height": 10
+      },
+      "rating_type": 1
+     },
+     "sold_count": {
+      "text": "1mil+ Vendido(s)"
+     },
+     "estimated_delivery_time": null,
+     "free_badge": null,
+     "find_similar": null,
+     "long_image": null,
+     "long_images": null,
+     "top_product_badge": null,
+     "name_tr": null,
+     "shop_location_tr": null,
+     "display_price": {
+      "price": 2490000,
+      "strikethrough_price": null,
+      "hidden_price_display_text": null,
+      "display_price_type": 0,
+      "installment_price": null,
+      "display_price_asset": {
+       "strikethrough_price": null,
+       "price": null,
+       "hidden_price_display_text": null,
+       "final_price_hint_text": "com cupom"
+      }
+     },
+     "final_price_icon": {
+      "icon_type": 1,
+      "icon": {
+       "hash": "id-11134005-81ztm-mq5zs2sy7swe8e",
+       "width": 48,
+       "height": 48
+      }
+     },
+     "in_title_image_flags": null
+    },
+    "item_data": {
+     "itemid": 58207322828,
+     "shopid": 1762381981,
+     "is_adult": false,
+     "need_kyc": false,
+     "adult_age_threshold": null,
+     "item_card_display_price": {
+      "item_id": 58207322828,
+      "model_id": 209194245711,
+      "promotion_type": 301,
+      "promotion_id": 487558392008889,
+      "price": 2490000,
+      "strikethrough_price": 4990000,
+      "discount": 50,
+      "hidden_price_display_text": null,
+      "recommended_shop_voucher_promotion_id": null,
+      "recommended_platform_voucher_promotion_id": 1514576282005504,
+      "recommended_shop_voucher_info": null,
+      "recommended_platform_voucher_info": {
+       "promotion_id": 1514576282005504,
+       "voucher_code": "1448362222",
+       "voucher_discount": 500000,
+       "time_info": {
+        "start_time": 1789959600,
+        "end_time": 1790650799,
+        "valid_duration": null
+       },
+       "groups": [
+        "BR_FINAL_PRICE_WHITELIST"
+       ],
+       "min_spend": 2500000,
+       "signature": "7235f18f5d094f6184bcab35ab978f8b9409f0646d68afe5a7bfb671fcd9c451",
+       "signature_source": 16
+      },
+      "original_price": 4990000,
+      "model_selection_logic": null,
+      "promotion_price": 2990000,
+      "pix_discount_info": null,
+      "recommended_ads_voucher_info": null
+     },
+     "item_card_display_sold_count": {
+      "historical_sold_count": 1948,
+      "monthly_sold_count": 531,
+      "historical_sold_count_text": "1mil+ Vendido(s)",
+      "monthly_sold_count_text": "531 Vendido/Mês"
+     },
+     "is_sold_out": false,
+     "is_preview": false,
+     "label_ids": [
+      844931064601283,
+      700065054,
+      700065053,
+      822062091122182,
+      1718388139,
+      2298802,
+      2143613,
+      595473041,
+      835343123222554,
+      648011521,
+      2103651,
+      700960097,
+      595968044
+     ],
+     "catid": 100639,
+     "shopee_verified": true,
+     "liked_count": 3837,
+     "item_type": 0,
+     "reference_item_id": null,
+     "shop_data": {
+      "shop_name": "Importadora Zenit",
+      "shop_icon": null,
+      "shop_location": "São Paulo"
+     },
+     "status": 1,
+     "ctime": 1774039857,
+     "flag": 131072,
+     "item_status": "normal",
+     "global_cat": {
+      "catid": [
+       100639,
+       100737,
+       101388
+      ]
+     },
+     "overlay_images": null,
+     "item_rating": {
+      "rating_star": 4.869485294117647,
+      "rating_count": [
+       1088,
+       9,
+       5,
+       25,
+       41,
+       1008
+      ]
+     },
+     "global_brand": null,
+     "platform_voucher": null,
+     "video_info_list": null,
+     "tier_variations": [
+      {
+       "name": "Cor",
+       "options": [
+        "Branco",
+        "Preto",
+        "Corolla Cross Branco",
+        "Corolla Cross Preto",
+        "Corolla Cross Vermelho",
+        "Corolla Cross Prata",
+        "Vermelho",
+        "Prata",
+        "Cinza"
+       ],
+       "images": [
+        "sg-11134201-8260h-mm2a8px8k2yq14",
+        "sg-11134201-82611-mm2a8ptdxb7nde",
+        "br-11134207-820lj-mpmsf9en4lc26c",
+        "br-11134207-820lo-mpmsf9eorl6ofa",
+        "br-11134207-820l7-mpmsf9eoszr44a",
+        "br-11134207-820md-mpmsf9eouebk5d",
+        "sg-11134201-825b0-mt03e0thy2vca4",
+        "sg-11134201-825bb-mt03e0vsl5oka5",
+        "sg-11134201-82599-mt03e1a0qryd12"
+       ],
+       "properties": null,
+       "type": 0
+      }
+     ],
+     "ad_voucher_signature": null,
+     "is_sexual": false,
+     "user_path_tokens": null
+    }
+   },
+   {
+    "item_card_displayed_asset": {
+     "name": "Toyota Corolla Cross SUV Miniatura 12,5cm Metal Diecast Luz Portas Abrem Colecionável",
+     "image": "sg-11134201-824j9-mpn2fmsxo6j307",
+     "images": [
+      "sg-11134201-824j9-mpn2fmsxo6j307",
+      "sg-11134201-824ic-mpn2fl8tj2fhff",
+      "sg-11134201-824ia-mpn2flg2n2tcdb",
+      "sg-11134201-824ik-mpn2fli08zyl10",
+      "sg-11134201-824gc-mpn2flgvv66j98",
+      "sg-11134201-824jk-mpn2flt3u7ezf2",
+      "sg-11134201-824io-mpn2fli3x2x90e",
+      "sg-11134201-824hh-mpn2flhioweafa",
+      "sg-11134201-824hi-mpn2flci2plb3b"
+     ],
+     "shop_location": null,
+     "highlight_videos": null,
+     "item_card_mask": {
+      "mask_type": null,
+      "mask_text": null,
+      "pre_kyc_text": "Verifique sua idade",
+      "post_kyc_text": "Item Restrito",
+      "enable_age_gate_label": true
+     },
+     "icon_in_image": {
+      "icon_type": null,
+      "ads_text": "Ad"
+     },
+     "image_overlay": null,
+     "seller_flag": null,
+     "promotion_label_list": null,
+     "icon_in_price": null,
+     "discount_tag": null,
+     "voucher_applied_icon": {
+      "can_display": true
+     },
+     "rating": {
+      "rating_text": "4.8",
+      "icon": {
+       "hash": "id-11134258-7r98o-ly1pxywrszyh0b",
+       "width": 10,
+       "height": 10
+      },
+      "rating_type": 1
+     },
+     "sold_count": {
+      "text": "366 Vendido(s)"
+     },
+     "estimated_delivery_time": null,
+     "free_badge": null,
+     "find_similar": null,
+     "long_image": null,
+     "long_images": null,
+     "top_product_badge": null,
+     "name_tr": null,
+     "shop_location_tr": null,
+     "display_price": {
+      "price": 2499000,
+      "strikethrough_price": null,
+      "hidden_price_display_text": null,
+      "display_price_type": 0,
+      "installment_price": null,
+      "display_price_asset": {
+       "strikethrough_price": null,
+       "price": null,
+       "hidden_price_display_text": null,
+       "final_price_hint_text": "com cupom"
+      }
+     },
+     "final_price_icon": {
+      "icon_type": 1,
+      "icon": {
+       "hash": "id-11134005-81ztm-mq5zs2sy7swe8e",
+       "width": 48,
+       "height": 48
+      }
+     },
+     "in_title_image_flags": null
+    },
+    "item_data": {
+     "itemid": 58212817733,
+     "shopid": 1762381981,
+     "is_adult": false,
+     "need_kyc": false,
+     "adult_age_threshold": null,
+     "item_card_display_price": {
+      "item_id": 58212817733,
+      "model_id": 219193605785,
+      "promotion_type": 301,
+      "promotion_id": 487558392008889,
+      "price": 2499000,
+      "strikethrough_price": 3990000,
+      "discount": 37,
+      "hidden_price_display_text": null,
+      "recommended_shop_voucher_promotion_id": null,
+      "recommended_platform_voucher_promotion_id": 1514576282005504,
+      "recommended_shop_voucher_info": null,
+      "recommended_platform_voucher_info": {
+       "promotion_id": 1514576282005504,
+       "voucher_code": "1448362222",
+       "voucher_discount": 500000,
+       "time_info": {
+        "start_time": 1789959600,
+        "end_time": 1790650799,
+        "valid_duration": null
+       },
+       "groups": [
+        "BR_FINAL_PRICE_WHITELIST"
+       ],
+       "min_spend": 2500000,
+       "signature": "7235f18f5d094f6184bcab35ab978f8b9409f0646d68afe5a7bfb671fcd9c451",
+       "signature_source": 16
+      },
+      "original_price": 3990000,
+      "model_selection_logic": null,
+      "promotion_price": 2999000,
+      "pix_discount_info": null,
+      "recommended_ads_voucher_info": null
+     },
+     "item_card_display_sold_count": {
+      "historical_sold_count": 366,
+      "monthly_sold_count": 146,
+      "historical_sold_count_text": "366 Vendido(s)",
+      "monthly_sold_count_text": "146 Vendido/Mês"
+     },
+     "is_sold_out": false,
+     "is_preview": false,
+     "label_ids": [
+      844931064601283,
+      1718388139,
+      700065054,
+      700065053,
+      822062091122182,
+      595473041,
+      835343123222554,
+      648011521,
+      595968044
+     ],
+     "catid": 100639,
+     "shopee_verified": true,
+     "liked_count": 750,
+     "item_type": 0,
+     "reference_item_id": null,
+     "shop_data": {
+      "shop_name": "Importadora Zenit",
+      "shop_icon": null,
+      "shop_location": "São Paulo"
+     },
+     "status": 1,
+     "ctime": 1781835674,
+     "flag": 131072,
+     "item_status": "normal",
+     "global_cat": {
+      "catid": [
+       100639,
+       100737,
+       101388
+      ]
+     },
+     "overlay_images": null,
+     "item_rating": {
+      "rating_star": 4.822429906542056,
+      "rating_count": [
+       214,
+       2,
+       1,
+       8,
+       11,
+       192
+      ]
+     },
+     "global_brand": null,
+     "platform_voucher": null,
+     "video_info_list": null,
+     "tier_variations": [
+      {
+       "name": "Cor",
+       "options": [
+        "Branco",
+        "Preto",
+        "Vermelho",
+        "Prata",
+        "Kit Com 4"
+       ],
+       "images": [
+        "sg-11134201-824it-mpn2fopmchzjac",
+        "sg-11134201-824ib-mpn2fol67rb421",
+        "sg-11134201-824hj-mpn2fokc4rgg80",
+        "sg-11134201-824hr-mpn2fol2qscr73",
+        "sg-11134201-824j2-mpn2fp1lyw3k69"
+       ],
+       "properties": null,
+       "type": 0
+      },
+      {
+       "name": "Som e Luz",
+       "options": [
+        "Sem Som e Luz",
+        "Com Som e Luz"
+       ],
+       "images": null,
+       "properties": null,
+       "type": 0
+      }
+     ],
+     "ad_voucher_signature": null,
+     "is_sexual": false,
+     "user_path_tokens": null
+    }
+   },
+   {
+    "item_card_displayed_asset": {
+     "name": "Shelby Cobra 1965 Miniatura Colecionável",
+     "image": "sg-11134201-823q1-moso9od2yosr0d",
+     "images": [
+      "sg-11134201-823q1-moso9od2yosr0d",
+      "sg-11134201-823qa-moso9pq2d2iz9f",
+      "sg-11134201-823pe-moso9pngwwea41",
+      "sg-11134201-823q7-moso9pnxuha8a7"
+     ],
+     "shop_location": null,
+     "highlight_videos": null,
+     "item_card_mask": {
+      "mask_type": null,
+      "mask_text": null,
+      "pre_kyc_text": "Verifique sua idade",
+      "post_kyc_text": "Item Restrito",
+      "enable_age_gate_label": true
+     },
+     "icon_in_image": {
+      "icon_type": null,
+      "ads_text": "Ad"
+     },
+     "image_overlay": null,
+     "seller_flag": null,
+     "promotion_label_list": null,
+     "icon_in_price": null,
+     "discount_tag": null,
+     "voucher_applied_icon": {
+      "can_display": true
+     },
+     "rating": {
+      "rating_text": "4.9",
+      "icon": {
+       "hash": "id-11134258-7r98o-ly1pxywrszyh0b",
+       "width": 10,
+       "height": 10
+      },
+      "rating_type": 1
+     },
+     "sold_count": {
+      "text": "198 Vendido(s)"
+     },
+     "estimated_delivery_time": null,
+     "free_badge": null,
+     "find_similar": null,
+     "long_image": null,
+     "long_images": null,
+     "top_product_badge": null,
+     "name_tr": null,
+     "shop_location_tr": null,
+     "display_price": {
+      "price": 4490000,
+      "strikethrough_price": null,
+      "hidden_price_display_text": null,
+      "display_price_type": 0,
+      "installment_price": null,
+      "display_price_asset": {
+       "strikethrough_price": null,
+       "price": null,
+       "hidden_price_display_text": null,
+       "final_price_hint_text": "com cupom"
+      }
+     },
+     "final_price_icon": {
+      "icon_type": 1,
+      "icon": {
+       "hash": "id-11134005-81ztm-mq5zs2sy7swe8e",
+       "width": 48,
+       "height": 48
+      }
+     },
+     "in_title_image_flags": null
+    },
+    "item_data": {
+     "itemid": 58211589976,
+     "shopid": 1762381981,
+     "is_adult": false,
+     "need_kyc": false,
+     "adult_age_threshold": null,
+     "item_card_display_price": {
+      "item_id": 58211589976,
+      "model_id": 179416743275,
+      "promotion_type": 0,
+      "promotion_id": 0,
+      "price": 4490000,
+      "strikethrough_price": 4990000,
+      "discount": 10,
+      "hidden_price_display_text": null,
+      "recommended_shop_voucher_promotion_id": null,
+      "recommended_platform_voucher_promotion_id": 1514576282005504,
+      "recommended_shop_voucher_info": null,
+      "recommended_platform_voucher_info": {
+       "promotion_id": 1514576282005504,
+       "voucher_code": "1448362222",
+       "voucher_discount": 500000,
+       "time_info": {
+        "start_time": 1789959600,
+        "end_time": 1790650799,
+        "valid_duration": null
+       },
+       "groups": [
+        "BR_FINAL_PRICE_WHITELIST"
+       ],
+       "min_spend": 2500000,
+       "signature": "7235f18f5d094f6184bcab35ab978f8b9409f0646d68afe5a7bfb671fcd9c451",
+       "signature_source": 16
+      },
+      "original_price": 4990000,
+      "model_selection_logic": null,
+      "promotion_price": 4990000,
+      "pix_discount_info": null,
+      "recommended_ads_voucher_info": null
+     },
+     "item_card_display_sold_count": {
+      "historical_sold_count": 198,
+      "monthly_sold_count": 43,
+      "historical_sold_count_text": "198 Vendido(s)",
+      "monthly_sold_count_text": "43 Vendido/Mês"
+     },
+     "is_sold_out": false,
+     "is_preview": false,
+     "label_ids": [
+      844931064601283,
+      700065053,
+      700065054,
+      822062091122182,
+      1718388139,
+      835343123222554,
+      595473041,
+      648011521,
+      595968044
+     ],
+     "catid": 100639,
+     "shopee_verified": true,
+     "liked_count": 575,
+     "item_type": 0,
+     "reference_item_id": null,
+     "shop_data": {
+      "shop_name": "Importadora Zenit",
+      "shop_icon": null,
+      "shop_location": "São Paulo"
+     },
+     "status": 1,
+     "ctime": 1779995824,
+     "flag": 131072,
+     "item_status": "normal",
+     "global_cat": {
+      "catid": [
+       100639,
+       100743
+      ]
+     },
+     "overlay_images": null,
+     "item_rating": {
+      "rating_star": 4.903225806451613,
+      "rating_count": [
+       124,
+       1,
+       0,
+       3,
+       2,
+       118
+      ]
+     },
+     "global_brand": null,
+     "platform_voucher": null,
+     "video_info_list": null,
+     "tier_variations": [
+      {
+       "name": "cor",
+       "options": [
+        "Amarelo",
+        "Branco",
+        "Vermelho",
+        "Azul",
+        "Vermelho 2ª Linha",
+        "Azul 2ª Linha",
+        "Preto 2ª Linha"
+       ],
+       "images": [
+        "sg-11134201-823p6-moso9s6l5lana4",
+        "sg-11134201-823qb-moso9s6ocqa49e",
+        "sg-11134201-823pm-moso9sprqqkhd9",
+        "sg-11134201-823rb-moso9sb88bgu9d",
+        "sg-11134201-823q8-moso9t1k8170f5",
+        "sg-11134201-823re-moso9rilhb7x2f",
+        "sg-11134201-823qm-moso9qkvdtz6b9"
+       ],
+       "properties": null,
+       "type": 0
+      }
+     ],
+     "ad_voucher_signature": null,
+     "is_sexual": false,
+     "user_path_tokens": null
+    }
+   },
+   {
+    "item_card_displayed_asset": {
+     "name": "VW Passat 1.6 Clássico Miniatura 12cm Diecast Metal Colecionável Portas Abrem Escala Realista",
+     "image": "sg-11134201-824id-mpn477dzu5u620",
+     "images": [
+      "sg-11134201-824id-mpn477dzu5u620",
+      "sg-11134201-824i3-mpn4772hcf0g13",
+      "sg-11134201-824gu-mpn4778m6tc0e8",
+      "sg-11134201-824hy-mpn47710ebykeb",
+      "sg-11134201-824iz-mpn477dia3v3f8",
+      "sg-11134201-824j5-mpn4778fczym99",
+      "sg-11134201-824i3-mpn477dx9hxeef",
+      "sg-11134201-824j6-mpn478cwcljf63"
+     ],
+     "shop_location": null,
+     "highlight_videos": null,
+     "item_card_mask": {
+      "mask_type": null,
+      "mask_text": null,
+      "pre_kyc_text": "Verifique sua idade",
+      "post_kyc_text": "Item Restrito",
+      "enable_age_gate_label": true
+     },
+     "icon_in_image": {
+      "icon_type": null,
+      "ads_text": "Ad"
+     },
+     "image_overlay": null,
+     "seller_flag": null,
+     "promotion_label_list": null,
+     "icon_in_price": null,
+     "discount_tag": null,
+     "voucher_applied_icon": {
+      "can_display": true
+     },
+     "rating": {
+      "rating_text": "5.0",
+      "icon": {
+       "hash": "id-11134258-7r98o-ly1pxywrszyh0b",
+       "width": 10,
+       "height": 10
+      },
+      "rating_type": 1
+     },
+     "sold_count": {
+      "text": "1mil+ Vendido(s)"
+     },
+     "estimated_delivery_time": null,
+     "free_badge": null,
+     "find_similar": null,
+     "long_image": null,
+     "long_images": null,
+     "top_product_badge": null,
+     "name_tr": null,
+     "shop_location_tr": null,
+     "display_price": {
+      "price": 2990000,
+      "strikethrough_price": null,
+      "hidden_price_display_text": null,
+      "display_price_type": 0,
+      "installment_price": null,
+      "display_price_asset": {
+       "strikethrough_price": null,
+       "price": null,
+       "hidden_price_display_text": null,
+       "final_price_hint_text": "com cupom"
+      }
+     },
+     "final_price_icon": {
+      "icon_type": 1,
+      "icon": {
+       "hash": "id-11134005-81ztm-mq5zs2sy7swe8e",
+       "width": 48,
+       "height": 48
+      }
+     },
+     "in_title_image_flags": null
+    },
+    "item_data": {
+     "itemid": 23695052665,
+     "shopid": 1762381981,
+     "is_adult": false,
+     "need_kyc": false,
+     "adult_age_threshold": null,
+     "item_card_display_price": {
+      "item_id": 23695052665,
+      "model_id": 199623266808,
+      "promotion_type": 301,
+      "promotion_id": 487558392008889,
+      "price": 2990000,
+      "strikethrough_price": 4990000,
+      "discount": 40,
+      "hidden_price_display_text": null,
+      "recommended_shop_voucher_promotion_id": null,
+      "recommended_platform_voucher_promotion_id": 1514576282005504,
+      "recommended_shop_voucher_info": null,
+      "recommended_platform_voucher_info": {
+       "promotion_id": 1514576282005504,
+       "voucher_code": "1448362222",
+       "voucher_discount": 500000,
+       "time_info": {
+        "start_time": 1789959600,
+        "end_time": 1790650799,
+        "valid_duration": null
+       },
+       "groups": [
+        "BR_FINAL_PRICE_WHITELIST"
+       ],
+       "min_spend": 2500000,
+       "signature": "7235f18f5d094f6184bcab35ab978f8b9409f0646d68afe5a7bfb671fcd9c451",
+       "signature_source": 16
+      },
+      "original_price": 4990000,
+      "model_selection_logic": null,
+      "promotion_price": 3490000,
+      "pix_discount_info": null,
+      "recommended_ads_voucher_info": null
+     },
+     "item_card_display_sold_count": {
+      "historical_sold_count": 1261,
+      "monthly_sold_count": 713,
+      "historical_sold_count_text": "1mil+ Vendido(s)",
+      "monthly_sold_count_text": "713 Vendido/Mês"
+     },
+     "is_sold_out": false,
+     "is_preview": false,
+     "label_ids": [
+      844931064601283,
+      1718388139,
+      700960097,
+      700065053,
+      700065054,
+      822062091122182,
+      595968044,
+      595473041,
+      648011521,
+      835343123222554
+     ],
+     "catid": 100639,
+     "shopee_verified": true,
+     "liked_count": 5737,
+     "item_type": 0,
+     "reference_item_id": null,
+     "shop_data": {
+      "shop_name": "Importadora Zenit",
+      "shop_icon": null,
+      "shop_location": "São Paulo"
+     },
+     "status": 1,
+     "ctime": 1781838645,
+     "flag": 131072,
+     "item_status": "normal",
+     "global_cat": {
+      "catid": [
+       100639,
+       100737,
+       101388
+      ]
+     },
+     "overlay_images": null,
+     "item_rating": {
+      "rating_star": 4.95483870967742,
+      "rating_count": [
+       775,
+       0,
+       1,
+       7,
+       18,
+       749
+      ]
+     },
+     "global_brand": null,
+     "platform_voucher": null,
+     "video_info_list": null,
+     "tier_variations": [
+      {
+       "name": "Cor",
+       "options": [
+        "Branco",
+        "Preto",
+        "Vermelho",
+        "Prata",
+        "Kit com 4"
+       ],
+       "images": [
+        "sg-11134201-824ig-mpn47a97ycqz1c",
+        "sg-11134201-824g8-mpn47a7hpyj288",
+        "sg-11134201-824h1-mpn47a6zayh9e2",
+        "sg-11134201-824gm-mpn47acmv37m5f",
+        "sg-11134201-824i5-mpn47abzq4gd5b"
+       ],
+       "properties": null,
+       "type": 0
+      }
+     ],
+     "ad_voucher_signature": null,
+     "is_sexual": false,
+     "user_path_tokens": null
+    }
+   },
+   {
+    "item_card_displayed_asset": {
+     "name": "DAF 4 Cores Caminhão Miniatura 1:50 Trucado de Metal Diecast / Som Luz e Fricção Cabine Abre e Pneus De Borracha",
+     "image": "sg-11134201-820mb-mnx6yzohtudg37",
+     "images": [
+      "sg-11134201-820mb-mnx6yzohtudg37",
+      "sg-11134201-820mv-mnx6yyct7p5030",
+      "sg-11134201-820lg-mnx6yy534m4o08",
+      "sg-11134201-820l7-mnx6yycvtrm04f",
+      "sg-11134201-820ol-mnx6yygzl9tv6c",
+      "sg-11134201-825ao-mt037ay2q3uo05",
+      "sg-11134201-8259q-mt037ax8iwaoe4"
+     ],
+     "shop_location": null,
+     "highlight_videos": null,
+     "item_card_mask": {
+      "mask_type": null,
+      "mask_text": null,
+      "pre_kyc_text": "Verifique sua idade",
+      "post_kyc_text": "Item Restrito",
+      "enable_age_gate_label": true
+     },
+     "icon_in_image": {
+      "icon_type": 2,
+      "ads_text": "Ad"
+     },
+     "image_overlay": null,
+     "seller_flag": null,
+     "promotion_label_list": null,
+     "icon_in_price": null,
+     "discount_tag": null,
+     "voucher_applied_icon": {
+      "can_display": true
+     },
+     "rating": {
+      "rating_text": "4.9",
+      "icon": {
+       "hash": "id-11134258-7r98o-ly1pxywrszyh0b",
+       "width": 10,
+       "height": 10
+      },
+      "rating_type": 1
+     },
+     "sold_count": {
+      "text": "480 Vendido(s)"
+     },
+     "estimated_delivery_time": null,
+     "free_badge": null,
+     "find_similar": null,
+     "long_image": null,
+     "long_images": null,
+     "top_product_badge": null,
+     "name_tr": null,
+     "shop_location_tr": null,
+     "display_price": {
+      "price": 2490000,
+      "strikethrough_price": null,
+      "hidden_price_display_text": null,
+      "display_price_type": 0,
+      "installment_price": null,
+      "display_price_asset": {
+       "strikethrough_price": null,
+       "price": null,
+       "hidden_price_display_text": null,
+       "final_price_hint_text": "com cupom"
+      }
+     },
+     "final_price_icon": {
+      "icon_type": 1,
+      "icon": {
+       "hash": "id-11134005-81ztm-mq5zs2sy7swe8e",
+       "width": 48,
+       "height": 48
+      }
+     },
+     "in_title_image_flags": null
+    },
+    "item_data": {
+     "itemid": 58210219988,
+     "shopid": 1762381981,
+     "is_adult": false,
+     "need_kyc": false,
+     "adult_age_threshold": null,
+     "item_card_display_price": {
+      "item_id": 58210219988,
+      "model_id": 189626694344,
+      "promotion_type": 301,
+      "promotion_id": 487558392008889,
+      "price": 2490000,
+      "strikethrough_price": 5990000,
+      "discount": 58,
+      "hidden_price_display_text": null,
+      "recommended_shop_voucher_promotion_id": null,
+      "recommended_platform_voucher_promotion_id": 1514576282005504,
+      "recommended_shop_voucher_info": null,
+      "recommended_platform_voucher_info": {
+       "promotion_id": 1514576282005504,
+       "voucher_code": "1448362222",
+       "voucher_discount": 500000,
+       "time_info": {
+        "start_time": 1789959600,
+        "end_time": 1790650799,
+        "valid_duration": null
+       },
+       "groups": [
+        "BR_FINAL_PRICE_WHITELIST"
+       ],
+       "min_spend": 2500000,
+       "signature": "7235f18f5d094f6184bcab35ab978f8b9409f0646d68afe5a7bfb671fcd9c451",
+       "signature_source": 16
+      },
+      "original_price": 5990000,
+      "model_selection_logic": null,
+      "promotion_price": 2990000,
+      "pix_discount_info": null,
+      "recommended_ads_voucher_info": null
+     },
+     "item_card_display_sold_count": {
+      "historical_sold_count": 480,
+      "monthly_sold_count": 93,
+      "historical_sold_count_text": "480 Vendido(s)",
+      "monthly_sold_count_text": "93 Vendido/Mês"
+     },
+     "is_sold_out": false,
+     "is_preview": false,
+     "label_ids": [
+      844931064601283,
+      1718388139,
+      700065053,
+      700065054,
+      648011521,
+      822062091122182,
+      595473041,
+      835343123222554,
+      595968044
+     ],
+     "catid": 100632,
+     "shopee_verified": true,
+     "liked_count": 275,
+     "item_type": 0,
+     "reference_item_id": null,
+     "shop_data": {
+      "shop_name": "Importadora Zenit",
+      "shop_icon": null,
+      "shop_location": "São Paulo"
+     },
+     "status": 1,
+     "ctime": 1778090168,
+     "flag": 131072,
+     "item_status": "normal",
+     "global_cat": {
+      "catid": [
+       100632,
+       100684,
+       101010
+      ]
+     },
+     "overlay_images": null,
+     "item_rating": {
+      "rating_star": 4.904411764705882,
+      "rating_count": [
+       272,
+       1,
+       2,
+       3,
+       10,
+       256
+      ]
+     },
+     "global_brand": null,
+     "platform_voucher": null,
+     "video_info_list": [
+      {
+       "video_id": "api/v4/11110106/mms/sg-11110106-6vatk-mnx6xre7dm2rc8.16000081778090121.mp4",
+       "thumb_url": "sg-11110106-6vatk-mnx6xre7dm2rc8_cover",
+       "duration": 27,
+       "version": 2,
+       "vid": "sg-11110106-6vatk-mnx6xre7dm2rc8",
+       "formats": [
+        {
+         "format": 1600008,
+         "defn": "V720P",
+         "profile": "MP4",
+         "path": "api/v4/11110106/mms/sg-11110106-6vatk-mnx6xre7dm2rc8.16000081778090121.mp4",
+         "url": "https://down-tx-br.vod.susercontent.com/api/v4/11110106/mms/sg-11110106-6vatk-mnx6xre7dm2rc8.16000081778090121.mp4",
+         "width": 720,
+         "height": 1280
+        }
+       ],
+       "default_format": {
+        "format": 1600323,
+        "defn": "V540P",
+        "profile": "MP4",
+        "path": null,
+        "url": "https://mms.vod.susercontent.com/api/v4/11110106/mms/sg-11110106-6vatk-mnx6xre7dm2rc8.default.mp4",
+        "width": 540,
+        "height": 960
+       },
+       "mms_data": "{\"vid\":\"sg-11110106-6vatk-mnx6xre7dm2rc8\",\"biz\":107,\"duration\":27422,\"create_time\":1778090119,\"update_time\":1778090122,\"serviceID\":2,\"cover\":\"https://down-bs-br.img.susercontent.com/sg-11110106-6vatk-mnx6xre7dm2rc8_cover\",\"cover_list\":[],\"formats\":[{\"format\":1600008,\"defn\":\"V720P\",\"profile\":\"MP4\",\"path\":\"api/v4/11110106/mms/sg-11110106-6vatk-mnx6xre7dm2rc8.16000081778090121.mp4\",\"url\":\"https://down-tx-br.vod.susercontent.com/api/v4/11110106/mms/sg-11110106-6vatk-mnx6xre7dm2rc8.16000081778090121.mp4\",\"width\":720,\"height\":1280,\"bitrate\":1029889,\"abitrate\":64375,\"size\":3772420,\"fps\":25,\"duration\":27422,\"update_time\":1778090135,\"codec\":\"H264\"}],\"default_format\":{\"format\":1600323,\"defn\":\"V540P\",\"profile\":\"MP4\",\"path\":\"\",\"url\":\"https://mms.vod.susercontent.com/api/v4/11110106/mms/sg-11110106-6vatk-mnx6xre7dm2rc8.default.mp4\",\"width\":540,\"height\":960,\"bitrate\":488530,\"abitrate\":32472,\"size\":1808910,\"fps\":25,\"duration\":27422,\"update_time\":1778090142,\"codec\":\"H264\"},\"extend_formats\":{\"H265\":[{\"format\":1600309,\"defn\":\"V720P\",\"profile\":\"MP4\",\"path\":\"api/v4/11110106/mms/sg-11110106-6vatk-mnx6xre7dm2rc8.16003091778090135.mp4\",\"url\":\"https://down-tx-br.vod.susercontent.com/api/v4/11110106/mms/sg-11110106-6vatk-mnx6xre7dm2rc8.16003091778090135.mp4\",\"width\":720,\"height\":1280,\"bitrate\":569596,\"abitrate\":64375,\"size\":2198890,\"fps\":25,\"duration\":27422,\"update_time\":1778090167,\"codec\":\"H265\"}]},\"ab_test\":\"\"}"
+      }
+     ],
+     "tier_variations": [
+      {
+       "name": "Cor",
+       "options": [
+        "Branco Trucado",
+        "Vermelho Trucado",
+        "Azul Trucado",
+        "Amarelo Trucado",
+        "Kit 4 Daf Trucado 1 d Cada Cor",
+        "Prata",
+        "Preto"
+       ],
+       "images": [
+        "sg-11134201-820md-mnx6z0ewtret8d",
+        "sg-11134201-820op-mnx6z0b8eadfef",
+        "sg-11134201-820m0-mnx6z0f41mgze0",
+        "sg-11134201-820ln-mnx6z0jk969v99",
+        "sg-11134201-820lq-mnx6z0jhznr6b8",
+        "sg-11134201-82595-mt037bsthfygba",
+        "sg-11134201-8259v-mt037bo2dzpk32"
+       ],
+       "properties": null,
+       "type": 0
+      }
+     ],
+     "ad_voucher_signature": null,
+     "is_sexual": false,
+     "user_path_tokens": null
+    }
+   }
+  ]
+ }
+}

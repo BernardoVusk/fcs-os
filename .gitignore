@@ -14,6 +14,14 @@ Thumbs.db
 .claude/file-history/
 .claude/backups/
 
+# Chaves de API — NUNCA versionar (o /salvar faz `git add .`)
+.env
+.env.local
+!.env.example
+
+# Capturas de rede do browser: carregam cookies de sessão
+*.har
+
 # Dependências
 node_modules/
 

@@ -1,0 +1,302 @@
+{
+ "data": {
+  "item": {
+   "item_id": 58207314279,
+   "shop_id": 1762381981,
+   "title": "Fórmula 1 - 4 Cores Miniatura F1 12cm – 4 Equipes 4 Cores, Fricção, Pneus de Borracha | Carrinho Corrida Colecionável",
+   "ctime": 1774034515,
+   "price": 1790000,
+   "price_min": 1790000,
+   "price_max": 5490000,
+   "item_rating": {
+    "rating_star": 4.923316062176166
+   },
+   "models": [
+    {
+     "item_id": 58207314279,
+     "status": 1,
+     "current_promotion_reserved_stock": null,
+     "name": "Vermelho",
+     "promotion_id": 487558392008889,
+     "price": 2990000,
+     "price_stocks": [
+      {
+       "allocated_stock": null,
+       "stock_breakdown_by_location": null,
+       "promotion_type": 301
+      },
+      {
+       "allocated_stock": null,
+       "stock_breakdown_by_location": null,
+       "promotion_type": 0
+      }
+     ],
+     "current_promotion_has_reserve_stock": false,
+     "normal_stock": null,
+     "extinfo": {
+      "tier_index": [
+       1
+      ],
+      "is_pre_order": false,
+      "estimated_days": 2,
+      "sku_image": ""
+     },
+     "price_before_discount": 3990000,
+     "model_id": 238803383606,
+     "stock": null,
+     "has_gimmick_tag": false,
+     "key_measurement": null,
+     "sold": null,
+     "is_lowest_price_at_shopee": false,
+     "name_tr": null,
+     "is_clickable": true,
+     "is_grayout": false,
+     "has_stock": true
+    },
+    {
+     "item_id": 58207314279,
+     "status": 1,
+     "current_promotion_reserved_stock": null,
+     "name": "Amarelo",
+     "promotion_id": 487558392008889,
+     "price": 2490000,
+     "price_stocks": [
+      {
+       "allocated_stock": null,
+       "stock_breakdown_by_location": null,
+       "promotion_type": 301
+      },
+      {
+       "allocated_stock": null,
+       "stock_breakdown_by_location": null,
+       "promotion_type": 0
+      }
+     ],
+     "current_promotion_has_reserve_stock": false,
+     "normal_stock": null,
+     "extinfo": {
+      "tier_index": [
+       2
+      ],
+      "is_pre_order": false,
+      "estimated_days": 2,
+      "sku_image": ""
+     },
+     "price_before_discount": 3990000,
+     "model_id": 238803383607,
+     "stock": null,
+     "has_gimmick_tag": false,
+     "key_measurement": null,
+     "sold": null,
+     "is_lowest_price_at_shopee": false,
+     "name_tr": null,
+     "is_clickable": true,
+     "is_grayout": false,
+     "has_stock": true
+    },
+    {
+     "item_id": 58207314279,
+     "status": 1,
+     "current_promotion_reserved_stock": null,
+     "name": "Laranja",
+     "promotion_id": 487558392008889,
+     "price": 1790000,
+     "price_stocks": [
+      {
+       "allocated_stock": null,
+       "stock_breakdown_by_location": null,
+       "promotion_type": 301
+      },
+      {
+       "allocated_stock": null,
+       "stock_breakdown_by_location": null,
+       "promotion_type": 0
+      }
+     ],
+     "current_promotion_has_reserve_stock": false,
+     "normal_stock": null,
+     "extinfo": {
+      "tier_index": [
+       3
+      ],
+      "is_pre_order": false,
+      "estimated_days": 2,
+      "sku_image": ""
+     },
+     "price_before_discount": 3990000,
+     "model_id": 238803383608,
+     "stock": null,
+     "has_gimmick_tag": false,
+     "key_measurement": null,
+     "sold": null,
+     "is_lowest_price_at_shopee": false,
+     "name_tr": null,
+     "is_clickable": true,
+     "is_grayout": false,
+     "has_stock": true
+    },
+    {
+     "item_id": 58207314279,
+     "status": 1,
+     "current_promotion_reserved_stock": null,
+     "name": "Kit com 4",
+     "promotion_id": 487558392008889,
+     "price": 5490000,
+     "price_stocks": [
+      {
+       "allocated_stock": null,
+       "stock_breakdown_by_location": null,
+       "promotion_type": 301
+      },
+      {
+       "allocated_stock": null,
+       "stock_breakdown_by_location": null,
+       "promotion_type": 0
+      }
+     ],
+     "current_promotion_has_reserve_stock": false,
+     "normal_stock": null,
+     "extinfo": {
+      "tier_index": [
+       4
+      ],
+      "is_pre_order": false,
+      "estimated_days": 2,
+      "sku_image": ""
+     },
+     "price_before_discount": 9990000,
+     "model_id": 238803383609,
+     "stock": null,
+     "has_gimmick_tag": false,
+     "key_measurement": null,
+     "sold": null,
+     "is_lowest_price_at_shopee": false,
+     "name_tr": null,
+     "is_clickable": true,
+     "is_grayout": false,
+     "has_stock": true
+    },
+    {
+     "item_id": 58207314279,
+     "status": 1,
+     "current_promotion_reserved_stock": null,
+     "name": "Preto",
+     "promotion_id": 487558392008889,
+     "price": 2490000,
+     "price_stocks": [
+      {
+       "allocated_stock": null,
+       "stock_breakdown_by_location": null,
+       "promotion_type": 301
+      },
+      {
+       "allocated_stock": null,
+       "stock_breakdown_by_location": null,
+       "promotion_type": 0
+      }
+     ],
+     "current_promotion_has_reserve_stock": false,
+     "normal_stock": null,
+     "extinfo": {
+      "tier_index": [
+       0
+      ],
+      "is_pre_order": false,
+      "estimated_days": 2,
+      "sku_image": ""
+     },
+     "price_before_discount": 3990000,
+     "model_id": 238803383605,
+     "stock": null,
+     "has_gimmick_tag": false,
+     "key_measurement": null,
+     "sold": null,
+     "is_lowest_price_at_shopee": false,
+     "name_tr": null,
+     "is_clickable": true,
+     "is_grayout": false,
+     "has_stock": true
+    }
+   ],
+   "tier_variations": [
+    {
+     "name": "Cor",
+     "options": [
+      "Preto",
+      "Vermelho",
+      "Amarelo",
+      "Laranja",
+      "Kit com 4"
+     ],
+     "images": [
+      "sg-11134201-8260p-mm272c66fojs8c",
+      "sg-11134201-82604-mm272c5smdxgd4",
+      "sg-11134201-825zw-mm272cmup15468",
+      "sg-11134201-8261x-mm272ciycgen41",
+      "sg-11134201-8261n-mm272d4wpa83ec"
+     ],
+     "properties": null,
+     "type": 0,
+     "summed_stocks": null,
+     "display_indicators": [
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "name_tr": null,
+     "options_tr": null,
+     "selling_points": [
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     "selling_points_tr": null
+    }
+   ],
+   "stock": null,
+   "is_hide_stock": false,
+   "shop_location": "São Paulo",
+   "cat_id": 100639
+  },
+  "product_review": {
+   "rating_star": 4.923316062176166,
+   "rating_count": [
+    965,
+    9,
+    0,
+    7,
+    24,
+    925
+   ],
+   "total_rating_count": 965,
+   "historical_sold": null,
+   "global_sold": null,
+   "liked": false,
+   "liked_count": 2545,
+   "cmt_count": 965,
+   "should_move_ratings_above": null,
+   "review_rcmd_exp_group": null,
+   "display_global_sold": false,
+   "hide_rating": false,
+   "hide_buyer_gallery": false,
+   "hide_reviews": false,
+   "hide_other_product_reviews_in_shop": false,
+   "sold_count_disclosure": null,
+   "historical_sold_display": "1mil+",
+   "global_sold_display": "1mil+",
+   "sold_count_display": "1mil+"
+  },
+  "flash_sale": null,
+  "shop_detailed": {
+   "shopid": 1762381981,
+   "name": "Importadora Zenit",
+   "is_preferred_plus_seller": false,
+   "is_official_shop": false,
+   "is_shopee_verified": true
+  }
+ }
+}

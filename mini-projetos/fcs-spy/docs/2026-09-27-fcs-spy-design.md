@@ -36,9 +36,44 @@ Mecânica:
 - O content script (contexto isolado da extensão) recebe a mensagem e passa adiante.
 - A resposta original segue intacta para a Shopee. A escuta nunca altera nem atrasa a requisição.
 
-Endpoints esperados (confirmar pela captura HAR antes de codar):
-- Busca: `/api/v4/search/search_items`
-- Produto: `/api/v4/pdp/get_pc` ou equivalente
+Endpoints confirmados pela captura HAR de 27/09/2026 (busca "miniatura f1", logado):
+- Busca: `/api/v4/search/search_items` (60 itens por chamada, paginação por `newest`)
+- Produto: `/api/v4/pdp/get_pc`
+- Vitrine "mais vendidos" da página de produto: `/api/v4/pdp/hot_sales/get_item_cards`
+
+A busca e a vitrine usam o mesmo formato de card (`item_data` + `item_card_displayed_asset`). A Tradução trata os dois com a mesma função. `item_basic`, o formato antigo, vem sempre `null` em 2026.
+
+Amostras limpas (sem cookie, endereço ou dados da conta) em `extensao/testes/amostras/`. O HAR original fica fora do git (`*.har` no `.gitignore`).
+
+## Mapa de campos (confirmado)
+
+Formato de card (busca e vitrine), por item:
+
+| Campo nosso | Caminho na resposta |
+|---|---|
+| itemId, shopId | `item_data.itemid`, `item_data.shopid` |
+| titulo | `item_card_displayed_asset.name` |
+| loja | `item_data.shop_data.shop_name` |
+| preco | `item_data.item_card_display_price.price` / 100000 |
+| vendas30d | `item_data.item_card_display_sold_count.monthly_sold_count` (é o "Vendido/Mês" da tela) |
+| vendasTotal | `item_data.item_card_display_sold_count.historical_sold_count` |
+| criadoEm | `item_data.ctime` (segundos Unix) |
+| likes | `item_data.liked_count` |
+| reviews | `item_data.item_rating.rating_count[0]` |
+| nota | `item_data.item_rating.rating_star` |
+| indicado | `item_card_displayed_asset.seller_flag.name` igual a `PREFERRED` |
+| lojaOficial | `item_card_displayed_asset.seller_flag.name` igual a `OFFICIAL_SHOP` |
+| ads | `search_item_tracking` (JSON em texto) campo `is_ads` |
+
+Página de produto (`pdp/get_pc`), usada só para variações:
+- `data.item.tier_variations[].options` (nomes) e `data.item.models[]` (preço por variação)
+- Não traz vendas nem estoque em número: `stock`, `models[].stock` e `models[].sold` vêm `null`, e `historical_sold` vem só como texto arredondado ("1mil+").
+
+Descobertas que mudam o desenho:
+- **Estoque não existe nas respostas.** Sai do tipo `Anuncio`. O raio-X de variações do Ziem depende de outra técnica, fica para a versão 2 e precisa de estudo próprio.
+- **Preço do card é o menor preço com promoção.** No anúncio da amostra, o card mostra R$ 17,90, mas as variações vão até R$ 54,90. Faturamento calculado com esse preço é piso, não média. O card deixa isso explícito.
+- **Ads não confirmado.** A busca capturada veio com `total_ads_count: 0`. O campo `is_ads` existe, mas falta uma amostra com anúncio pago. O texto "Ad" em `icon_in_image.ads_text` aparece em todo item e não serve como sinal.
+- **Relâmpago sem campo identificado.** `item_card_display_price.promotion_type` varia (301, 312, 324, 202), mas não dá para cravar qual é relâmpago com uma amostra. Selo relâmpago sai da versão 1.
 
 ## Unidades
 
@@ -75,10 +110,16 @@ type Anuncio = {
   likes: number | null
   reviews: number | null
   nota: number | null
-  estoque: number | null
-  variacoes: number | null
-  selos: { ads: boolean; relampago: boolean; indicado: boolean }
+  selos: { ads: boolean | null; indicado: boolean; lojaOficial: boolean }
 }
+```
+
+`ads` é `null` enquanto o sinal não for confirmado com uma amostra de anúncio pago.
+
+Variações ficam num tipo separado, preenchido só quando a página do produto abre:
+
+```ts
+type Variacoes = { itemId: string; opcoes: { nome: string; preco: number }[] }
 ```
 
 Campo ausente na resposta vira `null` e aparece como "sem dado" na tela, nunca como zero.
@@ -98,7 +139,9 @@ Comissão configurável: `comissaoPct` (padrão 20%) e `taxaFixa` (padrão R$ 4,
 | Média diária | faturamento 30D / 30 | estimativa |
 | Custo alvo por margem | recebe menos (margem x preço), margens padrão 10%, 15%, 20% | |
 
-"Estimativa" aparece com marcação visual discreta no card, porque o faturamento usa o preço atual para todo o período.
+"Estimativa" aparece com marcação visual discreta no card, porque o faturamento usa o menor preço atual para todo o período e para todas as variações.
+
+Na página de produto, o card usa os números guardados no Histórico da última vez que o anúncio apareceu numa busca ou vitrine, com a data da leitura. Se nunca apareceu, mostra "abra pela busca para ver vendas".
 
 Se qualquer entrada da fórmula for `null`, o resultado é `null`.
 
@@ -194,14 +237,14 @@ mini-projetos/
 
 ## Pré-requisitos para começar a codar
 
-1. Captura HAR feita no Chrome logado: uma busca na Shopee (rolando até o fim da primeira página) e uma página de produto. Salvar em `mini-projetos/fcs-spy/extensao/testes/amostras/`.
-2. Comissão Shopee atual da conta FCS (percentual e taxa fixa).
-3. Valores reais de custo de impressão: preço do kg de filamento, potência da impressora, kWh, desgaste, mão de obra, embalagem, imposto.
+1. Captura HAR: feita em 27/09/2026, amostras extraídas.
+2. Comissão Shopee: padrão 20% + R$ 4 aceito, editável nas opções.
+3. Custos de impressão: padrões editáveis, valores reais entram depois.
 
-O item 3 não bloqueia o código: a calculadora roda com padrões editáveis.
+Pendente, sem bloquear: uma captura de busca que tenha anúncio pago, para confirmar o sinal de ads.
 
 ## Riscos
 
 - **Termos da Shopee**: escutar dados que o próprio usuário carregou é baixo risco para uso interno. Vender a ferramenta aumenta a exposição. Avaliar antes da fase de venda.
 - **Mudança de formato**: a Shopee pode renomear campos. Mitigação: tudo concentrado na Tradução, com amostras reais nos testes.
-- **Significado de `sold`**: a hipótese é que `sold` seja vendas dos últimos 30 dias. Confirmar comparando com o "Vendido/Mês" que aparece no card da Shopee.
+- **Significado de vendas 30D**: confirmado. `monthly_sold_count` vem junto do texto "N Vendido/Mês" que a própria Shopee exibe.
