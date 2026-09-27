@@ -7,7 +7,7 @@ import type { Anuncio, Config, Tendencia, Variacoes } from '../nucleo/tipos'
 import { lerConfig, CONFIG_PADRAO, CHAVE_CONFIG } from '../dados/config'
 import { areaLocal } from '../dados/area'
 import { gravarLeituras, leituraDe, ultimaLeitura } from '../dados/historico'
-import { montarCard, anexarCard, linkDoProduto, containerDoCard, ATRIBUTO_CARD, type EstadoHistorico } from '../ui/card'
+import { montarCard, anexarCard, mapaDeLinks, chaveDoProduto, containerDoCard, ATRIBUTO_CARD, type EstadoHistorico } from '../ui/card'
 import { ordenar, reordenarNaPagina, type Criterio } from '../ui/ordenar'
 import { montarBarra, aplicarLigado, instalarEstiloGlobal, ATRIBUTO_BARRA } from '../ui/barra'
 import { montarPainel, ATRIBUTO_PAINEL } from '../ui/painel'
@@ -26,7 +26,8 @@ async function iniciar(): Promise<void> {
   let variacoes: Variacoes | null = null
   let urlDoPainel: string | null = null
   let desenhandoPainel = false
-  let agendado = false
+  let timerDesenho: ReturnType<typeof setTimeout> | null = null
+  let inicioPendente = 0
 
   // Registra antes de qualquer await para não perder a primeira resposta da busca.
   ouvirEscuta(window, msg => {
@@ -68,10 +69,12 @@ async function iniciar(): Promise<void> {
   }
 
   function agendar() {
-    if (agendado) return
-    agendado = true
-    setTimeout(() => {
-      agendado = false
+    const agora = Date.now()
+    if (timerDesenho === null) inicioPendente = agora // primeira chamada da janela pendente
+    else if (agora - inicioPendente < 1000) clearTimeout(timerDesenho) // ainda no teto: reinicia os 250 ms
+    else return // teto de 1 s: deixa o timer pendente disparar em vez de esticar de novo
+    timerDesenho = setTimeout(() => {
+      timerDesenho = null
       desenhar()
     }, 250)
   }
@@ -88,9 +91,10 @@ async function iniciar(): Promise<void> {
     if (!document.body) return
     garantirBarra()
     const hoje = new Date()
+    const links = mapaDeLinks(document) // um querySelectorAll só por ciclo, não um por item
     for (const { anuncio, historico } of vistos.values()) {
       if (desenhados.get(anuncio.itemId)?.isConnected) continue
-      const link = linkDoProduto(document, anuncio)
+      const link = links.get(chaveDoProduto(anuncio))
       if (!link) continue
       const container = containerDoCard(link)
       if (!container || container.querySelector(`[${ATRIBUTO_CARD}="${anuncio.itemId}"]`)) continue
@@ -108,9 +112,10 @@ async function iniciar(): Promise<void> {
   }
 
   function ordenarPagina(c: Criterio) {
-    const presentes = [...vistos.values()].map(v => v.anuncio).filter(a => linkDoProduto(document, a))
+    const links = mapaDeLinks(document)
+    const presentes = [...vistos.values()].map(v => v.anuncio).filter(a => links.has(chaveDoProduto(a)))
     const containers = ordenar(presentes, c)
-      .map(a => containerDoCard(linkDoProduto(document, a)!))
+      .map(a => containerDoCard(links.get(chaveDoProduto(a))!))
       .filter((x): x is HTMLElement => x !== null)
     reordenarNaPagina(containers)
   }

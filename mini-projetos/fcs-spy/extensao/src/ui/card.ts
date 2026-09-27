@@ -123,6 +123,24 @@ export function linkDoProduto(raiz: ParentNode, a: Pick<Anuncio, 'shopId' | 'ite
   return null
 }
 
+const SELETOR_LINK_PRODUTO = 'a[href*="-i."], a[href*="/product/"]'
+
+export function chaveDoProduto(a: Pick<Anuncio, 'shopId' | 'itemId'>): string {
+  return `${a.shopId}.${a.itemId}`
+}
+
+// Um querySelectorAll só por ciclo de desenho, em vez de um por item visto.
+export function mapaDeLinks(raiz: ParentNode): Map<string, HTMLAnchorElement> {
+  const mapa = new Map<string, HTMLAnchorElement>()
+  for (const link of raiz.querySelectorAll<HTMLAnchorElement>(SELETOR_LINK_PRODUTO)) {
+    const id = idDaUrl(link.getAttribute('href') ?? '')
+    if (!id) continue
+    const chave = chaveDoProduto(id)
+    if (!mapa.has(chave)) mapa.set(chave, link)
+  }
+  return mapa
+}
+
 // Hipótese a validar na checagem manual: o card da busca é o <li> que contém o link.
 export function containerDoCard(link: HTMLElement): HTMLElement | null {
   return link.closest('li') ?? link.parentElement

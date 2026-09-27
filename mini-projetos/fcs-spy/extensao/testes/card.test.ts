@@ -2,6 +2,7 @@
 import { describe, it, expect, beforeEach } from 'vitest'
 import {
   montarCard, linkDoProduto, containerDoCard, anexarCard, textoHistorico, ATRIBUTO_CARD,
+  mapaDeLinks, chaveDoProduto,
 } from '../src/ui/card'
 import { calcularMetricas } from '../src/nucleo/metricas'
 import { CONFIG_PADRAO } from '../src/dados/config'
@@ -87,5 +88,48 @@ describe('localizar e anexar', () => {
     anexarCard(container, card(anuncio()))
     anexarCard(container, card(anuncio()))
     expect(container.querySelectorAll(`[${ATRIBUTO_CARD}]`)).toHaveLength(1)
+  })
+})
+
+describe('chaveDoProduto', () => {
+  it('junta shopId e itemId com ponto', () => {
+    expect(chaveDoProduto({ shopId: '2', itemId: '1' })).toBe('2.1')
+  })
+})
+
+describe('mapaDeLinks', () => {
+  it('mapa com os dois padrões de URL', () => {
+    document.body.innerHTML = `
+      <ul>
+        <li><a href="/Produto-i.2.1">p</a></li>
+        <li><a href="/product/3/4">q</a></li>
+      </ul>`
+    const mapa = mapaDeLinks(document)
+    expect(mapa.size).toBe(2)
+    expect(mapa.get('2.1')?.textContent).toBe('p')
+    expect(mapa.get('3.4')?.textContent).toBe('q')
+  })
+
+  it('id parecido em chaves distintas', () => {
+    document.body.innerHTML = `
+      <ul>
+        <li><a href="/Produto-i.2.1">p</a></li>
+        <li><a href="/Outro-i.2.10">q</a></li>
+      </ul>`
+    const mapa = mapaDeLinks(document)
+    expect(mapa.size).toBe(2)
+    expect(mapa.get('2.1')?.textContent).toBe('p')
+    expect(mapa.get('2.10')?.textContent).toBe('q')
+  })
+
+  it('primeiro link vence quando o mesmo produto aparece duas vezes', () => {
+    document.body.innerHTML = `
+      <ul>
+        <li><a href="/Produto-i.2.1">primeiro</a></li>
+        <li><a href="/Produto-i.2.1">segundo</a></li>
+      </ul>`
+    const mapa = mapaDeLinks(document)
+    expect(mapa.size).toBe(1)
+    expect(mapa.get('2.1')?.textContent).toBe('primeiro')
   })
 })
