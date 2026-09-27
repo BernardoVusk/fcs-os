@@ -12,6 +12,7 @@ import { ordenar, reordenarNaPagina, type Criterio } from '../ui/ordenar'
 import { montarBarra, aplicarLigado, instalarEstiloGlobal, ATRIBUTO_BARRA } from '../ui/barra'
 import { montarPainel, ATRIBUTO_PAINEL } from '../ui/painel'
 import { licencaValida } from '../licenca/licenca'
+import { lembrar } from './vistos'
 
 type Visto = { anuncio: Anuncio; historico: EstadoHistorico }
 
@@ -21,21 +22,26 @@ async function iniciar(): Promise<void> {
   const area = areaLocal()
   let config: Config = CONFIG_PADRAO
   const vistos = new Map<string, Visto>()
+  const desenhados = new Map<string, HTMLElement>()
   let variacoes: Variacoes | null = null
   let urlDoPainel: string | null = null
   let desenhandoPainel = false
   let agendado = false
 
   // Registra antes de qualquer await para não perder a primeira resposta da busca.
-  ouvirEscuta(window, msg => void receber(msg))
+  ouvirEscuta(window, msg => {
+    receber(msg).catch(e => console.warn('[FCS SPY] resposta', e))
+  })
 
   config = await lerConfig(area)
   chrome.storage.onChanged.addListener((mudancas, nome) => {
     if (nome !== 'local' || !mudancas[CHAVE_CONFIG]) return
-    void lerConfig(area).then(c => {
-      config = c
-      redesenharTudo()
-    })
+    lerConfig(area)
+      .then(c => {
+        config = c
+        redesenharTudo()
+      })
+      .catch(e => console.warn('[FCS SPY] configuração', e))
   })
 
   async function receber(msg: MensagemEscuta) {
@@ -54,7 +60,9 @@ async function iniciar(): Promise<void> {
       console.warn('[FCS SPY] histórico indisponível', e)
     }
     for (const a of anuncios) {
-      vistos.set(a.itemId, { anuncio: a, historico: tendencias ? (tendencias.get(a.itemId) ?? null) : 'indisponivel' })
+      lembrar(vistos, a.itemId, { anuncio: a, historico: tendencias ? (tendencias.get(a.itemId) ?? null) : 'indisponivel' })
+      desenhados.get(a.itemId)?.remove()
+      desenhados.delete(a.itemId)
     }
     agendar()
   }
@@ -71,6 +79,7 @@ async function iniciar(): Promise<void> {
   function redesenharTudo() {
     document.querySelectorAll(`[${ATRIBUTO_CARD}]`).forEach(e => e.remove())
     document.querySelector(`[${ATRIBUTO_PAINEL}]`)?.remove()
+    desenhados.clear()
     urlDoPainel = null
     agendar()
   }
@@ -80,13 +89,16 @@ async function iniciar(): Promise<void> {
     garantirBarra()
     const hoje = new Date()
     for (const { anuncio, historico } of vistos.values()) {
+      if (desenhados.get(anuncio.itemId)?.isConnected) continue
       const link = linkDoProduto(document, anuncio)
       if (!link) continue
       const container = containerDoCard(link)
       if (!container || container.querySelector(`[${ATRIBUTO_CARD}="${anuncio.itemId}"]`)) continue
-      anexarCard(container, montarCard({ anuncio, metricas: calcularMetricas(anuncio, config, hoje), historico }))
+      const card = montarCard({ anuncio, metricas: calcularMetricas(anuncio, config, hoje), historico })
+      anexarCard(container, card)
+      desenhados.set(anuncio.itemId, card)
     }
-    void desenharPainel()
+    desenharPainel().catch(e => console.warn('[FCS SPY] painel', e))
   }
 
   function garantirBarra() {
