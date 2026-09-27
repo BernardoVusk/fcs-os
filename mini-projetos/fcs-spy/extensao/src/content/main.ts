@@ -61,9 +61,13 @@ async function iniciar(): Promise<void> {
       console.warn('[FCS SPY] histórico indisponível', e)
     }
     for (const a of anuncios) {
-      lembrar(vistos, a.itemId, { anuncio: a, historico: tendencias ? (tendencias.get(a.itemId) ?? null) : 'indisponivel' })
+      const removidas = lembrar(vistos, a.itemId, { anuncio: a, historico: tendencias ? (tendencias.get(a.itemId) ?? null) : 'indisponivel' })
       desenhados.get(a.itemId)?.remove()
       desenhados.delete(a.itemId)
+      for (const k of removidas) {
+        desenhados.get(k)?.remove()
+        desenhados.delete(k)
+      }
     }
     agendar()
   }

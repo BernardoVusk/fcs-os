@@ -7,8 +7,16 @@ describe('lembrar', () => {
     lembrar(mapa, 'a', 1, 3)
     lembrar(mapa, 'b', 2, 3)
     lembrar(mapa, 'c', 3, 3)
-    lembrar(mapa, 'd', 4, 3)
+    const removidas = lembrar(mapa, 'd', 4, 3)
     expect([...mapa.keys()]).toEqual(['b', 'c', 'd'])
+    expect(removidas).toEqual(['a'])
+  })
+
+  it('devolve lista vazia quando não passa do limite', () => {
+    const mapa = new Map<string, number>()
+    lembrar(mapa, 'a', 1, 3)
+    const removidas = lembrar(mapa, 'b', 2, 3)
+    expect(removidas).toEqual([])
   })
 
   it('rever uma chave existente move ela para o fim e ela sobrevive à próxima evicção', () => {
