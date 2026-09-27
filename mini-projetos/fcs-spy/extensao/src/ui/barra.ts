@@ -56,6 +56,13 @@ export function instalarEstiloGlobal(doc: Document): void {
   if (doc.getElementById('fcs-spy-estilo')) return
   const s = doc.createElement('style')
   s.id = 'fcs-spy-estilo'
-  s.textContent = `[${ATRIBUTO_DESLIGADO}] [${ATRIBUTO_CARD}], [${ATRIBUTO_DESLIGADO}] [${ATRIBUTO_PAINEL}] { display: none !important; }`
+  // O card da Shopee tem height: 100%. O bloco que recebe nosso painel vira coluna,
+  // o card ocupa só o espaço que sobra e o painel fica dentro do bloco.
+  s.textContent = [
+    `[${ATRIBUTO_DESLIGADO}] [${ATRIBUTO_CARD}], [${ATRIBUTO_DESLIGADO}] [${ATRIBUTO_PAINEL}] { display: none !important; }`,
+    `:has(> [${ATRIBUTO_CARD}]) { display: flex !important; flex-direction: column !important; }`,
+    `:has(> [${ATRIBUTO_CARD}]) > :not([${ATRIBUTO_CARD}]) { height: auto !important; flex: 1 1 auto !important; }`,
+    `[${ATRIBUTO_CARD}] { display: block; }`,
+  ].join('\n')
   ;(doc.head ?? doc.documentElement).append(s)
 }
