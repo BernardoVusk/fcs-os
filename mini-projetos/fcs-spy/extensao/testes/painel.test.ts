@@ -29,17 +29,19 @@ describe('textoLeitura', () => {
 
 describe('botão Custos', () => {
   const botaoCustos = (raiz: ShadowRoot) =>
-    [...raiz.querySelectorAll('button')].find(b => b.textContent === 'Custos')
+    raiz.querySelector<HTMLButtonElement>('button[aria-label="Custos"]')
 
   it('com callback, mostra o botão e chama ao clicar', () => {
     const aoAbrirCustos = vi.fn()
     const raiz = montarPainel({ config: cfg, preco: 10, variacoes: null, leitura: null, aoAbrirCustos }).shadowRoot!
-    botaoCustos(raiz)!.click()
+    const botao = botaoCustos(raiz)
+    expect(botao).not.toBeNull()
+    botao!.click()
     expect(aoAbrirCustos).toHaveBeenCalledOnce()
   })
   it('sem callback, não mostra o botão', () => {
     const raiz = montarPainel({ config: cfg, preco: 10, variacoes: null, leitura: null }).shadowRoot!
-    expect(botaoCustos(raiz)).toBeUndefined()
+    expect(botaoCustos(raiz)).toBeNull()
   })
 })
 
@@ -94,12 +96,36 @@ describe('montarPainel', () => {
     select.dispatchEvent(new Event('change', { bubbles: true }))
     expect(preco.value).toBe('54.9')
   })
-  it('recolher esconde o corpo', () => {
+  it('recolher esconde o corpo e vira abrir', () => {
     const raiz = montarPainel({ config: cfg, preco: 10, variacoes: null, leitura: null }).shadowRoot!
-    const botao = raiz.querySelector('button')!
+    const botao = raiz.querySelector<HTMLButtonElement>('button[aria-label="Recolher"]')!
     botao.click()
     expect(raiz.querySelector<HTMLElement>('.corpo')!.hidden).toBe(true)
-    expect(botao.textContent).toBe('Abrir')
+    expect(botao.getAttribute('aria-label')).toBe('Abrir')
+    botao.click()
+    expect(raiz.querySelector<HTMLElement>('.corpo')!.hidden).toBe(false)
+    expect(botao.getAttribute('aria-label')).toBe('Recolher')
+  })
+  it('resumo mostra vendas 30D grande e a linha da leitura', () => {
+    const leitura = { itemId: '1', data: '2026-09-27', preco: 17.9, vendas30d: 196, vendasTotal: 1596 }
+    const r = montarPainel({ config: cfg, preco: 17.9, variacoes: null, leitura }).shadowRoot!
+    expect(r.querySelector('.resumo .grande')!.textContent).toBe('196')
+    expect(r.querySelector('.resumo small')!.textContent).toBe(textoLeitura(leitura))
+    const vazio = montarPainel({ config: cfg, preco: 17.9, variacoes: null, leitura: null }).shadowRoot!
+    expect(vazio.querySelector('.resumo .grande')!.textContent).toBe('sem dado')
+  })
+  it('unidades dentro dos campos e ads como interruptor', () => {
+    const r = montarPainel({ config: cfg, preco: 10, variacoes: null, leitura: null }).shadowRoot!
+    const unidade = (nome: string) =>
+      [...r.querySelector(`input[name="${nome}"]`)!.parentElement!.querySelectorAll('.unidade')].map(u => u.textContent)
+    expect(unidade('preco')).toEqual(['R$'])
+    expect(unidade('gramas')).toEqual(['g'])
+    expect(unidade('horas')).toEqual(['h'])
+    expect(unidade('minutos')).toEqual(['min'])
+    expect(unidade('roas')).toEqual(['x'])
+    const ads = r.querySelector<HTMLInputElement>('input[name="ads"]')!
+    expect(ads.type).toBe('checkbox')
+    expect(ads.className).toBe('interruptor')
   })
   it('ads marcado com roas vazio mostra sem dado em ads, lucro e margem, mas taxa normal', () => {
     const raiz = montarPainel({ config: cfg, preco: 15.9, variacoes: null, leitura: null }).shadowRoot!

@@ -2,6 +2,7 @@ import type { Config, Leitura, Variacoes } from '../nucleo/tipos'
 import { calcular } from '../nucleo/calculadora'
 import { reais, inteiro, pct, SEM_DADO } from '../nucleo/formato'
 import { ESTILO_BASE } from './estilo'
+import { icone, marcaFcs, type NomeIcone } from './icones'
 
 export const ATRIBUTO_PAINEL = 'data-fcs-spy-painel'
 
@@ -14,17 +15,28 @@ export type DadosPainel = {
 }
 
 const ESTILO_PAINEL = `
-.painel { padding: 8px; display: grid; gap: 6px; }
-.topo { display: flex; justify-content: space-between; align-items: center; color: #00D8FF; font-weight: 800; text-transform: uppercase; }
-.corpo { display: grid; gap: 4px; }
-.leitura { color: #00D8FF; }
-label { display: flex; justify-content: space-between; gap: 6px; align-items: center; color: #9A9A9A; }
-label input:not([type=checkbox]) { width: 80px; }
-select { width: 100%; }
-.resultado { border-top: 1px solid #1F1F1F; padding-top: 6px; display: grid; gap: 2px; }
-.linha { display: flex; }
-.valor { margin-left: auto; font-weight: 700; }
-[data-campo=lucro] .valor { color: #00D8FF; }
+.painel { background: var(--fundo); border: 1px solid var(--linha); border-radius: 18px; box-shadow: var(--sombra); padding: 14px; display: grid; gap: 12px; font-size: 12px; color: var(--texto); }
+.painel-topo { display: flex; justify-content: space-between; align-items: center; }
+.acoes { display: flex; gap: 6px; }
+.corpo { display: grid; gap: 12px; }
+.corpo[hidden] { display: none; }
+.resumo { background: var(--superficie); border-radius: var(--raio); padding: 12px; display: grid; gap: 4px; }
+.resumo .grande { font-size: 26px; }
+.resumo small { color: var(--suave); font-size: 11px; }
+.campos { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.campo { display: grid; gap: 4px; min-width: 0; }
+.campo.cheio { grid-column: 1 / -1; }
+.entrada { display: flex; align-items: center; gap: 6px; background: var(--superficie); border: 1px solid transparent; border-radius: var(--raio-sm); padding: 7px 10px; }
+.entrada:focus-within { border-color: var(--ciano); background: var(--fundo); }
+.entrada input, .entrada select { appearance: none; border: 0; background: transparent; font: inherit; width: 100%; min-width: 0; outline: none; color: var(--texto); font-variant-numeric: tabular-nums; }
+.entrada .unidade { color: var(--suave); font-size: 11px; }
+.ads { display: flex; justify-content: space-between; align-items: center; }
+.lucro { background: var(--preto); color: #FFFFFF; border-radius: var(--raio); padding: 14px; display: grid; gap: 6px; }
+.lucro .rotulo { color: #9BA1A6; }
+.lucro .grande { color: #FFFFFF; }
+.lucro .chip { background: var(--ciano); color: var(--preto); }
+.lucro small { color: #9BA1A6; font-size: 11px; }
+.contas { display: grid; gap: 6px; }
 `
 
 // null quando o campo está vazio ou não é número. Quem chama decide o padrão (0 ou sem dado).
@@ -41,37 +53,61 @@ export function textoLeitura(l: Leitura | null): string {
   return `vendas 30D ${inteiro(l.vendas30d)}, total ${inteiro(l.vendasTotal)} (leitura de ${dia}/${mes}/${ano})`
 }
 
-function campo(pai: HTMLElement, rotulo: string, nome: string, inicial: string, tipo = 'text'): HTMLInputElement {
+type Unidade = { prefixo?: string; sufixo?: string; cheio?: boolean }
+
+function campo(pai: HTMLElement, rotulo: string, nome: string, inicial: string, u: Unidade = {}): HTMLInputElement {
   const label = document.createElement('label')
-  const span = document.createElement('span')
-  span.textContent = rotulo
+  label.className = u.cheio ? 'campo cheio' : 'campo'
+  const titulo = document.createElement('span')
+  titulo.className = 'rotulo'
+  titulo.textContent = rotulo
+  const entrada = document.createElement('div')
+  entrada.className = 'entrada'
   const input = document.createElement('input')
   input.name = nome
-  input.type = tipo
-  if (tipo === 'checkbox') input.checked = inicial === 'sim'
-  else input.value = inicial
-  label.append(span, input)
+  input.value = inicial
+  input.inputMode = 'decimal'
+  const unidade = (texto: string) => {
+    const s = document.createElement('span')
+    s.className = 'unidade'
+    s.textContent = texto
+    return s
+  }
+  if (u.prefixo) entrada.append(unidade(u.prefixo))
+  entrada.append(input)
+  if (u.sufixo) entrada.append(unidade(u.sufixo))
+  label.append(titulo, entrada)
   pai.append(label)
   return input
 }
 
-function linhaResultado(chave: string, rotulo: string, valor: string): HTMLElement {
+function conta(chave: string, nomeIcone: NomeIcone, rotulo: string, valor: string): HTMLElement {
   const l = document.createElement('div')
   l.className = 'linha'
   l.dataset.campo = chave
   const r = document.createElement('span')
-  r.textContent = rotulo
-  const v = document.createElement('span')
-  v.className = 'valor'
+  r.append(icone(nomeIcone), rotulo)
+  const v = document.createElement('b')
+  v.className = 'valor num'
   v.textContent = valor
   l.append(r, v)
   return l
 }
 
+function botaoIcone(rotulo: string, titulo: string, nome: NomeIcone): HTMLButtonElement {
+  const b = document.createElement('button')
+  b.type = 'button'
+  b.className = 'icone-btn'
+  b.setAttribute('aria-label', rotulo)
+  b.title = titulo
+  b.append(icone(nome))
+  return b
+}
+
 export function montarPainel(d: DadosPainel): HTMLElement {
   const host = document.createElement('div')
   host.setAttribute(ATRIBUTO_PAINEL, '')
-  host.style.cssText = 'position:fixed;top:180px;right:12px;z-index:2147483646;width:260px'
+  host.style.cssText = 'position:fixed;top:180px;right:12px;z-index:2147483646;width:280px'
   const raiz = host.attachShadow({ mode: 'open' })
 
   const estilo = document.createElement('style')
@@ -80,75 +116,140 @@ export function montarPainel(d: DadosPainel): HTMLElement {
   painel.className = 'painel'
 
   const topo = document.createElement('div')
-  topo.className = 'topo'
-  const titulo = document.createElement('span')
-  titulo.textContent = 'FCS SPY calculadora'
-  const recolher = document.createElement('button')
-  recolher.textContent = 'Recolher'
-  topo.append(titulo)
+  topo.className = 'painel-topo'
+  const acoes = document.createElement('div')
+  acoes.className = 'acoes'
   if (d.aoAbrirCustos) {
     const aoAbrirCustos = d.aoAbrirCustos
-    const custos = document.createElement('button')
-    custos.textContent = 'Custos'
-    custos.title = 'Editar custos de impressão, imposto e comissão'
+    const custos = botaoIcone('Custos', 'Editar custos de impressão, imposto e comissão', 'engrenagem')
     custos.addEventListener('click', () => aoAbrirCustos())
-    topo.append(custos)
+    acoes.append(custos)
   }
-  topo.append(recolher)
+  const recolher = botaoIcone('Recolher', 'Recolher', 'menos')
+  acoes.append(recolher)
+  topo.append(marcaFcs('Calculadora'), acoes)
 
   const corpo = document.createElement('div')
   corpo.className = 'corpo'
   recolher.addEventListener('click', () => {
     corpo.hidden = !corpo.hidden
-    recolher.textContent = corpo.hidden ? 'Abrir' : 'Recolher'
+    const texto = corpo.hidden ? 'Abrir' : 'Recolher'
+    recolher.setAttribute('aria-label', texto)
+    recolher.title = texto
+    recolher.replaceChildren(icone(corpo.hidden ? 'mais' : 'menos'))
   })
 
-  const leitura = document.createElement('div')
-  leitura.className = 'leitura'
-  leitura.textContent = textoLeitura(d.leitura)
-  corpo.append(leitura)
+  const resumo = document.createElement('div')
+  resumo.className = 'resumo'
+  const rotuloResumo = document.createElement('span')
+  rotuloResumo.className = 'rotulo'
+  rotuloResumo.textContent = 'Vendas 30D'
+  const grande = document.createElement('span')
+  grande.className = 'grande num'
+  grande.textContent = d.leitura ? inteiro(d.leitura.vendas30d) : SEM_DADO
+  const linhaLeitura = document.createElement('small')
+  linhaLeitura.textContent = textoLeitura(d.leitura)
+  resumo.append(rotuloResumo, grande, linhaLeitura)
+  corpo.append(resumo)
+
+  const campos = document.createElement('div')
+  campos.className = 'campos'
+  corpo.append(campos)
 
   const opcoes = d.variacoes?.opcoes ?? []
   let select: HTMLSelectElement | null = null
   if (opcoes.length) {
+    const label = document.createElement('label')
+    label.className = 'campo cheio'
+    const titulo = document.createElement('span')
+    titulo.className = 'rotulo'
+    titulo.textContent = 'Variação'
+    const entrada = document.createElement('div')
+    entrada.className = 'entrada'
     select = document.createElement('select')
     opcoes.forEach((o, i) => select!.append(new Option(`${o.nome} ${reais(o.preco)}`, String(i))))
-    corpo.append(select)
+    entrada.append(select, icone('seta'))
+    label.append(titulo, entrada)
+    campos.append(label)
   }
 
   const precoInicial = d.preco ?? (opcoes.length ? opcoes[0].preco : null)
-  const preco = campo(corpo, 'Preço de venda (R$)', 'preco', precoInicial === null ? '' : String(precoInicial))
+  const preco = campo(campos, 'Preço de venda', 'preco', precoInicial === null ? '' : String(precoInicial), { prefixo: 'R$', cheio: true })
   preco.placeholder = 'sem dado, digite o preço'
-  const gramas = campo(corpo, 'Filamento (g)', 'gramas', '0')
-  const horas = campo(corpo, 'Impressão (h)', 'horas', '0')
-  const minutos = campo(corpo, 'Acabamento (min)', 'minutos', '0')
-  const ads = campo(corpo, 'Shopee Ads', 'ads', 'nao', 'checkbox')
-  const roas = campo(corpo, 'ROAS esperado', 'roas', '10')
+  const gramas = campo(campos, 'Filamento', 'gramas', '0', { sufixo: 'g' })
+  const horas = campo(campos, 'Impressão', 'horas', '0', { sufixo: 'h' })
+  const minutos = campo(campos, 'Acabamento', 'minutos', '0', { sufixo: 'min' })
+  const roas = campo(campos, 'ROAS', 'roas', '10', { sufixo: 'x' })
+
+  const linhaAds = document.createElement('label')
+  linhaAds.className = 'ads'
+  const textoAds = document.createElement('span')
+  textoAds.textContent = 'Shopee Ads'
+  const ads = document.createElement('input')
+  ads.type = 'checkbox'
+  ads.name = 'ads'
+  ads.className = 'interruptor'
+  ads.setAttribute('role', 'switch')
+  linhaAds.append(textoAds, ads)
+  corpo.append(linhaAds)
 
   select?.addEventListener('change', () => {
     preco.value = String(opcoes[Number(select!.value)].preco)
   })
 
   const resultado = document.createElement('div')
-  resultado.className = 'resultado'
+  resultado.className = 'corpo'
   corpo.append(resultado)
+
+  function desenharResultado(v: { lucro: string; margem: string; roas: string; custo: string; taxa: string; imposto: string; ads: string }) {
+    const lucro = document.createElement('div')
+    lucro.className = 'lucro'
+    const rotuloLucro = document.createElement('span')
+    rotuloLucro.className = 'rotulo'
+    rotuloLucro.textContent = 'Lucro por unidade'
+    const heroi = document.createElement('div')
+    heroi.className = 'heroi'
+    const valorLucro = document.createElement('div')
+    valorLucro.dataset.campo = 'lucro'
+    const numeroLucro = document.createElement('span')
+    numeroLucro.className = 'grande num valor'
+    numeroLucro.textContent = v.lucro
+    valorLucro.append(numeroLucro)
+    const margem = document.createElement('span')
+    margem.className = 'chip'
+    margem.dataset.campo = 'margem'
+    const valorMargem = document.createElement('span')
+    valorMargem.className = 'valor num'
+    valorMargem.textContent = v.margem
+    margem.append(valorMargem)
+    heroi.append(valorLucro, margem)
+    const roasMin = document.createElement('small')
+    roasMin.dataset.campo = 'roasMinimo'
+    const valorRoas = document.createElement('span')
+    valorRoas.className = 'valor num'
+    valorRoas.textContent = v.roas
+    roasMin.append('ROAS mínimo ', valorRoas)
+    lucro.append(rotuloLucro, heroi, roasMin)
+
+    const contas = document.createElement('div')
+    contas.className = 'contas'
+    contas.append(
+      conta('custoProducao', 'cubo', 'Custo de produção', v.custo),
+      conta('taxa', 'loja', 'Taxa Shopee', v.taxa),
+      conta('imposto', 'carteira', 'Imposto', v.imposto),
+      conta('ads', 'alvo', 'Ads', v.ads),
+    )
+    resultado.replaceChildren(lucro, contas)
+  }
 
   function recalcular() {
     const precoNum = lerNumero(preco.value)
     if (precoNum === null) {
-      resultado.replaceChildren(
-        linhaResultado('custoProducao', 'Custo de produção', SEM_DADO),
-        linhaResultado('taxa', 'Taxa Shopee', SEM_DADO),
-        linhaResultado('imposto', 'Imposto', SEM_DADO),
-        linhaResultado('ads', 'Ads', SEM_DADO),
-        linhaResultado('lucro', 'Lucro por unidade', SEM_DADO),
-        linhaResultado('margem', 'Margem', SEM_DADO),
-        linhaResultado('roasMinimo', 'ROAS mínimo', SEM_DADO),
-      )
+      desenharResultado({ lucro: SEM_DADO, margem: SEM_DADO, roas: SEM_DADO, custo: SEM_DADO, taxa: SEM_DADO, imposto: SEM_DADO, ads: SEM_DADO })
       return
     }
     const roasNum = lerNumero(roas.value)
-    // Ads ligado sem ROAS utilizável: não dá para inventar o custo de ads, então essas três linhas ficam sem dado.
+    // Ads ligado sem ROAS utilizável: não dá para inventar o custo de ads, então essas três ficam sem dado.
     const roasSemDado = ads.checked && (roasNum === null || roasNum <= 0)
     const r = calcular({
       preco: precoNum,
@@ -158,16 +259,15 @@ export function montarPainel(d: DadosPainel): HTMLElement {
       ads: ads.checked,
       roas: roasNum ?? 0,
     }, d.config)
-    resultado.replaceChildren(
-      linhaResultado('custoProducao', 'Custo de produção', reais(r.custoProducao)),
-      linhaResultado('taxa', 'Taxa Shopee', reais(r.taxa)),
-      linhaResultado('imposto', 'Imposto', reais(r.imposto)),
-      linhaResultado('ads', 'Ads', roasSemDado ? SEM_DADO : reais(r.ads)),
-      linhaResultado('lucro', 'Lucro por unidade', roasSemDado ? SEM_DADO : reais(r.lucro)),
-      linhaResultado('margem', 'Margem', roasSemDado ? SEM_DADO : pct(r.margem)),
-      linhaResultado('roasMinimo', 'ROAS mínimo',
-        r.roasMinimo === null ? 'prejuízo mesmo sem ads' : `${r.roasMinimo.toFixed(2).replace('.', ',')}x`),
-    )
+    desenharResultado({
+      lucro: roasSemDado ? SEM_DADO : reais(r.lucro),
+      margem: roasSemDado ? SEM_DADO : pct(r.margem),
+      roas: r.roasMinimo === null ? 'prejuízo mesmo sem ads' : `${r.roasMinimo.toFixed(2).replace('.', ',')}x`,
+      custo: reais(r.custoProducao),
+      taxa: reais(r.taxa),
+      imposto: reais(r.imposto),
+      ads: roasSemDado ? SEM_DADO : reais(r.ads),
+    })
   }
   // O change do select atualiza o preço no próprio elemento antes de borbulhar até o corpo.
   corpo.addEventListener('input', recalcular)
