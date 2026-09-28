@@ -46,6 +46,12 @@ describe('montarCard', () => {
     expect(t).not.toMatch(/[–—]/)
     expect(t).not.toMatch(/\p{Extended_Pictographic}/u)
   })
+  it('ponto de estimativa tem texto para leitor de tela', () => {
+    const r = card(anuncio()).shadowRoot!
+    const soLeitor = [...r.querySelectorAll('.so-leitor')]
+    expect(soLeitor.length).toBeGreaterThan(0)
+    expect(soLeitor.some(s => s.textContent?.trim() === '(estimativa)')).toBe(true)
+  })
 })
 
 describe('textoHistorico', () => {

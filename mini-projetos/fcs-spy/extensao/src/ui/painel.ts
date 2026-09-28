@@ -20,6 +20,7 @@ const ESTILO_PAINEL = `
 .acoes { display: flex; gap: 6px; }
 .corpo { display: grid; gap: 12px; }
 .corpo[hidden] { display: none; }
+.resultado { display: grid; gap: 12px; }
 .resumo { background: var(--superficie); border-radius: var(--raio); padding: 12px; display: grid; gap: 4px; }
 .resumo .grande { font-size: 26px; }
 .resumo small { color: var(--suave); font-size: 11px; }
@@ -198,7 +199,7 @@ export function montarPainel(d: DadosPainel): HTMLElement {
   })
 
   const resultado = document.createElement('div')
-  resultado.className = 'corpo'
+  resultado.className = 'resultado'
   corpo.append(resultado)
 
   function desenharResultado(v: { lucro: string; margem: string; roas: string; custo: string; taxa: string; imposto: string; ads: string }) {

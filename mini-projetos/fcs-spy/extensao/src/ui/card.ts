@@ -46,10 +46,14 @@ function comIcone(nome: NomeIcone, texto: string, titulo: string): HTMLElement {
   return s
 }
 
+function marcaEstimativa(): HTMLElement[] {
+  return [el('i', 'est'), el('span', 'so-leitor', ' (estimativa)')]
+}
+
 function linha(rotulo: string, valor: string, estimativa = false): HTMLElement {
   const l = el('div', 'linha')
   const r = el('span', '', rotulo)
-  if (estimativa) r.append(el('i', 'est'))
+  if (estimativa) r.append(...marcaEstimativa())
   l.append(r, el('b', 'num', valor))
   return l
 }
@@ -57,7 +61,7 @@ function linha(rotulo: string, valor: string, estimativa = false): HTMLElement {
 function bloco(rotulo: string, valor: string): HTMLElement {
   const b = el('div', 'bloco')
   const r = el('span', 'rotulo', rotulo)
-  r.append(el('i', 'est'))
+  r.append(...marcaEstimativa())
   b.append(r, el('b', 'num', valor))
   return b
 }

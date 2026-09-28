@@ -32,6 +32,7 @@ export function montarBarra(
   const seletor = document.createElement('label')
   seletor.className = 'seletor'
   const select = document.createElement('select')
+  select.setAttribute('aria-label', 'Ordenar os itens desta página')
   select.append(new Option('Ordenar os itens desta página', ''))
   for (const c of CRITERIOS) select.append(new Option(c.rotulo, c.valor))
   select.addEventListener('change', () => {

@@ -19,6 +19,7 @@ svg.ic { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-wid
 .chip.cai { background: var(--preto); color: #FFFFFF; }
 .chip.estavel, .chip.novo { background: var(--superficie); color: var(--suave); }
 .est { display: inline-block; width: 5px; height: 5px; border-radius: 50%; background: var(--ciano); margin-left: 4px; vertical-align: middle; }
+.so-leitor { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .linha { display: flex; justify-content: space-between; align-items: center; gap: 6px; }
 .linha > span:first-child { color: var(--suave); display: inline-flex; gap: 5px; align-items: center; }
 .linha b { font-weight: 600; }

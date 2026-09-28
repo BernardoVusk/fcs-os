@@ -12,6 +12,7 @@ describe('montarBarra', () => {
     select.value = 'faturamento30d'
     select.dispatchEvent(new Event('change'))
     expect(aoOrdenar).toHaveBeenCalledWith('faturamento30d')
+    expect(select.getAttribute('aria-label')).toBe('Ordenar os itens desta página')
   })
   it('interruptor alterna ligado e desligado', () => {
     const aoAlternar = vi.fn()
