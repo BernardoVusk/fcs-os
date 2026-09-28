@@ -13,16 +13,28 @@ describe('montarBarra', () => {
     select.dispatchEvent(new Event('change'))
     expect(aoOrdenar).toHaveBeenCalledWith('faturamento30d')
   })
-  it('botão alterna ligado e desligado', () => {
+  it('interruptor alterna ligado e desligado', () => {
     const aoAlternar = vi.fn()
     const host = montarBarra(vi.fn(), aoAlternar)
-    const botao = host.shadowRoot!.querySelector('button')!
-    expect(botao.textContent).toBe('Desligar')
-    botao.click()
+    const r = host.shadowRoot!
+    const chave = r.querySelector<HTMLButtonElement>('[role="switch"]')!
+    const select = r.querySelector('select')!
+    expect(chave.getAttribute('aria-checked')).toBe('true')
+    expect(chave.getAttribute('aria-label')).toBe('Ligar e desligar o FCS SPY')
+    chave.click()
     expect(aoAlternar).toHaveBeenLastCalledWith(false)
-    expect(botao.textContent).toBe('Ligar')
-    botao.click()
+    expect(chave.getAttribute('aria-checked')).toBe('false')
+    expect(select.disabled).toBe(true)
+    chave.click()
     expect(aoAlternar).toHaveBeenLastCalledWith(true)
+    expect(select.disabled).toBe(false)
+  })
+  it('engrenagem abre os custos quando há callback', () => {
+    const aoAbrirCustos = vi.fn()
+    const r = montarBarra(vi.fn(), vi.fn(), aoAbrirCustos).shadowRoot!
+    r.querySelector<HTMLButtonElement>('button[aria-label="Custos"]')!.click()
+    expect(aoAbrirCustos).toHaveBeenCalledOnce()
+    expect(montarBarra(vi.fn(), vi.fn()).shadowRoot!.querySelector('button[aria-label="Custos"]')).toBeNull()
   })
 })
 

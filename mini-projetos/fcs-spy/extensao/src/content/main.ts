@@ -114,8 +114,12 @@ async function iniciar(): Promise<void> {
       anexarCard(container, card)
       desenhados.set(anuncio.itemId, card)
     }
-    sincronizarBarra(document, () => montarBarra(ordenarPagina, ligado => aplicarLigado(document, ligado)))
+    sincronizarBarra(document, () => montarBarra(ordenarPagina, ligado => aplicarLigado(document, ligado), abrirCustos))
     desenharPainel().catch(e => console.warn('[FCS SPY] painel', e))
+  }
+
+  function abrirCustos() {
+    chrome.runtime.sendMessage({ tipo: MENSAGEM_ABRIR_OPCOES }).catch(e => console.warn('[FCS SPY] custos', e))
   }
 
   function ordenarPagina(c: Criterio) {
@@ -151,9 +155,7 @@ async function iniciar(): Promise<void> {
         preco: vistos.get(id.itemId)?.anuncio.preco ?? null,
         variacoes: variacoes?.itemId === id.itemId ? variacoes : null,
         leitura,
-        aoAbrirCustos: () => {
-          chrome.runtime.sendMessage({ tipo: MENSAGEM_ABRIR_OPCOES }).catch(e => console.warn('[FCS SPY] custos', e))
-        },
+        aoAbrirCustos: abrirCustos,
       }))
     } finally {
       desenhandoPainel = false
