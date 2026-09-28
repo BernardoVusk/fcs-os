@@ -23,7 +23,7 @@ export function reaisCurto(v: number | null): string {
   if (v === null) return SEM_DADO
   if (v < 0) return `-${reaisCurto(-v)}`
   if (v < 100) return reais(v)
-  if (v < 1_000) return `R$ ${INTEIRO.format(Math.round(v))}`
-  if (v < 1_000_000) return `R$ ${CURTO.format(v / 1_000)} mil`
-  return `R$ ${CURTO.format(v / 1_000_000)} mi`
+  if (v < 1_000) return `R$\u00a0${INTEIRO.format(Math.round(v))}`
+  if (v < 1_000_000) return `R$\u00a0${CURTO.format(v / 1_000)}\u00a0mil`
+  return `R$\u00a0${CURTO.format(v / 1_000_000)}\u00a0mi`
 }
