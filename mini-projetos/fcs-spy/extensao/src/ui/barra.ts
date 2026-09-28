@@ -75,7 +75,7 @@ export function aplicarLigado(doc: Document, ligado: boolean): void {
 }
 
 // A barra só existe onde há card do FCS SPY para ordenar (some no carrinho, por exemplo).
-// Ao sumir, a camada volta a ficar ligada, porque a barra nova nasce em "Desligar".
+// Ao sumir, a camada volta a ficar ligada, porque a barra nova nasce com o interruptor ligado.
 export function sincronizarBarra(doc: Document, criar: () => HTMLElement): void {
   const barra = doc.querySelector(`[${ATRIBUTO_BARRA}]`)
   const temCard = doc.querySelector(`[${ATRIBUTO_CARD}]`) !== null

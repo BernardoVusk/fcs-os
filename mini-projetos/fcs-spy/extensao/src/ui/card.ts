@@ -78,7 +78,7 @@ export function textoHistorico(h: EstadoHistorico): string {
 export function chipHistorico(h: EstadoHistorico): { classe: 'sobe' | 'cai' | 'estavel' | 'novo'; texto: string; icone: NomeIcone | null } {
   if (h === 'indisponivel') return { classe: 'novo', texto: 'sem histórico', icone: null }
   if (h === null) return { classe: 'novo', texto: '1ª leitura', icone: null }
-  if (h.difVendas30d === null || h.seta === null) return { classe: 'novo', texto: 'sem dado', icone: null }
+  if (h.difVendas30d === null || h.seta === null) return { classe: 'novo', texto: SEM_DADO, icone: null }
   if (h.seta === 'sobe') return { classe: 'sobe', texto: `+${inteiro(h.difVendas30d)}`, icone: 'sobe' }
   if (h.seta === 'cai') return { classe: 'cai', texto: inteiro(h.difVendas30d), icone: 'cai' }
   return { classe: 'estavel', texto: '0', icone: null }
