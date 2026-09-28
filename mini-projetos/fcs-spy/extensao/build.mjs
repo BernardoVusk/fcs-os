@@ -20,3 +20,17 @@ await build({
 
 await cp('manifest.json', 'dist/manifest.json')
 await cp('src/opcoes/opcoes.html', 'dist/opcoes.html')
+
+// Prévia visual fora da extensão (não vai para dist/).
+await rm('previa', { recursive: true, force: true })
+await mkdir('previa', { recursive: true })
+await build({
+  entryPoints: { previa: 'src/previa/previa.ts', opcoes: 'src/previa/opcoes-previa.ts' },
+  bundle: true,
+  format: 'iife',
+  target: 'chrome120',
+  outdir: 'previa',
+  logLevel: 'info',
+})
+await cp('src/previa/index.html', 'previa/index.html')
+await cp('src/opcoes/opcoes.html', 'previa/opcoes.html')
