@@ -2,25 +2,50 @@
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8">
-  <title>FCS SPY, configurações</title>
+  <title>FCS SPY, seus custos</title>
   <style>
-    body { background: #0A0A0A; color: #FFFFFF; font-family: Inter, Poppins, system-ui, sans-serif; max-width: 560px; margin: 32px auto; padding: 0 16px; }
-    h1 { color: #00D8FF; text-transform: uppercase; font-size: 20px; letter-spacing: .08em; }
-    p { color: #9A9A9A; }
-    label { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin: 8px 0; }
-    input { background: #141414; color: #FFFFFF; border: 1px solid #1F1F1F; border-radius: 2px; padding: 4px 6px; width: 140px; }
-    button { background: #00D8FF; color: #0A0A0A; border: 0; border-radius: 2px; font-weight: 700; text-transform: uppercase; padding: 8px 16px; cursor: pointer; margin-top: 16px; }
-    #status { color: #00D8FF; margin-left: 12px; }
+    :root { --fundo: #FFFFFF; --superficie: #F3F5F6; --linha: #E6E9EB; --texto: #0A0A0A; --suave: #6B7177; --ciano: #00D8FF; --ciano-claro: #E0F9FF; --ciano-escuro: #006B80; --preto: #0A0A0A; --raio-sm: 10px; --sombra: 0 1px 2px rgba(10,10,10,.04), 0 8px 24px rgba(10,10,10,.06); }
+    * { box-sizing: border-box; margin: 0; }
+    body { background: #F5F6F7; color: var(--texto); font: 13px/1.4 Inter, "Segoe UI", system-ui, sans-serif; padding: 40px 16px; }
+    main { max-width: 560px; margin: 0 auto; background: var(--fundo); border: 1px solid var(--linha); border-radius: 20px; box-shadow: var(--sombra); padding: 28px; display: grid; gap: 22px; }
+    .marca { display: inline-flex; align-items: center; gap: 8px; font-weight: 800; letter-spacing: .02em; }
+    .logo { width: 24px; height: 24px; border-radius: 7px; background: var(--preto); display: grid; place-items: center; }
+    .logo i { width: 9px; height: 9px; border-radius: 2px; background: var(--ciano); }
+    h1 { font-size: 24px; letter-spacing: -.02em; margin-top: 14px; }
+    header p { color: var(--suave); margin-top: 4px; }
+    form { display: grid; gap: 22px; }
+    #campos { display: grid; gap: 22px; }
+    .grupo { display: grid; gap: 10px; }
+    .grupo h3 { display: flex; align-items: center; gap: 8px; font-size: 13px; }
+    .icone-grupo { width: 26px; height: 26px; border-radius: 999px; background: var(--ciano-claro); color: var(--ciano-escuro); display: grid; place-items: center; }
+    .campos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .campos.um { grid-template-columns: 1fr; }
+    .campo { display: grid; gap: 4px; min-width: 0; }
+    .rotulo { color: var(--suave); font-size: 10px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; }
+    .entrada { display: flex; align-items: center; gap: 6px; background: var(--superficie); border: 1px solid transparent; border-radius: var(--raio-sm); padding: 9px 12px; }
+    .entrada:focus-within { border-color: var(--ciano); background: var(--fundo); }
+    .entrada input { border: 0; background: transparent; font: inherit; width: 100%; min-width: 0; outline: none; color: var(--texto); font-variant-numeric: tabular-nums; }
+    .unidade { color: var(--suave); font-size: 12px; }
+    svg.ic { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .salvar { display: flex; justify-content: flex-end; align-items: center; gap: 12px; }
+    #status { color: var(--suave); display: inline-flex; align-items: center; gap: 4px; }
+    button { background: var(--preto); color: #FFFFFF; border: 0; border-radius: 999px; padding: 11px 20px; font: inherit; font-weight: 700; cursor: pointer; }
+    button:focus-visible { outline: 2px solid var(--ciano); outline-offset: 2px; }
+    @media (max-width: 520px) { .campos { grid-template-columns: 1fr 1fr; } }
   </style>
 </head>
 <body>
-  <h1>FCS SPY</h1>
-  <p>Os valores padrão são ponto de partida. Ajuste com os custos reais da FCS.</p>
-  <form id="form">
-    <div id="campos"></div>
-    <button type="submit">Salvar</button>
-    <span id="status"></span>
-  </form>
+  <main>
+    <header>
+      <span class="marca"><span class="logo"><i></i></span>FCS SPY</span>
+      <h1>Seus custos</h1>
+      <p>A calculadora e o custo alvo usam estes valores. Ficam salvos só no seu navegador.</p>
+    </header>
+    <form id="form">
+      <div id="campos"></div>
+      <div class="salvar"><span id="status"></span><button type="submit">Salvar custos</button></div>
+    </form>
+  </main>
   <script src="opcoes.js"></script>
 </body>
 </html>
