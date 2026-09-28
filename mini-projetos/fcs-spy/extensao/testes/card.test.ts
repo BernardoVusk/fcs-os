@@ -2,7 +2,7 @@
 import { describe, it, expect, beforeEach } from 'vitest'
 import {
   montarCard, linkDoProduto, containerDoCard, anexarCard, textoHistorico, ATRIBUTO_CARD,
-  mapaDeLinks, chaveDoProduto,
+  mapaDeLinks, chaveDoProduto, chipHistorico,
 } from '../src/ui/card'
 import { calcularMetricas } from '../src/nucleo/metricas'
 import { CONFIG_PADRAO } from '../src/dados/config'
@@ -19,15 +19,15 @@ describe('montarCard', () => {
     const host = card(anuncio())
     const t = texto(host)
     expect(host.getAttribute(ATRIBUTO_CARD)).toBe('1')
-    expect(t).toContain('390 dias no ar')
-    expect(t).toContain('recebe R$ 3,92')
+    expect(t).toContain('390 dias')
+    expect(t).toContain('R$\u00a03,92')
     expect(t).toContain('1.151')
     expect(t).toContain('4.595')
-    expect(t).toContain('R$ 11.394,90')
+    expect(t).toContain('R$\u00a011,4\u00a0mil')
     expect(t).toContain('R$ 45.490,50')
-    expect(t).toContain('R$ 379,83')
+    expect(t).toContain('R$\u00a0380')
     expect(t).toContain('10% R$ 2,93')
-    expect(t).toContain('est.')
+    expect(host.shadowRoot!.querySelectorAll('.est').length).toBeGreaterThan(0)
     expect(t).toContain('primeira leitura')
     expect(t).toContain('Loja Teste')
   })
@@ -66,6 +66,55 @@ describe('textoHistorico', () => {
       .toBe('caindo: -5 vendas 30D em 1 dia, preço +R$ 1,50')
     expect(textoHistorico({ dias: 3, difVendas30d: null, difPreco: 0.9, seta: null }))
       .toBe('sem dado de vendas, última leitura há 3 dias, preço +R$ 0,90')
+  })
+})
+
+describe('card v2', () => {
+  const raiz = (h: HTMLElement) => h.shadowRoot!
+
+  it('ver mais abre e fecha os detalhes', () => {
+    const r = raiz(card(anuncio()))
+    const detalhes = r.querySelector<HTMLElement>('.detalhes')!
+    const mais = r.querySelector<HTMLButtonElement>('.mais')!
+    expect(detalhes.hidden).toBe(true)
+    expect(mais.getAttribute('aria-expanded')).toBe('false')
+    expect(mais.textContent).toBe('ver mais')
+    mais.click()
+    expect(detalhes.hidden).toBe(false)
+    expect(mais.getAttribute('aria-expanded')).toBe('true')
+    expect(mais.textContent).toBe('fechar')
+  })
+  it('recebe e dias no ar têm título explicativo', () => {
+    const r = raiz(card(anuncio()))
+    expect(r.querySelector('[title="Dias no ar"]')!.textContent).toBe('390 dias')
+    expect(r.querySelector('[title^="Quanto o vendedor recebe"]')!.textContent).toBe('R$\u00a03,92')
+  })
+  it('chip de tendência leva a frase completa no title', () => {
+    const h = { dias: 7, difVendas30d: 120, difPreco: -2, seta: 'sobe' as const }
+    const chip = raiz(card(anuncio(), h)).querySelector<HTMLElement>('.chip')!
+    expect(chip.className).toBe('chip sobe')
+    expect(chip.textContent).toBe('+120')
+    expect(chip.title).toBe(textoHistorico(h))
+  })
+  it('copiar tem nome acessível e ícones estão presentes', () => {
+    const r = raiz(card(anuncio()))
+    expect(r.querySelector('button[aria-label="Copiar nome da loja"]')).not.toBeNull()
+    expect(r.querySelectorAll('svg.ic').length).toBeGreaterThan(4)
+  })
+})
+
+describe('chipHistorico', () => {
+  it('estados', () => {
+    expect(chipHistorico(null)).toEqual({ classe: 'novo', texto: '1ª leitura', icone: null })
+    expect(chipHistorico('indisponivel')).toEqual({ classe: 'novo', texto: 'sem histórico', icone: null })
+    expect(chipHistorico({ dias: 1, difVendas30d: null, difPreco: 0, seta: null }))
+      .toEqual({ classe: 'novo', texto: 'sem dado', icone: null })
+    expect(chipHistorico({ dias: 1, difVendas30d: 1200, difPreco: 0, seta: 'sobe' }))
+      .toEqual({ classe: 'sobe', texto: '+1.200', icone: 'sobe' })
+    expect(chipHistorico({ dias: 1, difVendas30d: -40, difPreco: 0, seta: 'cai' }))
+      .toEqual({ classe: 'cai', texto: '-40', icone: 'cai' })
+    expect(chipHistorico({ dias: 1, difVendas30d: 0, difPreco: 0, seta: 'estavel' }))
+      .toEqual({ classe: 'estavel', texto: '0', icone: null })
   })
 })
 

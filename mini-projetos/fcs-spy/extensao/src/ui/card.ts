@@ -1,25 +1,35 @@
 import type { Anuncio, Tendencia } from '../nucleo/tipos'
 import type { Metricas } from '../nucleo/metricas'
-import { reais, inteiro, pct, SEM_DADO } from '../nucleo/formato'
+import { reais, reaisCurto, inteiro, pct, SEM_DADO } from '../nucleo/formato'
 import { idDaUrl, seletorDoLink, type IdProduto } from '../shopee/url'
 import { ESTILO_BASE } from './estilo'
+import { icone, type NomeIcone } from './icones'
 
 export const ATRIBUTO_CARD = 'data-fcs-spy-card'
 export type EstadoHistorico = Tendencia | null | 'indisponivel'
 export type DadosCard = { anuncio: Anuncio; metricas: Metricas; historico: EstadoHistorico }
 
 const ESTILO_CARD = `
-.card { padding: 8px; margin-top: 4px; display: grid; gap: 2px; }
-.topo { display: flex; justify-content: space-between; color: #00D8FF; font-weight: 700; text-transform: uppercase; }
-.linha { display: flex; gap: 4px; align-items: baseline; }
-.rotulo { color: #9A9A9A; }
-.valor { margin-left: auto; font-weight: 600; }
-.est { color: #00D8FF; opacity: .6; font-size: 9px; }
-.alvo, .selos, .loja { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; margin-top: 4px; }
-.pilula, .selo { border: 1px solid rgba(0, 216, 255, .3); padding: 0 4px; border-radius: 2px; }
-.historico { color: #00D8FF; margin-top: 4px; }
-.nome { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 70%; }
-.rodape { color: #6A6A6A; font-size: 9px; margin-top: 4px; }
+.card { background: var(--fundo); border: 1px solid var(--linha); border-radius: var(--raio); padding: 10px; margin-top: 6px; display: grid; gap: 8px; font-size: 11px; color: var(--texto); box-shadow: var(--sombra); }
+.meta { display: flex; justify-content: space-between; align-items: center; gap: 6px; color: var(--suave); }
+.meta span { display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
+.blocos { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.bloco { background: var(--superficie); border-radius: var(--raio-sm); padding: 7px; display: grid; gap: 2px; min-width: 0; }
+.bloco b { font-size: 12px; white-space: nowrap; letter-spacing: -.01em; }
+.mais { display: flex; align-items: center; justify-content: center; gap: 4px; background: none; border: 0; color: var(--suave); font: inherit; font-weight: 600; cursor: pointer; padding: 3px; border-radius: 999px; }
+.mais:hover { color: var(--texto); background: var(--superficie); }
+.mais[aria-expanded="true"] svg { transform: rotate(180deg); }
+.detalhes { display: grid; gap: 6px; border-top: 1px solid var(--linha); padding-top: 8px; }
+.detalhes[hidden] { display: none; }
+.social { display: flex; justify-content: space-between; }
+.social span { display: inline-flex; align-items: center; gap: 4px; color: var(--suave); }
+.social b { color: var(--texto); font-weight: 600; }
+.loja { display: flex; justify-content: space-between; align-items: center; gap: 6px; }
+.loja .nome { display: inline-flex; align-items: center; gap: 5px; min-width: 0; font-weight: 600; }
+.loja .nome span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.historico { color: var(--suave); font-size: 10px; }
+.legenda { display: flex; align-items: center; gap: 4px; color: var(--suave); font-size: 9px; }
+.legenda .est { margin: 0; }
 `
 
 function el<K extends keyof HTMLElementTagNameMap>(tag: K, classe: string, texto?: string): HTMLElementTagNameMap[K] {
@@ -29,11 +39,27 @@ function el<K extends keyof HTMLElementTagNameMap>(tag: K, classe: string, texto
   return e
 }
 
+function comIcone(nome: NomeIcone, texto: string, titulo: string): HTMLElement {
+  const s = el('span', 'num')
+  s.title = titulo
+  s.append(icone(nome), texto)
+  return s
+}
+
 function linha(rotulo: string, valor: string, estimativa = false): HTMLElement {
   const l = el('div', 'linha')
-  l.append(el('span', 'rotulo', rotulo), el('span', 'valor', valor))
-  if (estimativa) l.append(el('span', 'est', 'est.'))
+  const r = el('span', '', rotulo)
+  if (estimativa) r.append(el('i', 'est'))
+  l.append(r, el('b', 'num', valor))
   return l
+}
+
+function bloco(rotulo: string, valor: string): HTMLElement {
+  const b = el('div', 'bloco')
+  const r = el('span', 'rotulo', rotulo)
+  r.append(el('i', 'est'))
+  b.append(r, el('b', 'num', valor))
+  return b
 }
 
 export function textoHistorico(h: EstadoHistorico): string {
@@ -49,6 +75,15 @@ export function textoHistorico(h: EstadoHistorico): string {
   return `${palavra}: ${sinal}${inteiro(h.difVendas30d)} vendas 30D em ${dias}${precoTexto}`
 }
 
+export function chipHistorico(h: EstadoHistorico): { classe: 'sobe' | 'cai' | 'estavel' | 'novo'; texto: string; icone: NomeIcone | null } {
+  if (h === 'indisponivel') return { classe: 'novo', texto: 'sem histórico', icone: null }
+  if (h === null) return { classe: 'novo', texto: '1ª leitura', icone: null }
+  if (h.difVendas30d === null || h.seta === null) return { classe: 'novo', texto: 'sem dado', icone: null }
+  if (h.seta === 'sobe') return { classe: 'sobe', texto: `+${inteiro(h.difVendas30d)}`, icone: 'sobe' }
+  if (h.seta === 'cai') return { classe: 'cai', texto: inteiro(h.difVendas30d), icone: 'cai' }
+  return { classe: 'estavel', texto: '0', icone: null }
+}
+
 export function montarCard(d: DadosCard): HTMLElement {
   const { anuncio: a, metricas: m } = d
   const host = document.createElement('div')
@@ -60,29 +95,67 @@ export function montarCard(d: DadosCard): HTMLElement {
   estilo.textContent = ESTILO_BASE + ESTILO_CARD
   const card = el('div', 'card')
 
-  const topo = el('div', 'topo')
-  topo.append(
-    el('span', '', m.diasNoAr === null ? SEM_DADO : `${m.diasNoAr} dias no ar`),
-    el('span', '', `recebe ${reais(m.recebe)}`),
-  )
-  card.append(
-    topo,
-    linha('Preço (menor)', reais(a.preco)),
-    linha('Vendas 30D', inteiro(a.vendas30d)),
-    linha('Vendas total', inteiro(a.vendasTotal)),
-    linha('Faturamento 30D', reais(m.faturamento30d), true),
-    linha('Faturamento total', reais(m.faturamentoTotal), true),
-    linha('Média diária', reais(m.mediaDiaria), true),
+  const meta = el('div', 'meta')
+  meta.append(
+    comIcone('calendario', m.diasNoAr === null ? SEM_DADO : `${inteiro(m.diasNoAr)} dias`, 'Dias no ar'),
+    comIcone('carteira', reais(m.recebe), 'Quanto o vendedor recebe por venda, depois da taxa Shopee'),
   )
 
-  const alvo = el('div', 'alvo')
-  alvo.append(el('span', 'rotulo', 'Custo alvo'))
-  for (const c of m.custoAlvo) alvo.append(el('span', 'pilula', `${pct(c.margem)} ${reais(c.valor)}`))
-  card.append(
+  const vendas = el('div', '')
+  const heroi = el('div', 'heroi')
+  const c = chipHistorico(d.historico)
+  const chip = el('span', `chip ${c.classe}`)
+  if (c.icone) chip.append(icone(c.icone))
+  chip.append(c.texto)
+  chip.title = textoHistorico(d.historico)
+  heroi.append(el('span', 'grande num', inteiro(a.vendas30d)), chip)
+  vendas.append(el('div', 'rotulo', 'Vendas 30D'), heroi)
+
+  const blocos = el('div', 'blocos')
+  blocos.append(bloco('Fatur. 30D', reaisCurto(m.faturamento30d)), bloco('Por dia', reaisCurto(m.mediaDiaria)))
+
+  const detalhes = el('div', 'detalhes')
+  detalhes.hidden = true
+  const mais = el('button', 'mais')
+  mais.type = 'button'
+  mais.setAttribute('aria-expanded', 'false')
+  const rotuloMais = el('span', '', 'ver mais')
+  mais.append(rotuloMais, icone('seta'))
+  mais.addEventListener('click', ev => {
+    ev.preventDefault()
+    detalhes.hidden = !detalhes.hidden
+    mais.setAttribute('aria-expanded', String(!detalhes.hidden))
+    rotuloMais.textContent = detalhes.hidden ? 'ver mais' : 'fechar'
+  })
+
+  const alvo = el('div', '')
+  const pilulas = el('div', 'pilulas')
+  for (const ca of m.custoAlvo) {
+    const p = el('span', 'pilula num')
+    p.append(el('em', '', pct(ca.margem)), ` ${reais(ca.valor)}`)
+    pilulas.append(p)
+  }
+  alvo.append(el('div', 'rotulo', 'Custo alvo'), pilulas)
+
+  const social = el('div', 'social')
+  const itensSociais: [NomeIcone, string, string][] = [
+    ['coracao', inteiro(a.likes), 'Likes'],
+    ['balao', inteiro(a.reviews), 'Reviews'],
+    ['estrela', a.nota === null ? SEM_DADO : a.nota.toFixed(1).replace('.', ','), 'Nota'],
+  ]
+  for (const [nome, valor, titulo] of itensSociais) {
+    const s = el('span', '')
+    s.title = titulo
+    s.append(icone(nome), el('b', 'num', valor))
+    social.append(s)
+  }
+
+  detalhes.append(
+    linha('Vendas total', inteiro(a.vendasTotal)),
+    linha('Fatur. total', reais(m.faturamentoTotal), true),
+    linha('Preço (menor)', reais(a.preco)),
     alvo,
-    linha('Likes', inteiro(a.likes)),
-    linha('Reviews', inteiro(a.reviews)),
-    linha('Nota', a.nota === null ? SEM_DADO : a.nota.toFixed(1).replace('.', ',')),
+    social,
   )
 
   const nomesSelos = [
@@ -91,26 +164,34 @@ export function montarCard(d: DadosCard): HTMLElement {
     a.selos.ads ? 'Ads' : null,
   ].filter((s): s is string => s !== null)
   if (nomesSelos.length) {
-    const selos = el('div', 'selos')
+    const selos = el('div', 'pilulas')
     for (const s of nomesSelos) selos.append(el('span', 'selo', s))
-    card.append(selos)
+    detalhes.append(selos)
   }
 
-  card.append(el('div', 'historico', textoHistorico(d.historico)))
-
   const loja = el('div', 'loja')
-  loja.append(el('span', 'nome', a.loja ?? SEM_DADO))
+  const nome = el('span', 'nome')
+  nome.append(icone('loja'), el('span', '', a.loja ?? SEM_DADO))
+  loja.append(nome)
   if (a.loja) {
-    const nome = a.loja
-    const copiar = el('button', '', 'Copiar')
+    const nomeLoja = a.loja
+    const copiar = el('button', 'icone-btn')
+    copiar.type = 'button'
+    copiar.setAttribute('aria-label', 'Copiar nome da loja')
+    copiar.title = 'Copiar nome da loja'
+    copiar.append(icone('copiar'))
     copiar.addEventListener('click', ev => {
       ev.preventDefault()
-      void navigator.clipboard?.writeText(nome)
+      void navigator.clipboard?.writeText(nomeLoja)
     })
     loja.append(copiar)
   }
-  card.append(loja, el('div', 'rodape', 'est. = estimativa com o menor preço atual'))
 
+  const legenda = el('div', 'legenda')
+  legenda.append(el('i', 'est'), 'estimativa com o menor preço atual')
+  detalhes.append(loja, el('div', 'historico', textoHistorico(d.historico)), legenda)
+
+  card.append(meta, vendas, blocos, mais, detalhes)
   raiz.append(estilo, card)
   return host
 }
