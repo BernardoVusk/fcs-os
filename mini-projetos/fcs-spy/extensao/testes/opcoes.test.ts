@@ -12,6 +12,9 @@ describe('paraTela e daTela', () => {
     expect(t.taxaFixa).toBe('4')
     expect(t.margens).toBe('10; 15; 20')
   })
+  it('vírgula decimal nos campos com casa decimal', () => {
+    expect(paraTela(CONFIG_PADRAO).kwh).toBe('0,95')
+  })
   it('ida e volta sem perda', () => {
     expect(daTela(paraTela(CONFIG_PADRAO))).toEqual(CONFIG_PADRAO)
   })

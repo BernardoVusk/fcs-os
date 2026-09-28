@@ -2,6 +2,7 @@ import type { Config } from '../nucleo/tipos'
 import { lerConfig, salvarConfig, mesclar } from '../dados/config'
 import { areaLocal, type Area } from '../dados/area'
 import { icone, type NomeIcone } from '../ui/icones'
+import { paraCampo } from '../nucleo/formato'
 
 type ChaveNumerica = Exclude<keyof Config, 'margens'>
 type IdGrupo = 'shopee' | 'impressao' | 'acabamento'
@@ -37,8 +38,8 @@ function numero(v: string | undefined): number | undefined {
 
 export function paraTela(c: Config): Record<string, string> {
   const t: Record<string, string> = {}
-  for (const f of CAMPOS) t[f.chave] = String(f.pct ? arredonda(c[f.chave] * 100) : c[f.chave])
-  t.margens = c.margens.map(m => arredonda(m * 100)).join('; ')
+  for (const f of CAMPOS) t[f.chave] = paraCampo(f.pct ? arredonda(c[f.chave] * 100) : c[f.chave])
+  t.margens = c.margens.map(m => paraCampo(arredonda(m * 100))).join('; ')
   return t
 }
 

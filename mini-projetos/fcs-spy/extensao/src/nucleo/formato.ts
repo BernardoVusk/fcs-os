@@ -16,6 +16,12 @@ export function pct(v: number | null): string {
   return `${(v * 100).toFixed(1).replace('.', ',').replace(/,0$/, '')}%`
 }
 
+// Vírgula decimal para os campos editáveis do painel e da tela de opções. Sem separador de milhar.
+export function paraCampo(n: number, casas?: number): string {
+  const s = casas === undefined ? String(n) : n.toFixed(casas)
+  return s.replace('.', ',')
+}
+
 const CURTO = new Intl.NumberFormat('pt-BR', { maximumFractionDigits: 1 })
 
 // Formato para blocos estreitos do card: R$ 3,92, R$ 380, R$ 11,4 mil, R$ 1,3 mi.

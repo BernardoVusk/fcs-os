@@ -84,17 +84,24 @@ describe('montarPainel', () => {
     preencher(raiz, 'gramas', '48')
     expect(valor(raiz, 'custoProducao')).toBe('R$ 5,00')
   })
+  it('preço inicial mostra vírgula e o valor volta a ser lido certo', () => {
+    const raiz = montarPainel({ config: cfg, preco: 15.9, variacoes: null, leitura: null }).shadowRoot!
+    const preco = raiz.querySelector<HTMLInputElement>('input[name="preco"]')!
+    expect(preco.value).toBe('15,90')
+    preencher(raiz, 'gramas', '48')
+    expect(valor(raiz, 'custoProducao')).toBe('R$ 5,00')
+  })
   it('variação preenche o preço', () => {
     const raiz = montarPainel({
       config: cfg, preco: null, leitura: null,
       variacoes: { itemId: '1', opcoes: [{ nome: 'Preto', preco: 24.9 }, { nome: 'Kit com 4', preco: 54.9 }] },
     }).shadowRoot!
     const preco = raiz.querySelector<HTMLInputElement>('input[name="preco"]')!
-    expect(preco.value).toBe('24.9')
+    expect(preco.value).toBe('24,90')
     const select = raiz.querySelector('select')!
     select.value = '1'
     select.dispatchEvent(new Event('change', { bubbles: true }))
-    expect(preco.value).toBe('54.9')
+    expect(preco.value).toBe('54,90')
   })
   it('recolher esconde o corpo e vira abrir', () => {
     const raiz = montarPainel({ config: cfg, preco: 10, variacoes: null, leitura: null }).shadowRoot!

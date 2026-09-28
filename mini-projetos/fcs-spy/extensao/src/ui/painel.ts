@@ -1,6 +1,6 @@
 import type { Config, Leitura, Variacoes } from '../nucleo/tipos'
 import { calcular } from '../nucleo/calculadora'
-import { reais, inteiro, pct, SEM_DADO } from '../nucleo/formato'
+import { reais, inteiro, pct, SEM_DADO, paraCampo } from '../nucleo/formato'
 import { ESTILO_BASE } from './estilo'
 import { icone, marcaFcs, type NomeIcone } from './icones'
 
@@ -174,7 +174,7 @@ export function montarPainel(d: DadosPainel): HTMLElement {
   }
 
   const precoInicial = d.preco ?? (opcoes.length ? opcoes[0].preco : null)
-  const preco = campo(campos, 'Preço de venda', 'preco', precoInicial === null ? '' : String(precoInicial), { prefixo: 'R$', cheio: true })
+  const preco = campo(campos, 'Preço de venda', 'preco', precoInicial === null ? '' : paraCampo(precoInicial, 2), { prefixo: 'R$', cheio: true })
   preco.placeholder = 'sem dado, digite o preço'
   const gramas = campo(campos, 'Filamento', 'gramas', '0', { sufixo: 'g' })
   const horas = campo(campos, 'Impressão', 'horas', '0', { sufixo: 'h' })
@@ -194,7 +194,7 @@ export function montarPainel(d: DadosPainel): HTMLElement {
   corpo.append(linhaAds)
 
   select?.addEventListener('change', () => {
-    preco.value = String(opcoes[Number(select!.value)].preco)
+    preco.value = paraCampo(opcoes[Number(select!.value)].preco, 2)
   })
 
   const resultado = document.createElement('div')

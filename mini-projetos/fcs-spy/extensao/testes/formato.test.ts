@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { reais, inteiro, pct, SEM_DADO, reaisCurto } from '../src/nucleo/formato'
+import { reais, inteiro, pct, SEM_DADO, reaisCurto, paraCampo } from '../src/nucleo/formato'
 
 describe('formato', () => {
   it('reais em pt-BR', () => {
@@ -17,6 +17,17 @@ describe('formato', () => {
     expect(inteiro(null)).toBe(SEM_DADO)
     expect(pct(null)).toBe(SEM_DADO)
     expect(SEM_DADO).toBe('sem dado')
+  })
+})
+
+describe('paraCampo', () => {
+  it('sem casas troca ponto por vírgula', () => {
+    expect(paraCampo(0.95)).toBe('0,95')
+    expect(paraCampo(20)).toBe('20')
+  })
+  it('com casas usa toFixed e troca o ponto', () => {
+    expect(paraCampo(54.9, 2)).toBe('54,90')
+    expect(paraCampo(4, 2)).toBe('4,00')
   })
 })
 
