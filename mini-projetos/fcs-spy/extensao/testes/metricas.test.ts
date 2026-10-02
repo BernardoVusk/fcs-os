@@ -41,3 +41,12 @@ describe('campos nulos', () => {
     expect(m.recebe).toBeCloseTo(3.92, 2)
   })
 })
+
+describe('faixa nas métricas', () => {
+  it('usa os cortes da configuração', () => {
+    expect(calcularMetricas(anuncio({ vendas30d: 1151 }), CONFIG_PADRAO, hoje).faixa?.nivel).toBe('alta')
+    expect(calcularMetricas(anuncio({ vendas30d: 188 }), CONFIG_PADRAO, hoje).faixa?.nivel).toBe('media')
+    expect(calcularMetricas(anuncio({ vendas30d: 12 }), CONFIG_PADRAO, hoje).faixa?.nivel).toBe('baixa')
+    expect(calcularMetricas(anuncio({ vendas30d: null }), CONFIG_PADRAO, hoje).faixa).toBeNull()
+  })
+})

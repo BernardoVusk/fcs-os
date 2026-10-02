@@ -1,5 +1,6 @@
 import type { Config, Leitura, Variacoes } from '../nucleo/tipos'
 import { calcular } from '../nucleo/calculadora'
+import { faixaVendas } from '../nucleo/faixas'
 import { reais, inteiro, pct, SEM_DADO, paraCampo } from '../nucleo/formato'
 import { ESTILO_BASE } from './estilo'
 import { icone, marcaFcs, type NomeIcone } from './icones'
@@ -148,6 +149,11 @@ export function montarPainel(d: DadosPainel): HTMLElement {
   const grande = document.createElement('span')
   grande.className = 'grande num'
   grande.textContent = d.leitura ? inteiro(d.leitura.vendas30d) : SEM_DADO
+  const faixa = faixaVendas(d.leitura ? d.leitura.vendas30d : null, d.config)
+  if (faixa) {
+    grande.classList.add(`cor-${faixa.nivel}`)
+    grande.title = faixa.titulo
+  }
   const linhaLeitura = document.createElement('small')
   linhaLeitura.textContent = textoLeitura(d.leitura)
   resumo.append(rotuloResumo, grande, linhaLeitura)

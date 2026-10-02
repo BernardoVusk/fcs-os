@@ -160,4 +160,9 @@ describe('montarPainel', () => {
     preencher(raiz, 'roas', '')
     expect(valor(raiz, 'ads')).toBe(reais(0))
   })
+  it('vendas 30D do resumo na cor da faixa', () => {
+    const leitura = { itemId: '1', data: '2026-09-27', preco: 17.9, vendas30d: 12, vendasTotal: 100 }
+    const r = montarPainel({ config: CONFIG_PADRAO, preco: 17.9, variacoes: null, leitura }).shadowRoot!
+    expect(r.querySelector('.resumo .grande')!.classList.contains('cor-baixa')).toBe(true)
+  })
 })

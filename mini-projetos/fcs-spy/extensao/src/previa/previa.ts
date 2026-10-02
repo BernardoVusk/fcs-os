@@ -16,7 +16,9 @@ const exemplos: [Anuncio, EstadoHistorico][] = [
   [base, { dias: 7, difVendas30d: 120, difPreco: 0, seta: 'sobe' }],
   [{ ...base, itemId: '3', titulo: 'Carrinho F1 Metal Fricção', preco: 19.7, vendas30d: 1345, vendasTotal: 2572, criadoEm: new Date('2026-04-28T12:00:00Z'), likes: 2901, reviews: 1459 },
     { dias: 1, difVendas30d: -40, difPreco: -1, seta: 'cai' }],
-  [{ ...base, itemId: '4', titulo: 'Bburago 1:43 2025 F1', preco: 60, vendas30d: 188, vendasTotal: 1020, criadoEm: new Date('2026-08-28T12:00:00Z'), selos: { ads: null, indicado: false, lojaOficial: true } }, null],
+  [{ ...base, itemId: '4', titulo: 'Bburago 1:43 2025 F1', preco: 60, vendas30d: 18, vendasTotal: 1020, criadoEm: new Date('2026-08-28T12:00:00Z'), selos: { ads: null, indicado: false, lojaOficial: true } }, null],
+  [{ ...base, itemId: '5', titulo: 'Pegboard Setup Gamer', preco: 73.85, vendas30d: 120, vendasTotal: 2100, criadoEm: new Date('2026-01-10T12:00:00Z') },
+    { dias: 3, difVendas30d: 0, difPreco: 0, seta: 'estavel' }],
 ]
 
 const grade = document.getElementById('grade')!

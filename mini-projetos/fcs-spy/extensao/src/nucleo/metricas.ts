@@ -1,4 +1,5 @@
 import type { Anuncio, Config } from './tipos'
+import { faixaVendas, type FaixaVendas } from './faixas'
 
 const DIA_MS = 86_400_000
 
@@ -9,6 +10,7 @@ export type Metricas = {
   faturamentoTotal: number | null
   mediaDiaria: number | null
   custoAlvo: { margem: number; valor: number }[]
+  faixa: FaixaVendas | null
 }
 
 export function taxaShopee(preco: number, c: Pick<Config, 'comissaoPct' | 'taxaFixa'>): number {
@@ -26,5 +28,6 @@ export function calcularMetricas(a: Anuncio, c: Config, hoje: Date): Metricas {
     faturamentoTotal: a.vendasTotal === null ? null : a.vendasTotal * a.preco,
     mediaDiaria: faturamento30d === null ? null : faturamento30d / 30,
     custoAlvo: c.margens.map(margem => ({ margem, valor: recebe - margem * a.preco })),
+    faixa: faixaVendas(a.vendas30d, c),
   }
 }

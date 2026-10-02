@@ -98,6 +98,7 @@ export function montarCard(d: DadosCard): HTMLElement {
   const estilo = el('style', '')
   estilo.textContent = ESTILO_BASE + ESTILO_CARD
   const card = el('div', 'card')
+  if (m.faixa) card.classList.add(`faixa-${m.faixa.nivel}`)
 
   const meta = el('div', 'meta')
   meta.append(
@@ -112,7 +113,12 @@ export function montarCard(d: DadosCard): HTMLElement {
   if (c.icone) chip.append(icone(c.icone))
   chip.append(c.texto)
   chip.title = textoHistorico(d.historico)
-  heroi.append(el('span', 'grande num', inteiro(a.vendas30d)), chip)
+  const numeroVendas = el('span', 'grande num', inteiro(a.vendas30d))
+  if (m.faixa) {
+    numeroVendas.classList.add(`cor-${m.faixa.nivel}`)
+    numeroVendas.title = m.faixa.titulo
+  }
+  heroi.append(numeroVendas, chip)
   vendas.append(el('div', 'rotulo', 'Vendas 30D'), heroi)
 
   const blocos = el('div', 'blocos')

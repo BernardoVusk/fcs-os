@@ -211,3 +211,23 @@ describe('mapaDeLinks', () => {
     expect(mapa.get('2.1')?.textContent).toBe('primeiro')
   })
 })
+
+describe('cor da faixa no card', () => {
+  const raiz = (a: Anuncio) => card(a).shadowRoot!
+  it('número e borda na cor da faixa, com título explicativo', () => {
+    const r = raiz(anuncio({ vendas30d: 1151 }))
+    const numero = r.querySelector<HTMLElement>('.heroi .grande')!
+    expect(numero.classList.contains('cor-alta')).toBe(true)
+    expect(numero.title).toBe('Vendas altas: 300 ou mais no mês')
+    expect(r.querySelector('.card')!.classList.contains('faixa-alta')).toBe(true)
+  })
+  it('média e baixa', () => {
+    expect(raiz(anuncio({ vendas30d: 188 })).querySelector('.card')!.classList.contains('faixa-media')).toBe(true)
+    expect(raiz(anuncio({ vendas30d: 12 })).querySelector('.card')!.classList.contains('faixa-baixa')).toBe(true)
+  })
+  it('sem vendas 30D o card fica neutro', () => {
+    const r = raiz(anuncio({ vendas30d: null }))
+    expect(r.querySelector('.card')!.className).toBe('card')
+    expect(r.querySelector('.heroi .grande')!.className).toBe('grande num')
+  })
+})
