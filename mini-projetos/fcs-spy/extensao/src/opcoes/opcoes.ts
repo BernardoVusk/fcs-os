@@ -5,13 +5,14 @@ import { icone, type NomeIcone } from '../ui/icones'
 import { paraCampo } from '../nucleo/formato'
 
 type ChaveNumerica = Exclude<keyof Config, 'margens'>
-type IdGrupo = 'shopee' | 'impressao' | 'acabamento'
+type IdGrupo = 'shopee' | 'impressao' | 'acabamento' | 'cores'
 export type Campo = { chave: ChaveNumerica; rotulo: string; pct: boolean; grupo: IdGrupo; prefixo?: string; sufixo?: string }
 
 export const GRUPOS: { id: IdGrupo | 'alvo'; titulo: string; icone: NomeIcone }[] = [
   { id: 'shopee', titulo: 'Shopee e imposto', icone: 'loja' },
   { id: 'impressao', titulo: 'Impressão 3D', icone: 'cubo' },
   { id: 'acabamento', titulo: 'Acabamento e envio', icone: 'carteira' },
+  { id: 'cores', titulo: 'Cores das vendas', icone: 'sobe' },
   { id: 'alvo', titulo: 'Custo alvo', icone: 'alvo' },
 ]
 
@@ -26,6 +27,8 @@ export const CAMPOS: Campo[] = [
   { chave: 'desgasteHora', rotulo: 'Desgaste', pct: false, grupo: 'impressao', prefixo: 'R$', sufixo: '/h' },
   { chave: 'maoDeObraHora', rotulo: 'Mão de obra', pct: false, grupo: 'acabamento', prefixo: 'R$', sufixo: '/h' },
   { chave: 'embalagem', rotulo: 'Embalagem', pct: false, grupo: 'acabamento', prefixo: 'R$' },
+  { chave: 'corteVerde', rotulo: 'Verde a partir de', pct: false, grupo: 'cores', sufixo: '/mês' },
+  { chave: 'corteAmarelo', rotulo: 'Amarelo a partir de', pct: false, grupo: 'cores', sufixo: '/mês' },
 ]
 const MARGENS = { chave: 'margens', rotulo: 'Margens, separadas por ;', sufixo: '%' }
 

@@ -47,11 +47,11 @@ describe('iniciarTela', () => {
 })
 
 describe('tela v2', () => {
-  it('quatro grupos na ordem e unidades nos campos', async () => {
+  it('cinco grupos na ordem e unidades nos campos', async () => {
     document.body.innerHTML = '<form id="form"><div id="campos"></div><span id="status"></span><button type="submit">Salvar custos</button></form>'
     await iniciarTela(document, areaEmMemoria())
     const titulos = [...document.querySelectorAll('.grupo h3')].map(h => h.textContent)
-    expect(titulos).toEqual(['Shopee e imposto', 'Impressão 3D', 'Acabamento e envio', 'Custo alvo'])
+    expect(titulos).toEqual(['Shopee e imposto', 'Impressão 3D', 'Acabamento e envio', 'Cores das vendas', 'Custo alvo'])
     const unidades = (nome: string) =>
       [...document.querySelector(`input[name="${nome}"]`)!.parentElement!.querySelectorAll('.unidade')].map(u => u.textContent)
     expect(unidades('comissaoPct')).toEqual(['%'])
@@ -59,5 +59,6 @@ describe('tela v2', () => {
     expect(unidades('potenciaW')).toEqual(['W'])
     expect(unidades('kwh')).toEqual(['R$', '/kWh'])
     expect(unidades('margens')).toEqual(['%'])
+    expect(unidades('corteVerde')).toEqual(['/mês'])
   })
 })

@@ -17,6 +17,8 @@ export const CONFIG_PADRAO: Config = {
   desgasteHora: 0.5,
   maoDeObraHora: 20,
   embalagem: 1.5,
+  corteVerde: 300,
+  corteAmarelo: 50,
 }
 
 export function mesclar(salvo: unknown): Config {
@@ -31,6 +33,11 @@ export function mesclar(salvo: unknown): Config {
     } else if (typeof v === 'number' && Number.isFinite(v)) {
       c[k] = v
     }
+  }
+  // Faixa impossível (amarelo alcançando o verde) volta os dois cortes ao padrão.
+  if (c.corteAmarelo >= c.corteVerde) {
+    c.corteVerde = CONFIG_PADRAO.corteVerde
+    c.corteAmarelo = CONFIG_PADRAO.corteAmarelo
   }
   return c
 }

@@ -41,3 +41,20 @@ describe('lerConfig e salvarConfig', () => {
     expect((await lerConfig(area)).embalagem).toBe(2.5)
   })
 })
+
+describe('cortes de faixa', () => {
+  it('padrões 300 e 50', () => {
+    expect(CONFIG_PADRAO.corteVerde).toBe(300)
+    expect(CONFIG_PADRAO.corteAmarelo).toBe(50)
+  })
+  it('amarelo maior ou igual ao verde volta os dois ao padrão', () => {
+    const c = mesclar({ corteVerde: 100, corteAmarelo: 100 })
+    expect(c.corteVerde).toBe(300)
+    expect(c.corteAmarelo).toBe(50)
+  })
+  it('cortes válidos são mantidos', () => {
+    const c = mesclar({ corteVerde: 500, corteAmarelo: 80 })
+    expect(c.corteVerde).toBe(500)
+    expect(c.corteAmarelo).toBe(80)
+  })
+})

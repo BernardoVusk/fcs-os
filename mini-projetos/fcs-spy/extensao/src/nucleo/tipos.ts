@@ -37,6 +37,9 @@ export type Config = {
   desgasteHora: number
   maoDeObraHora: number
   embalagem: number
+  // Faixa de Vendas 30D: verde a partir de corteVerde, amarelo a partir de corteAmarelo.
+  corteVerde: number
+  corteAmarelo: number
 }
 
 export type Leitura = {
