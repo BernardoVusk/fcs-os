@@ -124,8 +124,12 @@ describe('acharCards', () => {
   })
   it('array enorme de primitivos termina', () => {
     const r = acharCards({ a: new Array(100000).fill(1), b: busca.items[0] })
-    expect([0, 1]).toContain(r.length)
+    expect(r.map(a => a.itemId)).toEqual(['58207314279'])
     expect(acharCards(busca)).toHaveLength(60)
+  })
+  it('teto de nós para de verdade', () => {
+    const vazios = Array.from({ length: 6000 }, () => ({}))
+    expect(acharCards({ a: vazios, b: busca.items[0] })).toEqual([])
   })
   it('mesmo produto duas vezes fica uma só', () => {
     expect(acharCards({ a: [busca.items[0], busca.items[0]] })).toHaveLength(1)

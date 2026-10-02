@@ -100,11 +100,14 @@ export function acharCards(json: unknown): Anuncio[] {
   const achados = new Map<string, Anuncio>()
   let nos = 0
   const visitar = (v: unknown, profundidade: number) => {
+    if (v === null || typeof v !== 'object') return // primitivos não gastam o orçamento
     if (profundidade > PROFUNDIDADE_MAXIMA || nos >= NOS_MAXIMOS) return
     nos++
-    if (v === null || typeof v !== 'object') return
     if (Array.isArray(v)) {
-      for (const x of v) visitar(x, profundidade + 1)
+      for (const x of v) {
+        if (nos >= NOS_MAXIMOS) break
+        visitar(x, profundidade + 1)
+      }
       return
     }
     const o = v as Bruto
@@ -113,7 +116,10 @@ export function acharCards(json: unknown): Anuncio[] {
       if (a && !achados.has(a.itemId)) achados.set(a.itemId, a)
       return
     }
-    for (const x of Object.values(o)) visitar(x, profundidade + 1)
+    for (const x of Object.values(o)) {
+      if (nos >= NOS_MAXIMOS) break
+      visitar(x, profundidade + 1)
+    }
   }
   visitar(json, 0)
   return [...achados.values()]
