@@ -58,6 +58,26 @@ na busca "miniatura f1" (páginas 1 e 2) e no produto "Miniaturas Pneus Fórmula
 - [ok] Nenhum captcha ou verificação nova na conta Shopee depois de instalar
 - [ok] Painel da calculadora não cobre o botão "Comprar agora"
 
+## Cobertura geral (v3)
+
+Em cada página: o painel aparece nos produtos? A grade quebra? O painel cabe no card?
+
+- [ ] Página inicial, Descobertas do dia
+- [ ] Página de categoria (ex.: Brinquedos e Hobbies)
+- [ ] Página de uma loja (ex.: fcs3dstudio)
+- [ ] Busca, ordenada por Mais vendidos
+- [ ] Página de produto: similares e "da mesma loja"
+- [ ] Ofertas relâmpago
+
+Para cada item que falhar, anotar: a página, se a resposta chega (aviso no console ou não) e como o card da Shopee é montado ali (o `<li>` existe?).
+
+## Cores das vendas (v3)
+
+- [ ] Produto com 300+ vendas no mês: número e borda verdes
+- [ ] Produto entre 50 e 299: amarelo
+- [ ] Produto com menos de 50: vermelho
+- [ ] Mudar "Verde a partir de" para 1000 em Seus custos: os cards recalculam sem recarregar
+
 ## Pendências conhecidas
 
 - Selo Ads: confirmar com uma busca que tenha anúncio pago (capturar HAR e conferir `is_ads`)
