@@ -11,7 +11,7 @@ const MARCADOR_CARD = '"item_card_display_sold_count"'
 
 export function rotaDe(url: string): Rota | null {
   if (url.includes(ROTA_PRODUTO)) return 'produto'
-  if (url.includes('/api/')) return 'cards'
+  if (url.startsWith('/api/') || /^https:\/\/([a-z0-9-]+\.)*shopee\.com\.br\/api\//.test(url)) return 'cards'
   return null
 }
 

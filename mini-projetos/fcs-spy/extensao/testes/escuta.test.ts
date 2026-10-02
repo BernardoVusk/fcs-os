@@ -35,6 +35,10 @@ describe('rotaDe', () => {
     expect(rotaDe('https://shopee.com.br/api/v4/pdp/hot_sales/get_item_cards?item_id=1')).toBe('cards')
     expect(rotaDe('https://shopee.com.br/api/v4/homepage/get_daily_discover?limit=60')).toBe('cards')
   })
+  it('só APIs da Shopee: relativa vale, outro domínio não', () => {
+    expect(rotaDe('https://outro.com/api/x')).toBeNull()
+    expect(rotaDe('/api/v4/x')).toBe('cards')
+  })
   it('fora de /api/ não interessa', () => {
     expect(rotaDe('https://shopee.com.br/search?keyword=x')).toBeNull()
     expect(rotaDe('https://deo.shopeemobile.com/x.js')).toBeNull()
