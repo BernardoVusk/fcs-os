@@ -100,8 +100,9 @@ export function acharCards(json: unknown): Anuncio[] {
   const achados = new Map<string, Anuncio>()
   let nos = 0
   const visitar = (v: unknown, profundidade: number) => {
-    if (profundidade > PROFUNDIDADE_MAXIMA || nos >= NOS_MAXIMOS || v === null || typeof v !== 'object') return
+    if (profundidade > PROFUNDIDADE_MAXIMA || nos >= NOS_MAXIMOS) return
     nos++
+    if (v === null || typeof v !== 'object') return
     if (Array.isArray(v)) {
       for (const x of v) visitar(x, profundidade + 1)
       return

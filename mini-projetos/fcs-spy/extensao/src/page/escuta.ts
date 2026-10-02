@@ -47,7 +47,8 @@ export function instalarEscuta(w: JanelaEscutavel): void {
       const entrada = args[0]
       const url = resposta.url || (typeof entrada === 'string' ? entrada : entrada instanceof URL ? entrada.href : entrada.url)
       const rota = rotaDe(url)
-      if (rota) resposta.clone().text().then(t => publicarTexto(rota, url, t), () => {})
+      const json = (resposta.headers.get('content-type') ?? '').includes('json')
+      if (rota && (rota === 'produto' || json)) resposta.clone().text().then(t => publicarTexto(rota, url, t), () => {})
     } catch (e) {
       console.warn('[FCS SPY] escuta fetch', e)
     }

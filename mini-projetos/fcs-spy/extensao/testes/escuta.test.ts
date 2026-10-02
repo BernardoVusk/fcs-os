@@ -12,14 +12,14 @@ class XHRFalso {
   addEventListener(_tipo: string, f: () => void) { this.ouvintes.push(f) }
 }
 
-function janelaFalsa(corpo: string) {
+function janelaFalsa(corpo: string, tipo = 'application/json') {
   const postMessage = vi.fn()
   // Subclasse nova por teste: instalarEscuta troca o open do protótipo.
   class XHRDoTeste extends XHRFalso {}
   const w = {
     postMessage,
     location: { origin: 'https://shopee.com.br' },
-    fetch: vi.fn(async () => new Response(corpo)),
+    fetch: vi.fn(async () => new Response(corpo, { headers: { 'content-type': tipo } })),
     XMLHttpRequest: XHRDoTeste,
   }
   instalarEscuta(w as unknown as Parameters<typeof instalarEscuta>[0])
@@ -68,6 +68,12 @@ describe('instalarEscuta: fetch', () => {
   it('API sem marcador de card não é publicada', async () => {
     const { w, postMessage } = janelaFalsa('{"subcart":1}')
     await w.fetch('https://shopee.com.br/api/v4/web/subcart')
+    await new Promise(r => setTimeout(r, 10))
+    expect(postMessage).not.toHaveBeenCalled()
+  })
+  it('resposta text/html com o marcador não é publicada', async () => {
+    const { w, postMessage } = janelaFalsa('{"item_card_display_sold_count":{}}', 'text/html')
+    await w.fetch(BUSCA)
     await new Promise(r => setTimeout(r, 10))
     expect(postMessage).not.toHaveBeenCalled()
   })

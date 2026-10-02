@@ -122,6 +122,11 @@ describe('acharCards', () => {
     const resposta = { data: { sections: [{ data: { item: [busca.items[0]] } }, { outra: busca.items[1] }] } }
     expect(acharCards(resposta).map(a => a.itemId)).toEqual(['58207314279', '58211960177'])
   })
+  it('array enorme de primitivos termina', () => {
+    const r = acharCards({ a: new Array(100000).fill(1), b: busca.items[0] })
+    expect([0, 1]).toContain(r.length)
+    expect(acharCards(busca)).toHaveLength(60)
+  })
   it('mesmo produto duas vezes fica uma só', () => {
     expect(acharCards({ a: [busca.items[0], busca.items[0]] })).toHaveLength(1)
   })
