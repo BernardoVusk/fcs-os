@@ -2,18 +2,21 @@
 // Shopee já recebeu. Nunca altera, atrasa ou refaz requisição.
 
 export const MARCA = 'fcs-spy'
-export type Rota = 'busca' | 'vitrine' | 'produto'
+export type Rota = 'produto' | 'cards'
 export type MensagemEscuta = { marca: typeof MARCA; rota: Rota; url: string; corpo: unknown }
 
-const ROTAS: [string, Rota][] = [
-  ['/api/v4/search/search_items', 'busca'],
-  ['/api/v4/pdp/hot_sales/get_item_cards', 'vitrine'],
-  ['/api/v4/pdp/get_pc', 'produto'],
-]
+const ROTA_PRODUTO = '/api/v4/pdp/get_pc'
+// Marcador do formato de card de 2026: teste barato antes do JSON.parse.
+const MARCADOR_CARD = '"item_card_display_sold_count"'
 
 export function rotaDe(url: string): Rota | null {
-  for (const [trecho, rota] of ROTAS) if (url.includes(trecho)) return rota
+  if (url.includes(ROTA_PRODUTO)) return 'produto'
+  if (url.includes('/api/')) return 'cards'
   return null
+}
+
+export function temCards(texto: string): boolean {
+  return texto.includes(MARCADOR_CARD)
 }
 
 type JanelaEscutavel = {
@@ -30,6 +33,7 @@ export function instalarEscuta(w: JanelaEscutavel): void {
   }
   const publicarTexto = (rota: Rota, url: string, texto: string) => {
     try {
+      if (rota === 'cards' && !temCards(texto)) return
       publicar(rota, url, JSON.parse(texto))
     } catch (e) {
       console.warn('[FCS SPY] resposta ilegível', rota, e)
@@ -59,7 +63,9 @@ export function instalarEscuta(w: JanelaEscutavel): void {
       if (rota) {
         this.addEventListener('load', () => {
           try {
-            if (this.responseType === 'json') publicar(rota, url, this.response)
+            if (this.responseType === 'json') {
+              if (rota !== 'cards' || temCards(JSON.stringify(this.response))) publicar(rota, url, this.response)
+            }
             else if (this.responseType === '' || this.responseType === 'text') publicarTexto(rota, url, this.responseText)
           } catch (e) {
             console.warn('[FCS SPY] escuta xhr', e)

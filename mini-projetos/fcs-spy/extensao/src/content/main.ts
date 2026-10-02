@@ -1,6 +1,6 @@
 import { ouvirEscuta } from './ponte'
 import type { MensagemEscuta } from '../page/escuta'
-import { traduzirBusca, traduzirVitrine, traduzirProduto } from '../shopee/traduzir'
+import { acharCards, traduzirProduto } from '../shopee/traduzir'
 import { idDaUrl } from '../shopee/url'
 import { calcularMetricas } from '../nucleo/metricas'
 import type { Anuncio, Config, Tendencia, Variacoes } from '../nucleo/tipos'
@@ -56,7 +56,7 @@ async function iniciar(): Promise<void> {
       agendar()
       return
     }
-    const anuncios = msg.rota === 'busca' ? traduzirBusca(msg.corpo) : traduzirVitrine(msg.corpo)
+    const anuncios = acharCards(msg.corpo)
     if (!anuncios.length) return
     let tendencias: Map<string, Tendencia | null> | null = null
     try {

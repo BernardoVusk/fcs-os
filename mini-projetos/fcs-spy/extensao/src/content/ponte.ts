@@ -1,6 +1,6 @@
 import { MARCA, type MensagemEscuta, type Rota } from '../page/escuta'
 
-const ROTAS_VALIDAS: Rota[] = ['busca', 'vitrine', 'produto']
+const ROTAS_VALIDAS: Rota[] = ['produto', 'cards']
 
 export function ouvirEscuta(w: Window, aoReceber: (m: MensagemEscuta) => void): () => void {
   const ouvinte = (ev: MessageEvent) => {

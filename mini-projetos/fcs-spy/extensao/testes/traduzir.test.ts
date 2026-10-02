@@ -2,7 +2,7 @@ import { describe, it, expect, vi } from 'vitest'
 import busca from './amostras/busca-miniatura-f1.json'
 import vitrine from './amostras/hot-sales-miniatura-f1.json'
 import produto from './amostras/pdp-miniatura-f1.json'
-import { traduzirBusca, traduzirVitrine, traduzirProduto, traduzirCard } from '../src/shopee/traduzir'
+import { traduzirBusca, traduzirVitrine, traduzirProduto, traduzirCard, acharCards } from '../src/shopee/traduzir'
 
 describe('traduzirBusca com amostra real', () => {
   const anuncios = traduzirBusca(busca)
@@ -110,5 +110,29 @@ describe('traduzirProduto com amostra real', () => {
     expect(traduzirProduto(item)).toBeNull()
     expect(aviso.mock.calls[0][0]).toContain('[FCS SPY]')
     aviso.mockRestore()
+  })
+})
+
+describe('acharCards', () => {
+  it('acha os mesmos cards da busca e da vitrine', () => {
+    expect(acharCards(busca).map(a => a.itemId)).toEqual(traduzirBusca(busca).map(a => a.itemId))
+    expect(acharCards(vitrine)).toHaveLength(8)
+  })
+  it('acha card aninhado em qualquer formato de resposta', () => {
+    const resposta = { data: { sections: [{ data: { item: [busca.items[0]] } }, { outra: busca.items[1] }] } }
+    expect(acharCards(resposta).map(a => a.itemId)).toEqual(['58207314279', '58211960177'])
+  })
+  it('mesmo produto duas vezes fica uma só', () => {
+    expect(acharCards({ a: [busca.items[0], busca.items[0]] })).toHaveLength(1)
+  })
+  it('para de descer além da profundidade máxima', () => {
+    let fundo: unknown = busca.items[0]
+    for (let i = 0; i < 20; i++) fundo = { x: fundo }
+    expect(acharCards(fundo)).toEqual([])
+  })
+  it('lixo não quebra', () => {
+    expect(acharCards(null)).toEqual([])
+    expect(acharCards('texto')).toEqual([])
+    expect(acharCards({ items: [null, 1, 'x', {}] })).toEqual([])
   })
 })

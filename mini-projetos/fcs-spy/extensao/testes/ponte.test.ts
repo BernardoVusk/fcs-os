@@ -9,7 +9,7 @@ describe('ouvirEscuta', () => {
   it('entrega mensagem válida da escuta', () => {
     const recebido = vi.fn()
     const parar = ouvirEscuta(window, recebido)
-    const msg = { marca: 'fcs-spy', rota: 'busca', url: 'u', corpo: { items: [] } }
+    const msg = { marca: 'fcs-spy', rota: 'cards', url: 'u', corpo: { items: [] } }
     enviar(msg)
     expect(recebido).toHaveBeenCalledWith(msg)
     parar()
@@ -17,17 +17,17 @@ describe('ouvirEscuta', () => {
   it('ignora outra marca, rota inválida e outra janela', () => {
     const recebido = vi.fn()
     const parar = ouvirEscuta(window, recebido)
-    enviar({ marca: 'outra', rota: 'busca' })
+    enviar({ marca: 'outra', rota: 'cards' })
     enviar({ marca: 'fcs-spy', rota: 'carrinho' })
     enviar(null)
-    enviar({ marca: 'fcs-spy', rota: 'busca', url: 'u', corpo: {} }, null)
+    enviar({ marca: 'fcs-spy', rota: 'cards', url: 'u', corpo: {} }, null)
     expect(recebido).not.toHaveBeenCalled()
     parar()
   })
   it('parar remove o ouvinte', () => {
     const recebido = vi.fn()
     ouvirEscuta(window, recebido)()
-    enviar({ marca: 'fcs-spy', rota: 'busca', url: 'u', corpo: {} })
+    enviar({ marca: 'fcs-spy', rota: 'cards', url: 'u', corpo: {} })
     expect(recebido).not.toHaveBeenCalled()
   })
 })

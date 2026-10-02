@@ -91,3 +91,29 @@ export function traduzirProduto(json: unknown): Variacoes | null {
   }
   return { itemId, opcoes }
 }
+
+const PROFUNDIDADE_MAXIMA = 12
+const NOS_MAXIMOS = 5000
+
+// Procura cards em qualquer lugar da resposta: página inicial, categoria, loja, busca, vitrines.
+export function acharCards(json: unknown): Anuncio[] {
+  const achados = new Map<string, Anuncio>()
+  let nos = 0
+  const visitar = (v: unknown, profundidade: number) => {
+    if (profundidade > PROFUNDIDADE_MAXIMA || nos >= NOS_MAXIMOS || v === null || typeof v !== 'object') return
+    nos++
+    if (Array.isArray(v)) {
+      for (const x of v) visitar(x, profundidade + 1)
+      return
+    }
+    const o = v as Bruto
+    if (o.item_data && typeof o.item_data === 'object') {
+      const a = traduzirCard(o)
+      if (a && !achados.has(a.itemId)) achados.set(a.itemId, a)
+      return
+    }
+    for (const x of Object.values(o)) visitar(x, profundidade + 1)
+  }
+  visitar(json, 0)
+  return [...achados.values()]
+}
