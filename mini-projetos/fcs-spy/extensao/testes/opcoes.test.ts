@@ -73,6 +73,14 @@ describe('validarCortes', () => {
     expect(validarCortes({ corteVerde: '300,5', corteAmarelo: '50' })).toBe(msg)
     expect(validarCortes({ corteVerde: '300', corteAmarelo: '0' })).toBe(msg)
   })
+  it('ponto de milhar é aceito; lixo é recusado', () => {
+    const msg = 'Use um número inteiro a partir de 1 nas cores das vendas'
+    expect(validarCortes({ corteVerde: '1.000', corteAmarelo: '200' })).toBeNull()
+    expect(validarCortes({ corteVerde: '300abc', corteAmarelo: '50' })).toBe(msg)
+    expect(validarCortes({ corteVerde: '3e2', corteAmarelo: '50' })).toBe(msg)
+    expect(validarCortes({ corteVerde: '1.00', corteAmarelo: '50' })).toBe(msg)
+    expect(daTela({ ...paraTela(CONFIG_PADRAO), corteVerde: '1.000' }).corteVerde).toBe(1000)
+  })
   it('recusa amarelo maior ou igual ao verde', () => {
     expect(validarCortes({ corteVerde: '300', corteAmarelo: '300' })).toBe('O amarelo precisa ser menor que o verde')
   })

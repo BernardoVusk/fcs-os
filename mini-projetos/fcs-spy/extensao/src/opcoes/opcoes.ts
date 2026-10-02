@@ -39,9 +39,15 @@ function numero(v: string | undefined): number | undefined {
   return Number.isFinite(n) ? n : undefined
 }
 
+function inteiroDaTela(s: string | undefined): number | undefined {
+  const t = (s ?? '').replace(/\s/g, '')
+  if (!/^\d+$/.test(t) && !/^\d{1,3}(\.\d{3})+$/.test(t)) return undefined
+  return Number(t.replace(/\./g, ''))
+}
+
 export function validarCortes(v: Record<string, string>): string | null {
-  const verde = numero(v.corteVerde)
-  const amarelo = numero(v.corteAmarelo)
+  const verde = inteiroDaTela(v.corteVerde)
+  const amarelo = inteiroDaTela(v.corteAmarelo)
   const ok = (n: number | undefined): n is number => n !== undefined && Number.isInteger(n) && n >= 1
   if (!ok(verde) || !ok(amarelo)) return 'Use um número inteiro a partir de 1 nas cores das vendas'
   if (amarelo >= verde) return 'O amarelo precisa ser menor que o verde'
@@ -58,7 +64,7 @@ export function paraTela(c: Config): Record<string, string> {
 export function daTela(v: Record<string, string>): Config {
   const bruto: Record<string, unknown> = {}
   for (const f of CAMPOS) {
-    const n = numero(v[f.chave])
+    const n = f.chave === 'corteVerde' || f.chave === 'corteAmarelo' ? inteiroDaTela(v[f.chave]) : numero(v[f.chave])
     if (n !== undefined) bruto[f.chave] = f.pct ? arredonda(n / 100) : n
   }
   const margens = (v.margens ?? '')
