@@ -12,7 +12,7 @@ import { ordenar, reordenarNaPagina, type Criterio } from '../ui/ordenar'
 import { montarBarra, aplicarLigado, instalarEstiloGlobal, sincronizarBarra } from '../ui/barra'
 import { montarPainel, ATRIBUTO_PAINEL } from '../ui/painel'
 import { licencaValida } from '../licenca/licenca'
-import { lembrar } from './vistos'
+import { lembrar, mesclarAnuncio } from './vistos'
 import { MENSAGEM_ABRIR_OPCOES } from '../fundo/fundo'
 
 type Visto = { anuncio: Anuncio; historico: EstadoHistorico }
@@ -67,7 +67,9 @@ async function iniciar(): Promise<void> {
     } catch (e) {
       console.warn('[FCS SPY] histórico indisponível', e)
     }
-    for (const a of anuncios) {
+    for (const nova of anuncios) {
+      const antigo = vistos.get(nova.itemId)?.anuncio
+      const a = antigo ? mesclarAnuncio(antigo, nova) : nova
       const removidas = lembrar(vistos, a.itemId, { anuncio: a, historico: tendencias ? (tendencias.get(a.itemId) ?? null) : 'indisponivel' })
       desenhados.get(a.itemId)?.remove()
       desenhados.delete(a.itemId)

@@ -15,7 +15,11 @@ export function leituraDe(a: Anuncio, agora: Date): Leitura {
 }
 
 export function registrar(lista: Leitura[], nova: Leitura): Leitura[] {
-  return [...lista.filter(x => x.data !== nova.data), nova]
+  const existente = lista.find(x => x.data === nova.data)
+  const final = existente
+    ? { ...nova, vendas30d: nova.vendas30d ?? existente.vendas30d, vendasTotal: nova.vendasTotal ?? existente.vendasTotal }
+    : nova
+  return [...lista.filter(x => x.data !== nova.data), final]
     .sort((a, b) => a.data.localeCompare(b.data))
     .slice(-MAX_LEITURAS)
 }

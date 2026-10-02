@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest'
-import { lembrar, MAX_VISTOS } from '../src/content/vistos'
+import { lembrar, mesclarAnuncio, MAX_VISTOS } from '../src/content/vistos'
+import { anuncio } from './fabrica'
 
 describe('lembrar', () => {
   it('mantém no máximo max entradas, descartando as mais antigas', () => {
@@ -41,5 +42,24 @@ describe('lembrar', () => {
     const mapa = new Map<string, number>()
     lembrar(mapa, 'a', 1)
     expect(mapa.size).toBe(1)
+  })
+})
+
+describe('mesclarAnuncio', () => {
+  it('herda campo nulo do antigo', () => {
+    const m = mesclarAnuncio(anuncio(), anuncio({ vendas30d: null, vendasTotal: null, criadoEm: null, likes: null, reviews: null, nota: null, loja: null }))
+    expect(m.vendas30d).toBe(1151)
+    expect(m.vendasTotal).toBe(4595)
+    expect(m.criadoEm).toEqual(new Date('2025-09-02T12:00:00Z'))
+    expect(m.likes).toBe(1031)
+    expect(m.reviews).toBe(2354)
+    expect(m.nota).toBe(4.9)
+    expect(m.loja).toBe('Loja Teste')
+  })
+  it('campo presente substitui e preço é sempre o do novo', () => {
+    const m = mesclarAnuncio(anuncio(), anuncio({ vendas30d: 5, preco: 4.5, loja: 'Outra' }))
+    expect(m.vendas30d).toBe(5)
+    expect(m.loja).toBe('Outra')
+    expect(m.preco).toBe(4.5)
   })
 })

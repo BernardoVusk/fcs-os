@@ -81,3 +81,14 @@ describe('gravarLeituras e ultimaLeitura', () => {
     expect(await ultimaLeitura('999', areaEmMemoria())).toBeNull()
   })
 })
+
+describe('registrar, leitura mais pobre no mesmo dia', () => {
+  it('herda vendas nulas da leitura do mesmo dia', () => {
+    const r = registrar([{ ...l('2026-09-27', 50), vendasTotal: 900 }], { itemId: '1', data: '2026-09-27', preco: 7, vendas30d: null, vendasTotal: null })
+    expect(r).toEqual([{ itemId: '1', data: '2026-09-27', preco: 7, vendas30d: 50, vendasTotal: 900 }])
+  })
+  it('substitui quando a nova traz valor', () => {
+    const r = registrar([l('2026-09-27', 50)], l('2026-09-27', 80))
+    expect(r[0].vendas30d).toBe(80)
+  })
+})
