@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { describe, it, expect, vi } from 'vitest'
-import { paraTela, daTela, iniciarTela, CAMPOS } from '../src/opcoes/opcoes'
+import { paraTela, daTela, iniciarTela, validarCortes, CAMPOS } from '../src/opcoes/opcoes'
 import { CONFIG_PADRAO, CHAVE_CONFIG } from '../src/dados/config'
 import type { Config } from '../src/nucleo/tipos'
 import { areaEmMemoria } from './area-memoria'
@@ -60,5 +60,34 @@ describe('tela v2', () => {
     expect(unidades('kwh')).toEqual(['R$', '/kWh'])
     expect(unidades('margens')).toEqual(['%'])
     expect(unidades('corteVerde')).toEqual(['/mês'])
+  })
+})
+
+describe('validarCortes', () => {
+  it('aceita inteiros com amarelo menor que verde', () => {
+    expect(validarCortes({ corteVerde: '300', corteAmarelo: '50' })).toBeNull()
+  })
+  it('recusa vazio, decimal e menor que 1', () => {
+    const msg = 'Use um número inteiro a partir de 1 nas cores das vendas'
+    expect(validarCortes({ corteVerde: '', corteAmarelo: '50' })).toBe(msg)
+    expect(validarCortes({ corteVerde: '300,5', corteAmarelo: '50' })).toBe(msg)
+    expect(validarCortes({ corteVerde: '300', corteAmarelo: '0' })).toBe(msg)
+  })
+  it('recusa amarelo maior ou igual ao verde', () => {
+    expect(validarCortes({ corteVerde: '300', corteAmarelo: '300' })).toBe('O amarelo precisa ser menor que o verde')
+  })
+  it('ida e volta pela tela mantém 300 e 50', () => {
+    const c = daTela(paraTela(CONFIG_PADRAO))
+    expect(c.corteVerde).toBe(300)
+    expect(c.corteAmarelo).toBe(50)
+  })
+  it('tela recusa salvar corte inválido e mostra o aviso', async () => {
+    document.body.innerHTML = '<form id="form"><div id="campos"></div><span id="status"></span><button type="submit">Salvar</button></form>'
+    const area = areaEmMemoria()
+    await iniciarTela(document, area)
+    document.querySelector<HTMLInputElement>('input[name="corteAmarelo"]')!.value = '400'
+    document.getElementById('form')!.dispatchEvent(new Event('submit', { cancelable: true }))
+    await vi.waitFor(() => expect(document.getElementById('status')!.textContent).toBe('O amarelo precisa ser menor que o verde'))
+    expect(area.dados[CHAVE_CONFIG]).toBeUndefined()
   })
 })

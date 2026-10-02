@@ -42,6 +42,24 @@ describe('lerConfig e salvarConfig', () => {
   })
 })
 
+describe('cortes de faixa validados', () => {
+  it('não inteiro, negativo ou zero mantêm o padrão da chave', () => {
+    expect(mesclar({ corteVerde: 300.5 }).corteVerde).toBe(300)
+    expect(mesclar({ corteAmarelo: -5 }).corteAmarelo).toBe(50)
+    expect(mesclar({ corteVerde: 0 }).corteVerde).toBe(300)
+  })
+  it('config antiga sem os cortes recebe 300 e 50', () => {
+    const c = mesclar({ comissaoPct: 0.2, taxaFixa: 4 })
+    expect(c.corteVerde).toBe(300)
+    expect(c.corteAmarelo).toBe(50)
+  })
+  it('amarelo acima do verde volta os dois ao padrão', () => {
+    const c = mesclar({ corteVerde: 100, corteAmarelo: 150 })
+    expect(c.corteVerde).toBe(300)
+    expect(c.corteAmarelo).toBe(50)
+  })
+})
+
 describe('cortes de faixa', () => {
   it('padrões 300 e 50', () => {
     expect(CONFIG_PADRAO.corteVerde).toBe(300)

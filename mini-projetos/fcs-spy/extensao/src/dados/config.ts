@@ -30,6 +30,8 @@ export function mesclar(salvo: unknown): Config {
       if (Array.isArray(v) && v.length > 0 && v.every(n => typeof n === 'number' && Number.isFinite(n))) {
         c.margens = [...v]
       }
+    } else if (k === 'corteVerde' || k === 'corteAmarelo') {
+      if (typeof v === 'number' && Number.isInteger(v) && v >= 1) c[k] = v
     } else if (typeof v === 'number' && Number.isFinite(v)) {
       c[k] = v
     }

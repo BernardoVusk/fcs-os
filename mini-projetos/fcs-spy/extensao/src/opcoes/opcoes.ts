@@ -39,6 +39,15 @@ function numero(v: string | undefined): number | undefined {
   return Number.isFinite(n) ? n : undefined
 }
 
+export function validarCortes(v: Record<string, string>): string | null {
+  const verde = numero(v.corteVerde)
+  const amarelo = numero(v.corteAmarelo)
+  const ok = (n: number | undefined): n is number => n !== undefined && Number.isInteger(n) && n >= 1
+  if (!ok(verde) || !ok(amarelo)) return 'Use um número inteiro a partir de 1 nas cores das vendas'
+  if (amarelo >= verde) return 'O amarelo precisa ser menor que o verde'
+  return null
+}
+
 export function paraTela(c: Config): Record<string, string> {
   const t: Record<string, string> = {}
   for (const f of CAMPOS) t[f.chave] = paraCampo(f.pct ? arredonda(c[f.chave] * 100) : c[f.chave])
@@ -119,7 +128,13 @@ export async function iniciarTela(doc: Document, area: Area = areaLocal()): Prom
 
   form.addEventListener('submit', async ev => {
     ev.preventDefault()
-    const c = daTela(Object.fromEntries(chaves.map(k => [k, input(k).value])))
+    const valores = Object.fromEntries(chaves.map(k => [k, input(k).value]))
+    const aviso = validarCortes(valores)
+    if (aviso) {
+      status.textContent = aviso
+      return
+    }
+    const c = daTela(valores)
     await salvarConfig(c, area)
     preencher(c)
     status.replaceChildren(icone('check', doc), ' Salvo')
