@@ -19,6 +19,7 @@ describe('ouvirEscuta', () => {
     const parar = ouvirEscuta(window, recebido)
     enviar({ marca: 'outra', rota: 'cards' })
     enviar({ marca: 'fcs-spy', rota: 'carrinho' })
+    enviar({ marca: 'fcs-spy', rota: 'busca' })
     enviar(null)
     enviar({ marca: 'fcs-spy', rota: 'cards', url: 'u', corpo: {} }, null)
     expect(recebido).not.toHaveBeenCalled()

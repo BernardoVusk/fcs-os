@@ -61,7 +61,7 @@ describe('instalarEscuta: fetch', () => {
   })
   it('não publica rota que não interessa', async () => {
     const { w, postMessage } = janelaFalsa('{}')
-    await w.fetch('https://shopee.com.br/api/v4/web/subcart')
+    await w.fetch('https://shopee.com.br/search?keyword=x')
     await new Promise(r => setTimeout(r, 10))
     expect(postMessage).not.toHaveBeenCalled()
   })
