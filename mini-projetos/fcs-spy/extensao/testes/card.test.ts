@@ -230,4 +230,8 @@ describe('cor da faixa no card', () => {
     expect(r.querySelector('.card')!.className).toBe('card')
     expect(r.querySelector('.heroi .grande')!.className).toBe('grande num')
   })
+  it('a borda da faixa vence o border do .card (especificidade)', () => {
+    const css = Array.from(raiz(anuncio({ vendas30d: 1151 })).querySelectorAll('style')).map(s => s.textContent).join('')
+    expect(css).toContain('.card.faixa-alta { border-left: 4px solid #22C55E; }')
+  })
 })

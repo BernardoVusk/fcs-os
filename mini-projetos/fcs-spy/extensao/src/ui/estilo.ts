@@ -41,7 +41,7 @@ button:focus-visible, select:focus-visible, input:focus-visible { outline: 2px s
 .cor-alta { color: #15803D; }
 .cor-media { color: #A16207; }
 .cor-baixa { color: #B91C1C; }
-.faixa-alta { border-left: 4px solid #22C55E; }
-.faixa-media { border-left: 4px solid #EAB308; }
-.faixa-baixa { border-left: 4px solid #EF4444; }
+.card.faixa-alta { border-left: 4px solid #22C55E; }
+.card.faixa-media { border-left: 4px solid #EAB308; }
+.card.faixa-baixa { border-left: 4px solid #EF4444; }
 `
