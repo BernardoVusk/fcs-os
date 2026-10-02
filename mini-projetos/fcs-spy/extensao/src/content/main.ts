@@ -57,7 +57,10 @@ async function iniciar(): Promise<void> {
       return
     }
     const anuncios = acharCards(msg.corpo)
-    if (!anuncios.length) return
+    if (!anuncios.length) {
+      console.warn('[FCS SPY] resposta com marcador sem card reconhecido', msg.url)
+      return
+    }
     let tendencias: Map<string, Tendencia | null> | null = null
     try {
       tendencias = await gravarLeituras(anuncios.map(a => leituraDe(a, new Date())), area)
