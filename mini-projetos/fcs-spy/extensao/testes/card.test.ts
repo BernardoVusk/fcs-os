@@ -14,6 +14,14 @@ const card = (a: Anuncio, historico: Parameters<typeof textoHistorico>[0] = null
   montarCard({ anuncio: a, metricas: calcularMetricas(a, CONFIG_PADRAO, hoje), historico })
 const texto = (host: HTMLElement) => host.shadowRoot!.textContent ?? ''
 
+describe('CSS do card', () => {
+  it('faixa mantém a largura útil e o rótulo não quebra', () => {
+    const css = card(anuncio()).shadowRoot!.querySelector('style')!.textContent ?? ''
+    expect(css).toMatch(/\.card\.faixa-alta \{[^}]*padding-left: 7px/)
+    expect(css).toContain('.bloco .rotulo { white-space: nowrap; }')
+  })
+})
+
 describe('montarCard', () => {
   it('mostra as métricas conferidas', () => {
     const host = card(anuncio())
@@ -232,6 +240,6 @@ describe('cor da faixa no card', () => {
   })
   it('a borda da faixa vence o border do .card (especificidade)', () => {
     const css = Array.from(raiz(anuncio({ vendas30d: 1151 })).querySelectorAll('style')).map(s => s.textContent).join('')
-    expect(css).toContain('.card.faixa-alta { border-left: 4px solid #22C55E; }')
+    expect(css).toContain('.card.faixa-alta { border-left: 4px solid #22C55E; padding-left: 7px; }')
   })
 })

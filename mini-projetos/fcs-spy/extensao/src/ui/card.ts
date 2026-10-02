@@ -15,6 +15,7 @@ const ESTILO_CARD = `
 .meta span { display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
 .blocos { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
 .bloco { background: var(--superficie); border-radius: var(--raio-sm); padding: 7px; display: grid; gap: 2px; min-width: 0; }
+.bloco .rotulo { white-space: nowrap; }
 .bloco b { font-size: 12px; white-space: nowrap; letter-spacing: -.01em; }
 .mais { display: flex; align-items: center; justify-content: center; gap: 4px; background: none; border: 0; color: var(--suave); font: inherit; font-weight: 600; cursor: pointer; padding: 3px; border-radius: 999px; }
 .mais:hover { color: var(--texto); background: var(--superficie); }
