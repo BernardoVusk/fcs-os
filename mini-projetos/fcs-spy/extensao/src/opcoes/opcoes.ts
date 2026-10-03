@@ -92,7 +92,7 @@ function campoTela(doc: Document, chave: string, rotulo: string, prefixo?: strin
   }
   const input = doc.createElement('input')
   input.name = chave
-  input.inputMode = 'decimal'
+  input.inputMode = chave === 'corteVerde' || chave === 'corteAmarelo' ? 'numeric' : 'decimal'
   if (prefixo) entrada.append(unidade(prefixo))
   entrada.append(input)
   if (sufixo) entrada.append(unidade(sufixo))

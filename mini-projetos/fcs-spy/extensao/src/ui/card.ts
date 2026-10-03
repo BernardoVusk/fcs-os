@@ -119,7 +119,9 @@ export function montarCard(d: DadosCard): HTMLElement {
     numeroVendas.classList.add(`cor-${m.faixa.nivel}`)
     numeroVendas.title = m.faixa.titulo
   }
-  heroi.append(numeroVendas, chip)
+  heroi.append(numeroVendas)
+  if (m.faixa) heroi.append(el('span', 'so-leitor', ` (vendas ${{ alta: 'altas', media: 'médias', baixa: 'baixas' }[m.faixa.nivel]})`))
+  heroi.append(chip)
   vendas.append(el('div', 'rotulo', 'Vendas 30D'), heroi)
 
   const blocos = el('div', 'blocos')

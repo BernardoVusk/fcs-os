@@ -89,6 +89,12 @@ describe('validarCortes', () => {
     expect(c.corteVerde).toBe(300)
     expect(c.corteAmarelo).toBe(50)
   })
+  it('campos de corte abrem teclado numérico', async () => {
+    document.body.innerHTML = '<form id="form"><div id="campos"></div><span id="status"></span><button type="submit">Salvar</button></form>'
+    await iniciarTela(document, areaEmMemoria())
+    expect(document.querySelector<HTMLInputElement>('input[name="corteVerde"]')!.inputMode).toBe('numeric')
+    expect(document.querySelector<HTMLInputElement>('input[name="corteAmarelo"]')!.inputMode).toBe('numeric')
+  })
   it('tela recusa salvar corte inválido e mostra o aviso', async () => {
     document.body.innerHTML = '<form id="form"><div id="campos"></div><span id="status"></span><button type="submit">Salvar</button></form>'
     const area = areaEmMemoria()

@@ -229,6 +229,13 @@ describe('cor da faixa no card', () => {
     expect(numero.title).toBe('Vendas altas: 300 ou mais no mês')
     expect(r.querySelector('.card')!.classList.contains('faixa-alta')).toBe(true)
   })
+  it('leitor de tela ouve a faixa depois do número', () => {
+    const texto = (v: number | null) => raiz(anuncio({ vendas30d: v })).querySelector('.heroi .so-leitor')?.textContent ?? null
+    expect(texto(1151)).toBe(' (vendas altas)')
+    expect(texto(188)).toBe(' (vendas médias)')
+    expect(texto(12)).toBe(' (vendas baixas)')
+    expect(texto(null)).toBeNull()
+  })
   it('média e baixa', () => {
     expect(raiz(anuncio({ vendas30d: 188 })).querySelector('.card')!.classList.contains('faixa-media')).toBe(true)
     expect(raiz(anuncio({ vendas30d: 12 })).querySelector('.card')!.classList.contains('faixa-baixa')).toBe(true)
