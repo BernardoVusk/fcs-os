@@ -33,10 +33,21 @@ describe('ouvirEscuta', () => {
   })
   it('filtro do vendedor aceita a marca e os tipos dele', () => {
     const recebido = vi.fn()
+    const m = { marca: 'fcs-spy-vendedor', rota: 'produtos', url: 'u', corpo: {} }
     const parar = ouvirEscuta(window, recebido, { marca: 'fcs-spy-vendedor', rotas: ['produtos'] })
-    enviar({ marca: 'fcs-spy-vendedor', rota: 'produtos', url: 'u', corpo: {} })
+    enviar(m)
     enviar({ marca: 'fcs-spy', rota: 'cards', url: 'u', corpo: {} })
+    enviar({ ...m, rota: 'indicadores' })
+    enviar({ ...m, rota: ['produtos'] as unknown as string })
     expect(recebido).toHaveBeenCalledOnce()
+    expect(recebido).toHaveBeenCalledWith(m)
+    parar()
+  })
+  it('filtro do comprador não recebe mensagem do vendedor', () => {
+    const recebido = vi.fn()
+    const parar = ouvirEscuta(window, recebido)
+    enviar({ marca: 'fcs-spy-vendedor', rota: 'produtos', url: 'u', corpo: {} })
+    expect(recebido).not.toHaveBeenCalled()
     parar()
   })
 })

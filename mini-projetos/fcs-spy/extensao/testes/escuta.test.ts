@@ -141,4 +141,18 @@ describe('instalarEscuta com regras do vendedor', () => {
     await new Promise(r => setTimeout(r, 10))
     expect(postMessage).not.toHaveBeenCalled()
   })
+  it('XHR de texto publica endereço sem sessão', () => {
+    const postMessage = vi.fn()
+    class XHRVendedor3 extends XHRFalso {}
+    const w = { postMessage, location: { origin: 'https://seller.shopee.com.br' }, XMLHttpRequest: XHRVendedor3, fetch: vi.fn() }
+    instalarEscuta(w as unknown as Parameters<typeof instalarEscuta>[0], REGRAS_VENDEDOR)
+    const x = new w.XMLHttpRequest()
+    x.open('GET', 'https://seller.shopee.com.br/api/mydata/v4/product/performance/?SPC_CDS=abc&page_num=2')
+    x.responseText = '{"result":{}}'
+    x.ouvintes.forEach(f => f())
+    expect(postMessage).toHaveBeenCalledOnce()
+    const msg = postMessage.mock.calls[0][0]
+    expect(msg.url).toBe('/api/mydata/v4/product/performance/?page_num=2')
+    expect(msg.url).not.toContain('SPC')
+  })
 })
