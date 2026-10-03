@@ -84,6 +84,8 @@ export function traduzirCampanhas(json: unknown): Campanha[] | null {
     if (campanhaId === null) continue
     const r = e.report ?? {}
     const alvo = ads(e.campaign?.roi_two_target)
+    const gasto = ads(r.cost)
+    const cliques = num(r.click)
     saida.push({
       campanhaId,
       itemId: e.manual_product_ads?.item_id == null ? null : id(e.manual_product_ads.item_id),
@@ -91,14 +93,15 @@ export function traduzirCampanhas(json: unknown): Campanha[] | null {
       estado: typeof e.state === 'string' ? e.state : '',
       orcamentoDiario: ads(e.campaign?.daily_budget),
       roasAlvo: alvo === 0 ? null : alvo,
-      gasto: ads(r.cost),
+      gasto,
       receita: ads(r.broad_gmv),
       pedidos: num(r.broad_order),
       roas: num(r.broad_roi),
-      cliques: num(r.click),
+      cliques,
       impressoes: num(r.impression),
       ctr: num(r.ctr),
-      cpc: ads(r.cpc),
+      custoPorPedido: ads(r.cpc), // cpc do report é custo por pedido (cost / broad_order)
+      custoPorClique: gasto !== null && cliques !== null && cliques > 0 ? gasto / cliques : null,
       carrinho: num(r.atc),
     })
   }

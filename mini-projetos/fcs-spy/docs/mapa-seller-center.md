@@ -51,7 +51,7 @@ Amostras: `extensao/testes/amostras/vendedor/seller-center-2026-10-02.json` (nom
 
 | Uso | Endpoint | Campos principais |
 |---|---|---|
-| **Campanhas** | `/api/pas/v1/homepage/query/` (POST) | `entry_list[]`: `type` (`product_manual` etc.), `state` (`ongoing`, `paused`, `ended`, `closed`), `title`, `manual_product_ads.item_id` (liga a campanha ao produto), `campaign`: `campaign_id`, `daily_budget`, `total_budget`, `roi_two_target` (ROAS alvo), `start_time`, `end_time`. `report`: `cost`, `impression`, `click`, `ctr`, `cpc`, `broad_gmv`, `broad_order`, `broad_roi` (ROAS amplo), `direct_gmv`, `direct_order`, `direct_roi`, `atc`, `avg_rank`, `cpm`. `ratio`: variação de cada métrica |
+| **Campanhas** | `/api/pas/v1/homepage/query/` (POST) | `entry_list[]`: `type` (`product_manual` etc.), `state` (`ongoing`, `paused`, `ended`, `closed`), `title`, `manual_product_ads.item_id` (liga a campanha ao produto), `campaign`: `campaign_id`, `daily_budget`, `total_budget`, `roi_two_target` (ROAS alvo), `start_time`, `end_time`. `report`: `cost`, `impression`, `click`, `ctr`, `cpc` (custo por pedido, igual a `cost / broad_order`, 0 sem pedido; não é custo por clique), `cpdc` (custo por pedido direto), `broad_gmv`, `broad_order`, `broad_roi` (ROAS amplo), `direct_gmv`, `direct_order`, `direct_roi`, `atc`, `avg_rank`, `cpm` (não confirmado, não usado). `ratio`: variação de cada métrica |
 | Resumo do período | `/api/pas/v1/report/get_time_graph/` | `report_aggregate` (mesmas métricas somadas) e `report_by_time` (série) |
 | Saldo | `/api/pas/v1/wallet/get/` | `ads_credit`, `ads_expense_today` |
 | Orçamento estourando | `/api/pas/v1/todo/daily_budget/check_campaign_list/` | lista de campanhas perto do teto diário (útil para "cabe mais investimento") |

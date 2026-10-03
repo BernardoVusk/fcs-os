@@ -56,10 +56,12 @@ describe('traduzirCampanhas', () => {
     expect(c[0]).toEqual({
       campanhaId: '900001', itemId: '11111111111', titulo: 'Produto 1', estado: 'ongoing',
       orcamentoDiario: 50, roasAlvo: 8, gasto: 20, receita: 180, pedidos: 5, roas: 9,
-      cliques: 80, impressoes: 3000, ctr: 0.0267, cpc: 0.25, carrinho: 10,
+      cliques: 80, impressoes: 3000, ctr: 0.0267, custoPorPedido: 4, custoPorClique: 0.25, carrinho: 10,
     })
     expect(c[1].estado).toBe('paused')
     expect(c[1].roasAlvo).toBeNull() // roi_two_target 0 = sem alvo
+    expect(c[1].custoPorPedido).toBe(0)
+    expect(c[1].custoPorClique).toBeCloseTo(5 / 60, 6)
   })
 })
 
