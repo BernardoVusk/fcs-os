@@ -15,7 +15,7 @@ export type DadosPainel = {
   leitura: Leitura | null
   aoAbrirCustos?: () => void
   custoSalvo?: CustoProduto | null
-  aoSalvarCusto?: (c: CustoProduto) => void
+  aoSalvarCusto?: (c: CustoProduto) => Promise<void>
 }
 
 const ESTILO_PAINEL = `
@@ -214,9 +214,18 @@ export function montarPainel(d: DadosPainel): HTMLElement {
     const status = document.createElement('span')
     status.className = 'status-custo'
     salvar.addEventListener('click', () => {
-      aoSalvarCusto({ gramas: lerNumero(gramas.value) ?? 0, horas: lerNumero(horas.value) ?? 0, minutos: lerNumero(minutos.value) ?? 0 })
-      status.textContent = 'Custo salvo para este produto'
+      const c = { gramas: lerNumero(gramas.value) ?? 0, horas: lerNumero(horas.value) ?? 0, minutos: lerNumero(minutos.value) ?? 0 }
+      if (c.gramas < 0 || c.horas < 0 || c.minutos < 0) {
+        status.textContent = 'Use números a partir de zero'
+        return
+      }
+      status.textContent = 'Salvando...'
+      aoSalvarCusto(c).then(
+        () => { status.textContent = 'Custo salvo para este produto' },
+        () => { status.textContent = 'Não foi possível salvar o custo' },
+      )
     })
+    for (const i of [gramas, horas, minutos]) i.addEventListener('input', () => { status.textContent = '' })
     corpo.append(salvar, status)
   }
 

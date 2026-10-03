@@ -164,7 +164,7 @@ async function iniciar(): Promise<void> {
         leitura,
         aoAbrirCustos: abrirCustos,
         custoSalvo,
-        aoSalvarCusto: c => { salvarCusto(id.itemId, c, area).catch(e => console.warn('[FCS SPY] custo', e)) },
+        aoSalvarCusto: c => salvarCusto(id.itemId, c, area),
       }))
     } finally {
       desenhandoPainel = false

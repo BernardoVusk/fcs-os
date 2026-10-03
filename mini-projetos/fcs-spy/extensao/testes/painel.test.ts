@@ -171,14 +171,37 @@ describe('montarPainel', () => {
     expect(r.querySelector<HTMLInputElement>('input[name="horas"]')!.value).toBe('2')
     expect(r.querySelector<HTMLInputElement>('input[name="minutos"]')!.value).toBe('5')
   })
-  it('salvar custo manda os números digitados', () => {
-    const aoSalvarCusto = vi.fn()
+  it('salvar custo manda os números digitados', async () => {
+    const aoSalvarCusto = vi.fn().mockResolvedValue(undefined)
     const r = montarPainel({ config: cfg, preco: 15.9, variacoes: null, leitura: null, aoSalvarCusto }).shadowRoot!
     preencher(r, 'gramas', '30,5')
     preencher(r, 'horas', '4')
     r.querySelector<HTMLButtonElement>('button.salvar-custo')!.click()
     expect(aoSalvarCusto).toHaveBeenCalledWith({ gramas: 30.5, horas: 4, minutos: 0 })
-    expect(r.querySelector('.status-custo')!.textContent).toBe('Custo salvo para este produto')
+    await vi.waitFor(() => expect(r.querySelector('.status-custo')!.textContent).toBe('Custo salvo para este produto'))
+  })
+  it('número negativo é recusado sem chamar o callback', () => {
+    const aoSalvarCusto = vi.fn().mockResolvedValue(undefined)
+    const r = montarPainel({ config: cfg, preco: 15.9, variacoes: null, leitura: null, aoSalvarCusto }).shadowRoot!
+    preencher(r, 'gramas', '-5')
+    r.querySelector<HTMLButtonElement>('button.salvar-custo')!.click()
+    expect(aoSalvarCusto).not.toHaveBeenCalled()
+    expect(r.querySelector('.status-custo')!.textContent).toBe('Use números a partir de zero')
+  })
+  it('falha na gravação aparece no status', async () => {
+    const aoSalvarCusto = vi.fn().mockRejectedValue(new Error('x'))
+    const r = montarPainel({ config: cfg, preco: 15.9, variacoes: null, leitura: null, aoSalvarCusto }).shadowRoot!
+    r.querySelector<HTMLButtonElement>('button.salvar-custo')!.click()
+    expect(r.querySelector('.status-custo')!.textContent).toBe('Salvando...')
+    await vi.waitFor(() => expect(r.querySelector('.status-custo')!.textContent).toBe('Não foi possível salvar o custo'))
+  })
+  it('editar o custo limpa o status', async () => {
+    const aoSalvarCusto = vi.fn().mockResolvedValue(undefined)
+    const r = montarPainel({ config: cfg, preco: 15.9, variacoes: null, leitura: null, aoSalvarCusto }).shadowRoot!
+    r.querySelector<HTMLButtonElement>('button.salvar-custo')!.click()
+    await vi.waitFor(() => expect(r.querySelector('.status-custo')!.textContent).toBe('Custo salvo para este produto'))
+    preencher(r, 'gramas', '12')
+    expect(r.querySelector('.status-custo')!.textContent).toBe('')
   })
   it('sem callback, sem botão de salvar custo', () => {
     const r = montarPainel({ config: cfg, preco: 15.9, variacoes: null, leitura: null }).shadowRoot!
