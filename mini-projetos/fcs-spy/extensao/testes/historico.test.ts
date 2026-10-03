@@ -92,3 +92,14 @@ describe('registrar, leitura mais pobre no mesmo dia', () => {
     expect(r[0].vendas30d).toBe(80)
   })
 })
+
+describe('gravarLeituras com leitura mais pobre no mesmo dia', () => {
+  it('a tendência usa a leitura mesclada', async () => {
+    const area = areaEmMemoria()
+    await gravarLeituras([l('2026-09-26', 10)], area)
+    await gravarLeituras([l('2026-09-27', 14)], area)
+    const t = await gravarLeituras([{ itemId: '1', data: '2026-09-27', preco: 10, vendas30d: null, vendasTotal: null }], area)
+    expect(t.get('1')?.difVendas30d).toBe(4)
+    expect(t.get('1')?.seta).toBe('sobe')
+  })
+})

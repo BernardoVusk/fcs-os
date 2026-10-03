@@ -53,8 +53,9 @@ export async function gravarLeituras(novas: Leitura[], area: Area = areaLocal())
   for (const n of novas) {
     const k = chave(n.itemId)
     const lista = atualizado[k] ?? listaDe(salvo[k])
-    tendencias.set(n.itemId, comparar(n, anterior(lista, n.data)))
     atualizado[k] = registrar(lista, n)
+    const atual = atualizado[k].find(x => x.data === n.data) ?? n
+    tendencias.set(n.itemId, comparar(atual, anterior(lista, n.data)))
   }
   await area.set(atualizado)
   return tendencias
