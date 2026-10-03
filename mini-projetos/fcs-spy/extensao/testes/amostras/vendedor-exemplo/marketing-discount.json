@@ -1,0 +1,1 @@
+{"code":0,"msg":"ok","result":{"key_metrics":{"sales":400,"sales_pct_diff":0.2,"orders":12,"orders_pct_diff":0.1,"units":13,"units_pct_diff":0.1,"buyers":11,"buyers_pct_diff":0.1,"sales_per_buyer":36.36,"sales_per_buyer_pct_diff":0.05},"time_series":[]}}
