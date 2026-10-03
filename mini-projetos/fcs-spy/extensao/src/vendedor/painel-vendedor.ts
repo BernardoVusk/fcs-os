@@ -32,7 +32,7 @@ const ESTILO_VENDEDOR = `
 .fonte { display: grid; gap: 4px; background: var(--superficie); border-radius: var(--raio); padding: 10px 12px; }
 .fonte .linha b { font-weight: 700; }
 .estado { font-size: 11px; color: var(--suave); }
-.estado.lido { color: var(--cor-ok, #15803D); }
+.estado.lido { color: #15803D; }
 .fonte a { color: var(--texto); font-size: 11px; }
 `
 

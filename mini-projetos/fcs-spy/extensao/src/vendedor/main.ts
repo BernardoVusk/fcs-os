@@ -7,6 +7,7 @@ import { areaLocal } from '../dados/area'
 function iniciar(): void {
   const area = areaLocal()
   let aberto = false
+  let geracao = 0
 
   // Logo no início, para não perder a primeira resposta da página.
   ouvirEscuta(window, msg => {
@@ -15,10 +16,12 @@ function iniciar(): void {
   }, { marca: MARCA_VENDEDOR, rotas: TIPOS_VENDEDOR })
 
   async function desenhar() {
+    const minha = ++geracao
     document.querySelector(`[${ATRIBUTO_VENDEDOR}]`)?.remove()
     if (!aberto) return
     const coletas = await lerColetas(area)
-    if (!aberto) return
+    if (minha !== geracao || !aberto) return
+    document.querySelector(`[${ATRIBUTO_VENDEDOR}]`)?.remove()
     document.body.append(montarPainelVendedor(coletas, Date.now()))
   }
 
@@ -30,9 +33,13 @@ function iniciar(): void {
     }))
   }
 
-  chrome.storage.onChanged.addListener((mudancas, nome) => {
-    if (nome === 'local' && mudancas[CHAVE_VENDEDOR] && aberto) desenhar().catch(e => console.warn('[FCS SPY] painel vendedor', e))
-  })
+  try {
+    chrome.storage.onChanged.addListener((mudancas, nome) => {
+      if (nome === 'local' && mudancas[CHAVE_VENDEDOR] && aberto) desenhar().catch(e => console.warn('[FCS SPY] painel vendedor', e))
+    })
+  } catch (e) {
+    console.warn('[FCS SPY] painel vendedor', e)
+  }
 
   if (document.body) montarBotao()
   else document.addEventListener('DOMContentLoaded', montarBotao, { once: true })
