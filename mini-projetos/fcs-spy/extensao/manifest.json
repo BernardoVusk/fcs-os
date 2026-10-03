@@ -19,6 +19,17 @@
       "matches": ["https://shopee.com.br/*"],
       "js": ["content.js"],
       "run_at": "document_start"
+    },
+    {
+      "matches": ["https://seller.shopee.com.br/*"],
+      "js": ["escuta-vendedor.js"],
+      "run_at": "document_start",
+      "world": "MAIN"
+    },
+    {
+      "matches": ["https://seller.shopee.com.br/*"],
+      "js": ["vendedor.js"],
+      "run_at": "document_start"
     }
   ]
 }

@@ -10,6 +10,8 @@ await build({
     content: 'src/content/main.ts',
     opcoes: 'src/opcoes/entrada.ts',
     fundo: 'src/fundo/entrada.ts',
+    'escuta-vendedor': 'src/page/entrada-vendedor.ts',
+    vendedor: 'src/vendedor/main.ts',
   },
   bundle: true,
   format: 'iife',
