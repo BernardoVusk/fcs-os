@@ -5,6 +5,7 @@ import pp from './amostras/vendedor-exemplo/product-performance.json'
 import ads from './amostras/vendedor-exemplo/ads-campanhas.json'
 import af from './amostras/vendedor-exemplo/afiliados-diario.json'
 import mk from './amostras/vendedor-exemplo/marketing-discount.json'
+import mkCupom from './amostras/vendedor-exemplo/marketing-voucher.json'
 import {
   traduzirIndicadores, traduzirOrigens, traduzirProdutos, traduzirCampanhas,
   traduzirAfiliados, traduzirMarketing, ferramentaDaUrl,
@@ -73,6 +74,15 @@ describe('traduzirAfiliados e traduzirMarketing', () => {
     expect(traduzirMarketing(mk, 'new-discount')).toEqual({ ferramenta: 'new-discount', vendas: 400, pedidos: 12, unidades: 13, compradores: 11, variacaoVendas: 0.2 })
     expect(ferramentaDaUrl('/api/mydata/marketing/new-discount/key-metrics/?start_time=1')).toBe('new-discount')
     expect(ferramentaDaUrl('/api/outra')).toBeNull()
+  })
+  it('ferramenta de marketing no formato por métrica (cupom, oferta relâmpago, prêmio da loja)', () => {
+    expect(traduzirMarketing(mkCupom, 'voucher')).toEqual({ ferramenta: 'voucher', vendas: 80, pedidos: 3, unidades: null, compradores: 3, variacaoVendas: -0.25 })
+  })
+  it('ferramenta sem dado na loja (result null) vira null sem aviso', () => {
+    const aviso = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    expect(traduzirMarketing({ code: 60001, msg: 'x', result: null }, 'hot-listing')).toBeNull()
+    expect(aviso).not.toHaveBeenCalled()
+    aviso.mockRestore()
   })
 })
 

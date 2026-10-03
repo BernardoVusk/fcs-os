@@ -126,8 +126,16 @@ export function ferramentaDaUrl(url: string): string | null {
   return m ? m[1] : null
 }
 
+// Dois formatos: Descontos traz key_metrics com *_pct_diff; Cupom, Oferta Relâmpago e Prêmio da Loja
+// trazem cada métrica como { value, chain_ratio }. Ferramenta que a loja não usa volta com result null.
 export function traduzirMarketing(json: unknown, ferramenta: string): FerramentaMarketing | null {
-  const k = (json as Bruto)?.result?.key_metrics
-  if (!k || typeof k !== 'object') return inesperado('marketing')
-  return { ferramenta, vendas: num(k.sales), pedidos: num(k.orders), unidades: num(k.units), compradores: num(k.buyers), variacaoVendas: num(k.sales_pct_diff) }
+  const r = (json as Bruto)?.result
+  if (r === null) return null
+  if (!r || typeof r !== 'object') return inesperado('marketing')
+  const k = r.key_metrics
+  if (k && typeof k === 'object') {
+    return { ferramenta, vendas: num(k.sales), pedidos: num(k.orders), unidades: num(k.units), compradores: num(k.buyers), variacaoVendas: num(k.sales_pct_diff) }
+  }
+  if (!r.sales || typeof r.sales !== 'object') return inesperado('marketing')
+  return { ferramenta, vendas: num(r.sales.value), pedidos: num(r.orders?.value), unidades: num(r.units?.value), compradores: num(r.buyers?.value), variacaoVendas: num(r.sales.chain_ratio) }
 }

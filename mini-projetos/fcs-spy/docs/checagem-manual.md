@@ -82,28 +82,35 @@ Para cada item que falhar, anotar: a página, se a resposta chega (aviso no cons
 
 Recarregar a extensão em `chrome://extensions` e abrir o Seller Center logado.
 
-- [ ] Botão preto com miolo ciano no canto inferior direito; clicar abre o painel "FCS SPY Vendedor"
-- [ ] Antes de navegar: as seis fontes mostram "ainda não lido" com o link da página certa
-- [ ] Abrir Informações Gerenciais > Visão Geral: "Indicadores do período" e "De onde vêm as vendas" passam a "lido agora há pouco"
-- [ ] Abrir Produto > Performance do Produto e passar para a página 2: "Funil por produto" lido
-- [ ] Abrir Shopee Ads: "Campanhas de Shopee Ads" lido
-- [ ] Abrir Afiliados > Principais Indicadores: "Afiliados" lido
-- [ ] Abrir Informações Gerenciais > Marketing: "Marketing" com 1 ferramenta
-- [ ] O painel atualiza sozinho enquanto está aberto
-- [ ] Nenhuma verificação de robô nova no Seller Center
-- [ ] Console sem erro vermelho vindo da extensão
-- [ ] No console do service worker da extensão (`chrome://extensions` > FCS SPY > service worker): `chrome.storage.local.get(null).then(console.log)` não mostra `SPC_`, token, carteira, pedido nem dado de comprador
-- [ ] Conferir um número de cada fonte com o que a tela mostra (vendas do período, um produto do funil, gasto e custo por pedido de uma campanha, vendas de afiliados)
-- [ ] Trocar o período para 7 e 30 dias: o funil por produto é substituído, não somado
-- [ ] Trocar o tipo de pedido (pago, feito, confirmado) e conferir que o painel continua coerente
-- [ ] Abrir Visão Geral e Shopee Ads em duas abas ao mesmo tempo: as duas fontes aparecem como lidas (se uma sumir, anotar: corrida entre abas)
-- [ ] Na Shopee normal, cards e calculadora continuam funcionando
-- [ ] Período das campanhas de Ads: anotar qual intervalo a tela mostra (a extensão ainda não lê o período dessa resposta)
+- [ok] Botão preto com miolo ciano no canto inferior direito; clicar abre o painel "FCS SPY Vendedor"
+- [ok] Antes de navegar: as seis fontes mostram "ainda não lido" com o link da página certa
+- [ok] Abrir Informações Gerenciais > Visão Geral: "Indicadores do período" e "De onde vêm as vendas" passam a "lido agora há pouco"
+- [ok] Abrir Produto > Performance do Produto e passar para a página 2: "Funil por produto" lido (03/10: em Tempo Real a lista tem 1 página só; página 2 testada em Últimos 30 Dias)
+- [ok] Abrir Shopee Ads: "Campanhas de Shopee Ads" lido
+- [ok] Abrir Afiliados > Principais Indicadores: "Afiliados" lido
+- [ok] Abrir Informações Gerenciais > Marketing: "Marketing" com 1 ferramenta (03/10: Descontos lido; Cupom, Oferta Relâmpago e Prêmio da Loja eram descartados por formato diferente, corrigido no mesmo dia)
+- [ok] O painel atualiza sozinho enquanto está aberto (03/10: atualiza em navegação interna; link que recarrega a página fecha o painel)
+- [ok] Nenhuma verificação de robô nova no Seller Center
+- [ok] Console sem erro vermelho vindo da extensão (03/10: sem erro vermelho; um aviso [FCS SPY] de marketing, que era o bug acima)
+- [pendente] No console do service worker da extensão (`chrome://extensions` > FCS SPY > service worker): `chrome.storage.local.get(null).then(console.log)` não mostra `SPC_`, token, carteira, pedido nem dado de comprador (03/10: a ferramenta do Chrome não abre páginas de extensão; rodar à mão)
+- [pendente] Conferir um número de cada fonte com o que a tela mostra (vendas do período, um produto do funil, gasto e custo por pedido de uma campanha, vendas de afiliados) (03/10: o painel da fase 4 ainda não mostra número; depende da leitura do storage)
+- [pendente] Trocar o período para 7 e 30 dias: o funil por produto é substituído, não somado (03/10: período trocado para 30 dias e funil lido; substituição só se confere no storage)
+- [pendente] Trocar o tipo de pedido (pago, feito, confirmado) e conferir que o painel continua coerente
+- [ok] Abrir Visão Geral e Shopee Ads em duas abas ao mesmo tempo: as duas fontes aparecem como lidas (se uma sumir, anotar: corrida entre abas) (03/10: Visão Geral numa aba nova atualizou o painel aberto na outra)
+- [ok] Na Shopee normal, cards e calculadora continuam funcionando (03/10: calculadora na página do produto, Vendas 30D = 5 em vermelho)
+- [ok] Período das campanhas de Ads: anotar qual intervalo a tela mostra (a extensão ainda não lê o período dessa resposta) (03/10: a tela de Ads abre em "hoje"; o período está no endereço da página, não na resposta. Fica para a fase 6)
 
 ## Custo por produto (fase 4)
 
-- [ ] Na página de um produto da FCS, preencher gramas e horas na calculadora e clicar "Salvar custo deste produto": aparece "Custo salvo para este produto"
-- [ ] Recarregar a página do produto: gramas e horas voltam preenchidos
+- [ok] Na página de um produto da FCS, preencher gramas e horas na calculadora e clicar "Salvar custo deste produto": aparece "Custo salvo para este produto" (03/10: negativo recusado com "Use números a partir de zero")
+- [ok] Recarregar a página do produto: gramas e horas voltam preenchidos (03/10: teste feito com 12 g, 1 h, 5 min e depois zerado)
+
+### Achados da rodada de 03/10/2026 (feita pelo Claude no Chrome conectado)
+
+- Corrigido: Marketing tem dois formatos de resposta. Só Descontos usa `key_metrics`; Cupom, Oferta Relâmpago e Prêmio da Loja trazem cada métrica como `{ value, chain_ratio }`. Hot Listing sem uso na loja volta com `result: null` e agora é ignorado sem aviso. Tráfego Fora da Plataforma usa outro endpoint e fica fora da lista.
+- Usabilidade: link do painel que troca de aplicativo (Afiliados, Marketing vindo de Afiliados) recarrega a página e o painel fecha. Avaliar guardar aberto/fechado na sessão.
+- Usabilidade: o painel aberto cobre os ícones do canto superior direito do Seller Center (avatar, notificações).
+- O painel mostra quando cada fonte foi lida, mas não de qual período. Entra na fase 5 junto com os números.
 
 ## Pendências conhecidas
 
