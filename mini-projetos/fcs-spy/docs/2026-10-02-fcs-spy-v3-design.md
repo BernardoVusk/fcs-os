@@ -72,11 +72,11 @@ Toda página do comprador com card de produto: página inicial (Descobertas do d
 
 ### Como
 
-- **Escuta**: hoje filtra 3 URLs. Passa a olhar toda resposta JSON de `shopee.com.br/api/`. Antes de publicar, um teste barato no texto: só publica se contém `"item_card_display_sold_count"`, `"item_basic"` ou `"historical_sold"`. Respostas de rastreamento, carrinho e notificação são descartadas sem `JSON.parse`. Continua sem alterar nem atrasar nada.
+- **Escuta**: hoje filtra 3 URLs. Passa a olhar toda resposta JSON de `shopee.com.br/api/`. Antes de publicar, um teste barato no texto: só publica se contém `"item_card_display_sold_count"`. A v3 usa só esse marcador; `"item_basic"` e `"historical_sold"` ficam adiados até uma amostra real mostrar que são necessários. Respostas de rastreamento, carrinho e notificação são descartadas sem `JSON.parse`. Continua sem alterar nem atrasar nada.
 - **Rota**: `produto` continua para `pdp/get_pc` (variações). Todo o resto vira rota `cards`.
-- **Tradução**: `acharCards(json)` percorre o JSON (profundidade máxima 12, até 5.000 nós) e traduz cada objeto que tiver a forma de card. Duas formas:
-  - card 2026 (`item_data` + `item_card_displayed_asset`), já suportada;
-  - `item_basic` (formato antigo, que pode ainda aparecer fora da busca), a confirmar com amostra.
+- **Tradução**: `acharCards(json)` percorre o JSON (profundidade máxima 12, até 5.000 nós) e traduz cada objeto que tiver a forma de card. Duas formas, só a primeira na v3:
+  - card 2026 (`item_data` + `item_card_displayed_asset`), já suportada e a única forma da v3;
+  - `item_basic` (formato antigo, que pode ainda aparecer fora da busca): adiado até uma amostra real mostrar que é necessário.
   Duplicados pelo mesmo `itemId` ficam com a primeira ocorrência.
 - **Desenho**: `mapaDeLinks` já varre o documento todo. O ponto incerto é o container: na busca é o `<li>`; nas outras páginas pode não haver `<li>`. Cada tipo de página é conferido no Chrome antes de dar por pronta.
 
