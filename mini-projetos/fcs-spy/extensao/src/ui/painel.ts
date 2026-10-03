@@ -4,6 +4,7 @@ import { faixaVendas } from '../nucleo/faixas'
 import { reais, inteiro, pct, SEM_DADO, paraCampo } from '../nucleo/formato'
 import { ESTILO_BASE } from './estilo'
 import { icone, marcaFcs, type NomeIcone } from './icones'
+import type { CustoProduto } from '../dados/custos'
 
 export const ATRIBUTO_PAINEL = 'data-fcs-spy-painel'
 
@@ -13,6 +14,8 @@ export type DadosPainel = {
   variacoes: Variacoes | null
   leitura: Leitura | null
   aoAbrirCustos?: () => void
+  custoSalvo?: CustoProduto | null
+  aoSalvarCusto?: (c: CustoProduto) => void
 }
 
 const ESTILO_PAINEL = `
@@ -39,6 +42,8 @@ const ESTILO_PAINEL = `
 .lucro .chip { background: var(--ciano); color: var(--preto); }
 .lucro small { color: #9BA1A6; font-size: 11px; }
 .contas { display: grid; gap: 6px; }
+.salvar-custo { justify-self: start; background: var(--superficie); color: var(--texto); border: 1px solid var(--linha); border-radius: 999px; padding: 6px 12px; text-transform: none; font-weight: 600; }
+.status-custo { color: var(--suave); font-size: 11px; }
 `
 
 // null quando o campo está vazio ou não é número. Quem chama decide o padrão (0 ou sem dado).
@@ -183,9 +188,9 @@ export function montarPainel(d: DadosPainel): HTMLElement {
   const precoInicial = d.preco ?? (opcoes.length ? opcoes[0].preco : null)
   const preco = campo(campos, 'Preço de venda', 'preco', precoInicial === null ? '' : paraCampo(precoInicial, 2), { prefixo: 'R$', cheio: true })
   preco.placeholder = 'sem dado, digite o preço'
-  const gramas = campo(campos, 'Filamento', 'gramas', '0', { sufixo: 'g' })
-  const horas = campo(campos, 'Impressão', 'horas', '0', { sufixo: 'h' })
-  const minutos = campo(campos, 'Acabamento', 'minutos', '0', { sufixo: 'min' })
+  const gramas = campo(campos, 'Filamento', 'gramas', d.custoSalvo ? paraCampo(d.custoSalvo.gramas) : '0', { sufixo: 'g' })
+  const horas = campo(campos, 'Impressão', 'horas', d.custoSalvo ? paraCampo(d.custoSalvo.horas) : '0', { sufixo: 'h' })
+  const minutos = campo(campos, 'Acabamento', 'minutos', d.custoSalvo ? paraCampo(d.custoSalvo.minutos) : '0', { sufixo: 'min' })
   const roas = campo(campos, 'ROAS', 'roas', '10', { sufixo: 'x' })
 
   const linhaAds = document.createElement('label')
@@ -199,6 +204,21 @@ export function montarPainel(d: DadosPainel): HTMLElement {
   ads.setAttribute('role', 'switch')
   linhaAds.append(textoAds, ads)
   corpo.append(linhaAds)
+
+  if (d.aoSalvarCusto) {
+    const aoSalvarCusto = d.aoSalvarCusto
+    const salvar = document.createElement('button')
+    salvar.type = 'button'
+    salvar.className = 'salvar-custo'
+    salvar.textContent = 'Salvar custo deste produto'
+    const status = document.createElement('span')
+    status.className = 'status-custo'
+    salvar.addEventListener('click', () => {
+      aoSalvarCusto({ gramas: lerNumero(gramas.value) ?? 0, horas: lerNumero(horas.value) ?? 0, minutos: lerNumero(minutos.value) ?? 0 })
+      status.textContent = 'Custo salvo para este produto'
+    })
+    corpo.append(salvar, status)
+  }
 
   select?.addEventListener('change', () => {
     preco.value = paraCampo(opcoes[Number(select!.value)].preco, 2)

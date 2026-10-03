@@ -6,6 +6,7 @@ import { calcularMetricas } from '../nucleo/metricas'
 import type { Anuncio, Config, Tendencia, Variacoes } from '../nucleo/tipos'
 import { lerConfig, CONFIG_PADRAO, CHAVE_CONFIG } from '../dados/config'
 import { areaLocal } from '../dados/area'
+import { lerCusto, salvarCusto } from '../dados/custos'
 import { gravarLeituras, leituraDe, ultimaLeitura } from '../dados/historico'
 import { montarCard, anexarCard, mapaDeLinks, chaveDoProduto, containerDoCard, ATRIBUTO_CARD, type EstadoHistorico } from '../ui/card'
 import { ordenar, reordenarNaPagina, type Criterio } from '../ui/ordenar'
@@ -154,6 +155,7 @@ async function iniciar(): Promise<void> {
       } catch (e) {
         console.warn('[FCS SPY] histórico indisponível', e)
       }
+      const custoSalvo = await lerCusto(id.itemId, area).catch(() => null)
       document.querySelector(`[${ATRIBUTO_PAINEL}]`)?.remove()
       document.body.append(montarPainel({
         config,
@@ -161,6 +163,8 @@ async function iniciar(): Promise<void> {
         variacoes: variacoes?.itemId === id.itemId ? variacoes : null,
         leitura,
         aoAbrirCustos: abrirCustos,
+        custoSalvo,
+        aoSalvarCusto: c => { salvarCusto(id.itemId, c, area).catch(e => console.warn('[FCS SPY] custo', e)) },
       }))
     } finally {
       desenhandoPainel = false

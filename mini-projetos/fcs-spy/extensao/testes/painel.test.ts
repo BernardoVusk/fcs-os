@@ -165,4 +165,23 @@ describe('montarPainel', () => {
     const r = montarPainel({ config: CONFIG_PADRAO, preco: 17.9, variacoes: null, leitura }).shadowRoot!
     expect(r.querySelector('.resumo .grande')!.classList.contains('cor-baixa')).toBe(true)
   })
+  it('custo salvo preenche os campos', () => {
+    const r = montarPainel({ config: cfg, preco: 15.9, variacoes: null, leitura: null, custoSalvo: { gramas: 48, horas: 2, minutos: 5 } }).shadowRoot!
+    expect(r.querySelector<HTMLInputElement>('input[name="gramas"]')!.value).toBe('48')
+    expect(r.querySelector<HTMLInputElement>('input[name="horas"]')!.value).toBe('2')
+    expect(r.querySelector<HTMLInputElement>('input[name="minutos"]')!.value).toBe('5')
+  })
+  it('salvar custo manda os números digitados', () => {
+    const aoSalvarCusto = vi.fn()
+    const r = montarPainel({ config: cfg, preco: 15.9, variacoes: null, leitura: null, aoSalvarCusto }).shadowRoot!
+    preencher(r, 'gramas', '30,5')
+    preencher(r, 'horas', '4')
+    r.querySelector<HTMLButtonElement>('button.salvar-custo')!.click()
+    expect(aoSalvarCusto).toHaveBeenCalledWith({ gramas: 30.5, horas: 4, minutos: 0 })
+    expect(r.querySelector('.status-custo')!.textContent).toBe('Custo salvo para este produto')
+  })
+  it('sem callback, sem botão de salvar custo', () => {
+    const r = montarPainel({ config: cfg, preco: 15.9, variacoes: null, leitura: null }).shadowRoot!
+    expect(r.querySelector('button.salvar-custo')).toBeNull()
+  })
 })
