@@ -92,6 +92,13 @@ Recarregar a extensão em `chrome://extensions` e abrir o Seller Center logado.
 - [ ] O painel atualiza sozinho enquanto está aberto
 - [ ] Nenhuma verificação de robô nova no Seller Center
 - [ ] Console sem erro vermelho vindo da extensão
+- [ ] No console do service worker da extensão (`chrome://extensions` > FCS SPY > service worker): `chrome.storage.local.get(null).then(console.log)` não mostra `SPC_`, token, carteira, pedido nem dado de comprador
+- [ ] Conferir um número de cada fonte com o que a tela mostra (vendas do período, um produto do funil, gasto e custo por pedido de uma campanha, vendas de afiliados)
+- [ ] Trocar o período para 7 e 30 dias: o funil por produto é substituído, não somado
+- [ ] Trocar o tipo de pedido (pago, feito, confirmado) e conferir que o painel continua coerente
+- [ ] Abrir Visão Geral e Shopee Ads em duas abas ao mesmo tempo: as duas fontes aparecem como lidas (se uma sumir, anotar: corrida entre abas)
+- [ ] Na Shopee normal, cards e calculadora continuam funcionando
+- [ ] Período das campanhas de Ads: anotar qual intervalo a tela mostra (a extensão ainda não lê o período dessa resposta)
 
 ## Custo por produto (fase 4)
 
