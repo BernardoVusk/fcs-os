@@ -1,5 +1,5 @@
 import { ouvirEscuta } from '../content/ponte'
-import { MARCA_VENDEDOR, TIPOS_VENDEDOR, type TipoVendedor } from './rotas'
+import { MARCA_VENDEDOR, TIPOS_VENDEDOR, mensagemValida, type TipoVendedor } from './rotas'
 import { gravarColeta, lerColetas, CHAVE_VENDEDOR } from './coleta'
 import { montarPainelVendedor, montarBotaoVendedor, ATRIBUTO_VENDEDOR } from './painel-vendedor'
 import { areaLocal } from '../dados/area'
@@ -11,6 +11,7 @@ function iniciar(): void {
 
   // Logo no início, para não perder a primeira resposta da página.
   ouvirEscuta(window, msg => {
+    if (!mensagemValida(msg)) return
     gravarColeta(msg.rota as TipoVendedor, msg.url, msg.corpo, Date.now(), area)
       .catch(e => console.warn('[FCS SPY] coleta', e))
   }, { marca: MARCA_VENDEDOR, rotas: TIPOS_VENDEDOR })

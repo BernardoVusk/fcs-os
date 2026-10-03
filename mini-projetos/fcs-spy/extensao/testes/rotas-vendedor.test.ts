@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { rotaVendedor, limparUrlVendedor, TIPOS_VENDEDOR } from '../src/vendedor/rotas'
+import { rotaVendedor, limparUrlVendedor, mensagemValida, TIPOS_VENDEDOR } from '../src/vendedor/rotas'
 
 const S = 'https://seller.shopee.com.br'
 
@@ -20,6 +20,16 @@ describe('rotaVendedor', () => {
     expect(rotaVendedor('https://outro.com/api/mydata/v4/product/performance/')).toBeNull()
   })
   it('seis tipos', () => expect(TIPOS_VENDEDOR).toHaveLength(6))
+})
+
+describe('mensagemValida', () => {
+  it('rota confere com o endereço', () => {
+    expect(mensagemValida({ rota: 'produtos', url: '/api/mydata/v4/product/performance/?page_num=1' })).toBe(true)
+  })
+  it('rota forjada ou endereço fora da lista é recusado', () => {
+    expect(mensagemValida({ rota: 'produtos', url: '/api/v2/login/' })).toBe(false)
+    expect(mensagemValida({ rota: 'campanhas', url: '/api/mydata/v4/product/performance/' })).toBe(false)
+  })
 })
 
 describe('limparUrlVendedor', () => {
