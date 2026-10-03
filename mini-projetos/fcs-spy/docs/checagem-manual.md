@@ -78,6 +78,26 @@ Para cada item que falhar, anotar: a página, se a resposta chega (aviso no cons
 - [ ] Produto com menos de 50: vermelho
 - [ ] Mudar "Verde a partir de" para 1000 em Seus custos: os cards recalculam sem recarregar
 
+## Vendedor (fase 4)
+
+Recarregar a extensão em `chrome://extensions` e abrir o Seller Center logado.
+
+- [ ] Botão preto com miolo ciano no canto inferior direito; clicar abre o painel "FCS SPY Vendedor"
+- [ ] Antes de navegar: as seis fontes mostram "ainda não lido" com o link da página certa
+- [ ] Abrir Informações Gerenciais > Visão Geral: "Indicadores do período" e "De onde vêm as vendas" passam a "lido agora há pouco"
+- [ ] Abrir Produto > Performance do Produto e passar para a página 2: "Funil por produto" lido
+- [ ] Abrir Shopee Ads: "Campanhas de Shopee Ads" lido
+- [ ] Abrir Afiliados > Principais Indicadores: "Afiliados" lido
+- [ ] Abrir Informações Gerenciais > Marketing: "Marketing" com 1 ferramenta
+- [ ] O painel atualiza sozinho enquanto está aberto
+- [ ] Nenhuma verificação de robô nova no Seller Center
+- [ ] Console sem erro vermelho vindo da extensão
+
+## Custo por produto (fase 4)
+
+- [ ] Na página de um produto da FCS, preencher gramas e horas na calculadora e clicar "Salvar custo deste produto": aparece "Custo salvo para este produto"
+- [ ] Recarregar a página do produto: gramas e horas voltam preenchidos
+
 ## Pendências conhecidas
 
 - Selo Ads: confirmar com uma busca que tenha anúncio pago (capturar HAR e conferir `is_ads`)
