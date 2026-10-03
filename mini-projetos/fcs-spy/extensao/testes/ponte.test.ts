@@ -31,4 +31,12 @@ describe('ouvirEscuta', () => {
     enviar({ marca: 'fcs-spy', rota: 'cards', url: 'u', corpo: {} })
     expect(recebido).not.toHaveBeenCalled()
   })
+  it('filtro do vendedor aceita a marca e os tipos dele', () => {
+    const recebido = vi.fn()
+    const parar = ouvirEscuta(window, recebido, { marca: 'fcs-spy-vendedor', rotas: ['produtos'] })
+    enviar({ marca: 'fcs-spy-vendedor', rota: 'produtos', url: 'u', corpo: {} })
+    enviar({ marca: 'fcs-spy', rota: 'cards', url: 'u', corpo: {} })
+    expect(recebido).toHaveBeenCalledOnce()
+    parar()
+  })
 })

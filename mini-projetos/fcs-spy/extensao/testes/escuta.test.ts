@@ -114,3 +114,31 @@ describe('instalarEscuta: XMLHttpRequest', () => {
     expect(postMessage.mock.calls[0][0].corpo).toEqual({ items: [{ item_card_display_sold_count: {} }] })
   })
 })
+
+import { REGRAS_VENDEDOR, MARCA_VENDEDOR } from '../src/vendedor/rotas'
+
+describe('instalarEscuta com regras do vendedor', () => {
+  it('publica rota da lista com endereço limpo e marca do vendedor', async () => {
+    const postMessage = vi.fn()
+    class XHRVendedor extends XHRFalso {}
+    const w = { postMessage, location: { origin: 'https://seller.shopee.com.br' }, XMLHttpRequest: XHRVendedor,
+      fetch: vi.fn(async () => new Response('{"result":{}}', { headers: { 'content-type': 'application/json' } })) }
+    instalarEscuta(w as unknown as Parameters<typeof instalarEscuta>[0], REGRAS_VENDEDOR)
+    await (w as unknown as { fetch: typeof fetch }).fetch('https://seller.shopee.com.br/api/mydata/v3/dashboard/key-metrics/?SPC_CDS=abc&start_time=1')
+    await vi.waitFor(() => expect(postMessage).toHaveBeenCalledOnce())
+    expect(postMessage).toHaveBeenCalledWith(
+      { marca: MARCA_VENDEDOR, rota: 'indicadores', url: '/api/mydata/v3/dashboard/key-metrics/?start_time=1', corpo: { result: {} } },
+      'https://seller.shopee.com.br',
+    )
+  })
+  it('login nunca é publicado', async () => {
+    const postMessage = vi.fn()
+    class XHRVendedor2 extends XHRFalso {}
+    const w = { postMessage, location: { origin: 'https://seller.shopee.com.br' }, XMLHttpRequest: XHRVendedor2,
+      fetch: vi.fn(async () => new Response('{"token":"x"}', { headers: { 'content-type': 'application/json' } })) }
+    instalarEscuta(w as unknown as Parameters<typeof instalarEscuta>[0], REGRAS_VENDEDOR)
+    await (w as unknown as { fetch: typeof fetch }).fetch('https://seller.shopee.com.br/api/v2/login/')
+    await new Promise(r => setTimeout(r, 10))
+    expect(postMessage).not.toHaveBeenCalled()
+  })
+})

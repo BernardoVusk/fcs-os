@@ -3,7 +3,7 @@
 
 export const MARCA = 'fcs-spy'
 export type Rota = 'produto' | 'cards'
-export type MensagemEscuta = { marca: typeof MARCA; rota: Rota; url: string; corpo: unknown }
+export type MensagemEscuta = { marca: string; rota: string; url: string; corpo: unknown }
 
 const ROTA_PRODUTO = '/api/v4/pdp/get_pc'
 // Marcador do formato de card de 2026: teste barato antes do JSON.parse.
@@ -19,6 +19,21 @@ export function temCards(texto: string): boolean {
   return texto.includes(MARCADOR_CARD)
 }
 
+export type Regras = {
+  marca: string
+  rotaDe(url: string): string | null
+  exigeJson(rota: string): boolean
+  aceitaTexto(rota: string, texto: string): boolean
+  limparUrl?(url: string): string
+}
+
+export const REGRAS_COMPRADOR: Regras = {
+  marca: MARCA,
+  rotaDe,
+  exigeJson: rota => rota === 'cards',
+  aceitaTexto: (rota, texto) => rota !== 'cards' || temCards(texto),
+}
+
 type JanelaEscutavel = {
   fetch: typeof fetch
   postMessage: (msg: unknown, origem: string) => void
@@ -26,14 +41,14 @@ type JanelaEscutavel = {
   XMLHttpRequest: typeof XMLHttpRequest
 }
 
-export function instalarEscuta(w: JanelaEscutavel): void {
-  const publicar = (rota: Rota, url: string, corpo: unknown) => {
-    const msg: MensagemEscuta = { marca: MARCA, rota, url, corpo }
+export function instalarEscuta(w: JanelaEscutavel, regras: Regras = REGRAS_COMPRADOR): void {
+  const publicar = (rota: string, url: string, corpo: unknown) => {
+    const msg: MensagemEscuta = { marca: regras.marca, rota, url: regras.limparUrl ? regras.limparUrl(url) : url, corpo }
     w.postMessage(msg, w.location.origin)
   }
-  const publicarTexto = (rota: Rota, url: string, texto: string) => {
+  const publicarTexto = (rota: string, url: string, texto: string) => {
     try {
-      if (rota === 'cards' && !temCards(texto)) return
+      if (!regras.aceitaTexto(rota, texto)) return
       publicar(rota, url, JSON.parse(texto))
     } catch (e) {
       console.warn('[FCS SPY] resposta ilegível', rota, e)
@@ -46,9 +61,9 @@ export function instalarEscuta(w: JanelaEscutavel): void {
     try {
       const entrada = args[0]
       const url = resposta.url || (typeof entrada === 'string' ? entrada : entrada instanceof URL ? entrada.href : entrada.url)
-      const rota = rotaDe(url)
+      const rota = regras.rotaDe(url)
       const json = (resposta.headers.get('content-type') ?? '').includes('json')
-      if (rota && (rota === 'produto' || json)) resposta.clone().text().then(t => publicarTexto(rota, url, t), () => {})
+      if (rota && (!regras.exigeJson(rota) || json)) resposta.clone().text().then(t => publicarTexto(rota, url, t), () => {})
     } catch (e) {
       console.warn('[FCS SPY] escuta fetch', e)
     }
@@ -60,12 +75,12 @@ export function instalarEscuta(w: JanelaEscutavel): void {
   proto.open = function (this: XMLHttpRequest, ...args: unknown[]) {
     try {
       const url = String(args[1])
-      const rota = rotaDe(url)
+      const rota = regras.rotaDe(url)
       if (rota) {
         this.addEventListener('load', () => {
           try {
             if (this.responseType === 'json') {
-              if (rota !== 'cards' || temCards(JSON.stringify(this.response))) publicar(rota, url, this.response)
+              if (regras.aceitaTexto(rota, JSON.stringify(this.response))) publicar(rota, url, this.response)
             }
             else if (this.responseType === '' || this.responseType === 'text') publicarTexto(rota, url, this.responseText)
           } catch (e) {
