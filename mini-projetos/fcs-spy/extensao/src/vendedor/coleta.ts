@@ -19,8 +19,12 @@ export const CHAVE_VENDEDOR = 'vendedor'
 const inteiroOuNull = (v: string | null) => (v !== null && /^\d+$/.test(v) ? Number(v) : null)
 
 export function periodoDaUrl(url: string): Periodo {
-  const u = new URL(url, 'https://seller.shopee.com.br')
-  return { inicio: inteiroOuNull(u.searchParams.get('start_time')), fim: inteiroOuNull(u.searchParams.get('end_time')), tipo: u.searchParams.get('period') }
+  try {
+    const u = new URL(url, 'https://seller.shopee.com.br')
+    return { inicio: inteiroOuNull(u.searchParams.get('start_time')), fim: inteiroOuNull(u.searchParams.get('end_time')), tipo: u.searchParams.get('period') }
+  } catch {
+    return { inicio: null, fim: null, tipo: null }
+  }
 }
 
 export function mesmoPeriodo(a: Periodo, b: Periodo): boolean {
@@ -40,7 +44,7 @@ export async function lerColetas(area: Area = areaLocal()): Promise<Coletas> {
   return v && typeof v === 'object' ? (v as Coletas) : {}
 }
 
-export async function gravarColeta(tipo: TipoVendedor, url: string, json: unknown, agora: number, area: Area = areaLocal()): Promise<boolean> {
+async function gravar(tipo: TipoVendedor, url: string, json: unknown, agora: number, area: Area = areaLocal()): Promise<boolean> {
   const periodo = periodoDaUrl(url)
   const atual = await lerColetas(area)
   const nova = <T>(dados: T): Coleta<T> => ({ lidoEm: agora, periodo, dados })
@@ -60,4 +64,12 @@ export async function gravarColeta(tipo: TipoVendedor, url: string, json: unknow
   }
   await area.set({ [CHAVE_VENDEDOR]: atual })
   return true
+}
+
+// Respostas chegam ao mesmo tempo (visão geral): gravar em fila evita que uma leitura antiga apague a outra.
+let fila: Promise<unknown> = Promise.resolve()
+export function gravarColeta(tipo: TipoVendedor, url: string, json: unknown, agora: number, area: Area = areaLocal()): Promise<boolean> {
+  const r = fila.then(() => gravar(tipo, url, json, agora, area))
+  fila = r.catch(() => {})
+  return r
 }

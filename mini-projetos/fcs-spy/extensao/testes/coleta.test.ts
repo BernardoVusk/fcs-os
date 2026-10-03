@@ -3,6 +3,7 @@ import { periodoDaUrl, mesmoPeriodo, juntarProdutos, gravarColeta, lerColetas, C
 import { areaEmMemoria } from './area-memoria'
 import km from './amostras/vendedor-exemplo/key-metrics.json'
 import pp from './amostras/vendedor-exemplo/product-performance.json'
+import ts from './amostras/vendedor-exemplo/traffic-sources.json'
 import mk from './amostras/vendedor-exemplo/marketing-discount.json'
 
 const URL_KM = '/api/mydata/v3/dashboard/key-metrics/?start_time=100&end_time=200&period=past7days'
@@ -16,6 +17,9 @@ describe('periodoDaUrl', () => {
   it('mesmo perÃ­odo', () => {
     expect(mesmoPeriodo(periodoDaUrl(URL_KM), periodoDaUrl(URL_PP(2)))).toBe(true)
     expect(mesmoPeriodo(periodoDaUrl(URL_KM), { inicio: 100, fim: 300, tipo: 'past7days' })).toBe(false)
+  })
+  it('endereço inválido não lança', () => {
+    expect(periodoDaUrl('//[')).toEqual({ inicio: null, fim: null, tipo: null })
   })
 })
 
@@ -58,5 +62,21 @@ describe('gravarColeta e lerColetas', () => {
     const area = areaEmMemoria()
     await gravarColeta('indicadores', URL_KM, km, 1000, area)
     expect(Object.keys(area.dados)).toEqual([CHAVE_VENDEDOR])
+  })
+  it('gravações simultâneas não se perdem', async () => {
+    const area = areaEmMemoria()
+    await Promise.all([
+      gravarColeta('indicadores', URL_KM, km, 1000, area),
+      gravarColeta('origens', '/api/mydata/v1/dashboard/traffic-sources/?start_time=100&end_time=200&period=past7days', ts, 1000, area),
+    ])
+    const c = await lerColetas(area)
+    expect(c.indicadores).toBeDefined()
+    expect(c.origens).toBeDefined()
+  })
+  it('duas páginas de produtos simultâneas se juntam', async () => {
+    const area = areaEmMemoria()
+    const outra = { result: { items: [{ id: 33333333333, name: 'Produto 3', paid_orders: 1 }] } }
+    await Promise.all([gravarColeta('produtos', URL_PP(1), pp, 1000, area), gravarColeta('produtos', URL_PP(2), outra, 2000, area)])
+    expect((await lerColetas(area)).produtos?.dados).toHaveLength(3)
   })
 })
