@@ -18,7 +18,7 @@ describe('periodoDaUrl', () => {
     expect(mesmoPeriodo(periodoDaUrl(URL_KM), periodoDaUrl(URL_PP(2)))).toBe(true)
     expect(mesmoPeriodo(periodoDaUrl(URL_KM), { inicio: 100, fim: 300, tipo: 'past7days' })).toBe(false)
   })
-  it('endereço inválido não lança', () => {
+  it('endereÃ§o invÃ¡lido nÃ£o lanÃ§a', () => {
     expect(periodoDaUrl('//[')).toEqual({ inicio: null, fim: null, tipo: null })
   })
 })
@@ -63,7 +63,7 @@ describe('gravarColeta e lerColetas', () => {
     await gravarColeta('indicadores', URL_KM, km, 1000, area)
     expect(Object.keys(area.dados)).toEqual([CHAVE_VENDEDOR])
   })
-  it('gravações simultâneas não se perdem', async () => {
+  it('gravaÃ§Ãµes simultÃ¢neas nÃ£o se perdem', async () => {
     const area = areaEmMemoria()
     await Promise.all([
       gravarColeta('indicadores', URL_KM, km, 1000, area),
@@ -73,7 +73,7 @@ describe('gravarColeta e lerColetas', () => {
     expect(c.indicadores).toBeDefined()
     expect(c.origens).toBeDefined()
   })
-  it('duas páginas de produtos simultâneas se juntam', async () => {
+  it('duas pÃ¡ginas de produtos simultÃ¢neas se juntam', async () => {
     const area = areaEmMemoria()
     const outra = { result: { items: [{ id: 33333333333, name: 'Produto 3', paid_orders: 1 }] } }
     await Promise.all([gravarColeta('produtos', URL_PP(1), pp, 1000, area), gravarColeta('produtos', URL_PP(2), outra, 2000, area)])

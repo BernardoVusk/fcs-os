@@ -66,7 +66,7 @@ async function gravar(tipo: TipoVendedor, url: string, json: unknown, agora: num
   return true
 }
 
-// Respostas chegam ao mesmo tempo (vis„o geral): gravar em fila evita que uma leitura antiga apague a outra.
+// Respostas chegam ao mesmo tempo (vis√£o geral): gravar em fila evita que uma leitura antiga apague a outra.
 let fila: Promise<unknown> = Promise.resolve()
 export function gravarColeta(tipo: TipoVendedor, url: string, json: unknown, agora: number, area: Area = areaLocal()): Promise<boolean> {
   const r = fila.then(() => gravar(tipo, url, json, agora, area))
