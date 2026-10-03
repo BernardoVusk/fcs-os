@@ -60,7 +60,7 @@ describe('traduzirCampanhas', () => {
     })
     expect(c[1].estado).toBe('paused')
     expect(c[1].roasAlvo).toBeNull() // roi_two_target 0 = sem alvo
-    expect(c[1].custoPorPedido).toBe(0)
+    expect(c[1].custoPorPedido).toBeNull()
     expect(c[1].custoPorClique).toBeCloseTo(5 / 60, 6)
   })
 })

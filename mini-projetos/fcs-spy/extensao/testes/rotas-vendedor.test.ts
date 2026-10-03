@@ -28,6 +28,7 @@ describe('mensagemValida', () => {
   })
   it('rota forjada ou endereço fora da lista é recusado', () => {
     expect(mensagemValida({ rota: 'produtos', url: '/api/v2/login/' })).toBe(false)
+    expect(mensagemValida({ rota: 'produtos', url: 123 as unknown as string })).toBe(false)
     expect(mensagemValida({ rota: 'campanhas', url: '/api/mydata/v4/product/performance/' })).toBe(false)
   })
 })

@@ -100,7 +100,7 @@ export function traduzirCampanhas(json: unknown): Campanha[] | null {
       cliques,
       impressoes: num(r.impression),
       ctr: num(r.ctr),
-      custoPorPedido: ads(r.cpc), // cpc do report é custo por pedido (cost / broad_order)
+      custoPorPedido: (num(r.broad_order) ?? 0) > 0 ? ads(r.cpc) : null, // cpc do report é custo por pedido (cost / broad_order)
       custoPorClique: gasto !== null && cliques !== null && cliques > 0 ? gasto / cliques : null,
       carrinho: num(r.atc),
     })

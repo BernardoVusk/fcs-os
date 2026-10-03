@@ -41,7 +41,7 @@ export function limparUrlVendedor(url: string): string {
 
 // Confere de novo no content script: mensagem forjada na página com rota que não bate com o endereço é ignorada.
 export function mensagemValida(m: { rota: string; url: string }): boolean {
-  return rotaVendedor(m.url) === m.rota
+  return typeof m.url === 'string' && rotaVendedor(m.url) === m.rota
 }
 
 export const REGRAS_VENDEDOR: Regras = {
