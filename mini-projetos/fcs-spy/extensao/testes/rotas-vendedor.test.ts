@@ -40,6 +40,9 @@ describe('limparUrlVendedor', () => {
   it('endereço relativo sem sessão', () => {
     expect(limparUrlVendedor('/api/mydata/v4/product/performance/?SPC_CDS=a&page_num=3')).toBe('/api/mydata/v4/product/performance/?page_num=3')
   })
+  it('mantém o tipo de pedido', () => {
+    expect(limparUrlVendedor(`${S}/api/mydata/v3/dashboard/key-metrics/?SPC_CDS=x&period=past7days&order_type=paid&page_num=1`)).toBe('/api/mydata/v3/dashboard/key-metrics/?period=past7days&order_type=paid&page_num=1')
+  })
   it('descarta o fragmento', () => {
     expect(limparUrlVendedor(S + '/api/mydata/v4/product/performance/?start_time=1#x')).not.toContain('#x')
   })

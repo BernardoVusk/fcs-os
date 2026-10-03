@@ -14,7 +14,7 @@ const ROTAS: [RegExp, TipoVendedor][] = [
 ]
 export const TIPOS_VENDEDOR: TipoVendedor[] = ['indicadores', 'origens', 'produtos', 'campanhas', 'afiliados', 'marketing']
 
-const PARAMS_PERMITIDOS = ['start_time', 'end_time', 'period', 'page_num', 'page_size', 'promotion_type', 'channel']
+const PARAMS_PERMITIDOS = ['start_time', 'end_time', 'period', 'order_type', 'page_num', 'page_size', 'promotion_type', 'channel']
 const ORIGEM = /^https:\/\/seller\.shopee\.com\.br(?=\/)/
 
 function caminho(url: string): string | null {

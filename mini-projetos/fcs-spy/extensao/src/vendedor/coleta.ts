@@ -3,7 +3,7 @@ import type { Indicadores, OrigemVendas, ProdutoVendedor, Campanha, Afiliados, F
 import { traduzirIndicadores, traduzirOrigens, traduzirProdutos, traduzirCampanhas, traduzirAfiliados, traduzirMarketing, ferramentaDaUrl } from './traduzir'
 import { areaLocal, type Area } from '../dados/area'
 
-export type Periodo = { inicio: number | null; fim: number | null; tipo: string | null }
+export type Periodo = { inicio: number | null; fim: number | null; tipo: string | null; pedido: string | null }
 export type Coleta<T> = { lidoEm: number; periodo: Periodo; dados: T }
 export type Coletas = {
   indicadores?: Coleta<Indicadores>
@@ -21,14 +21,14 @@ const inteiroOuNull = (v: string | null) => (v !== null && /^\d+$/.test(v) ? Num
 export function periodoDaUrl(url: string): Periodo {
   try {
     const u = new URL(url, 'https://seller.shopee.com.br')
-    return { inicio: inteiroOuNull(u.searchParams.get('start_time')), fim: inteiroOuNull(u.searchParams.get('end_time')), tipo: u.searchParams.get('period') }
+    return { inicio: inteiroOuNull(u.searchParams.get('start_time')), fim: inteiroOuNull(u.searchParams.get('end_time')), tipo: u.searchParams.get('period'), pedido: u.searchParams.get('order_type') }
   } catch {
-    return { inicio: null, fim: null, tipo: null }
+    return { inicio: null, fim: null, tipo: null, pedido: null }
   }
 }
 
 export function mesmoPeriodo(a: Periodo, b: Periodo): boolean {
-  return a.inicio === b.inicio && a.fim === b.fim && a.tipo === b.tipo
+  return a.inicio === b.inicio && a.fim === b.fim && a.tipo === b.tipo && a.pedido === b.pedido
 }
 
 // Cada página da Performance do Produto traz 10 itens: juntamos as páginas do mesmo período.

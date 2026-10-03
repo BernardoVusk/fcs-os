@@ -11,15 +11,17 @@ const URL_PP = (p: number) => `/api/mydata/v4/product/performance/?start_time=10
 
 describe('periodoDaUrl', () => {
   it('lê início, fim e tipo', () => {
-    expect(periodoDaUrl(URL_KM)).toEqual({ inicio: 100, fim: 200, tipo: 'past7days' })
-    expect(periodoDaUrl('/api/x')).toEqual({ inicio: null, fim: null, tipo: null })
+    expect(periodoDaUrl(URL_KM)).toEqual({ inicio: 100, fim: 200, tipo: 'past7days', pedido: null })
+    expect(periodoDaUrl('/api/x')).toEqual({ inicio: null, fim: null, tipo: null, pedido: null })
+    expect(periodoDaUrl(URL_KM + '&order_type=paid')).toEqual({ inicio: 100, fim: 200, tipo: 'past7days', pedido: 'paid' })
   })
   it('mesmo período', () => {
     expect(mesmoPeriodo(periodoDaUrl(URL_KM), periodoDaUrl(URL_PP(2)))).toBe(true)
-    expect(mesmoPeriodo(periodoDaUrl(URL_KM), { inicio: 100, fim: 300, tipo: 'past7days' })).toBe(false)
+    expect(mesmoPeriodo(periodoDaUrl(URL_KM), { inicio: 100, fim: 300, tipo: 'past7days', pedido: null })).toBe(false)
+    expect(mesmoPeriodo(periodoDaUrl(URL_KM), periodoDaUrl(URL_KM + '&order_type=paid'))).toBe(false)
   })
   it('endereço inválido não lança', () => {
-    expect(periodoDaUrl('//[')).toEqual({ inicio: null, fim: null, tipo: null })
+    expect(periodoDaUrl('//[')).toEqual({ inicio: null, fim: null, tipo: null, pedido: null })
   })
 })
 

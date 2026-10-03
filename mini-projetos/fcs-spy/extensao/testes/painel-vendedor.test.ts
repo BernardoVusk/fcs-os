@@ -16,7 +16,7 @@ describe('textoLidoHa', () => {
 
 describe('montarPainelVendedor', () => {
   it('uma linha por fonte, com estado de leitura', () => {
-    const coletas = { indicadores: { lidoEm: 0, periodo: { inicio: null, fim: null, tipo: 'past7days' }, dados: {} as never } }
+    const coletas = { indicadores: { lidoEm: 0, periodo: { inicio: null, fim: null, tipo: 'past7days', pedido: null }, dados: {} as never } }
     const host = montarPainelVendedor(coletas, 12 * MIN)
     expect(host.hasAttribute(ATRIBUTO_VENDEDOR)).toBe(true)
     const linhas = [...host.shadowRoot!.querySelectorAll('.fonte')]
@@ -26,7 +26,7 @@ describe('montarPainelVendedor', () => {
     expect(linhas[1].querySelector('a')!.getAttribute('href')).toBe(FONTES[1].link)
   })
   it('marketing conta as ferramentas lidas', () => {
-    const coleta = { lidoEm: 0, periodo: { inicio: null, fim: null, tipo: null }, dados: {} as never }
+    const coleta = { lidoEm: 0, periodo: { inicio: null, fim: null, tipo: null, pedido: null }, dados: {} as never }
     const host = montarPainelVendedor({ marketing: { 'new-discount': coleta, voucher: coleta } }, MIN)
     const mk = [...host.shadowRoot!.querySelectorAll('.fonte')].find(l => l.querySelector('b')!.textContent!.startsWith('Marketing'))!
     expect(mk.textContent).toContain('2 ferramentas')
