@@ -1,18 +1,109 @@
-# MazyOS — Sistema operacional do negócio
+# FCS 3D STUDIO — sistema operacional do negócio
 
-Sua empresa roda em cima desse arquivo. Aqui ficam as regras de operação
-do MazyOS — como o Claude lê o contexto, aprende com correções, mantém
-tudo atualizado e cria skills novas conforme a operação evolui.
+Aqui ficam as regras de operação do sistema: como o Claude lê o contexto,
+aprende com correções, mantém tudo atualizado e cria skills novas conforme
+a operação evolui.
 
-Esse arquivo é editável. Quando o `/instalar` rodar, ele complementa o
-final dessa página com as regras específicas do seu negócio.
+Esse arquivo é editável. Quando algo mudar na empresa, atualize aqui.
+
+---
+
+## O que é esse workspace
+
+Operação da FCS 3D STUDIO, e-commerce de produtos feitos em impressão 3D.
+Cada frente do negócio tem sua área: produto, marketplace, anúncios,
+marketing e produção.
+
+**Estrutura de pastas:**
+- `_memoria/` — quem é a empresa, como falamos, foco atual
+- `identidade/` — marca aplicada em tudo que o sistema gera (logo, cores, playbooks de design)
+- `marketing/` — conteúdo, carrosséis, legendas, campanhas orgânicas
+- `marketing/marketplace/relatorios/` — relatório semanal e auditorias dos canais
+- `pesquisa/` — achados de tendência e candidatos a produto novo
+- `dados/marketplace/` — capturas brutas das centrais de vendedor, uma pasta por data e canal
+- `dados/catalogo/` — catálogo unificado dos três canais em CSV, um por coleta
+- `saidas/` — documentos e peças pontuais
+- `scripts/` — automações (geração de imagem, publicação em Instagram e Facebook)
+- `templates/` — moldes de skills, perfis e identidade
+- `mini-projetos/` — ferramentas internas pequenas, uma pasta por projeto, cada uma com `docs/` (estudo, spec, plano, checagem). Primeira: `fcs-spy/`, extensão de Chrome de estudo de mercado na Shopee
+
+Pastas a criar conforme a operação pedir:
+- `produtos/` — ficha de cada produto do catálogo (modelo, material, tempo de impressão, custo, preço)
+
+## Sobre a empresa
+
+FCS 3D STUDIO é um e-commerce de produtos impressos em 3D, vendidos em
+marketplace e em catálogo sob demanda. O público é comprador online com
+hobby: games, miniaturas, Fórmula 1, carros e automobilismo.
+
+A operação é tocada por uma pessoa só, que cobre produto, marketplace,
+anúncios, marketing e produção. Isso define uma regra prática: toda sugestão
+precisa caber na agenda de uma pessoa. Nada de plano que exige time.
+
+## Frentes de trabalho
+
+- **Produto e catálogo:** garimpar modelos 3D, decidir o que entra, precificar, escrever a ficha
+- **Marketplace:** acompanhar tendências, ajustar anúncios de produto, monitorar concorrência
+- **Mídia paga:** campanhas, criativos, leitura semanal de métricas
+- **Conteúdo:** carrosséis e legendas mostrando o produto, com foco no hobby do cliente
+- **Produção:** impressão, acabamento, prazo de entrega
+
+## O que mais fazemos aqui
+
+- Pesquisa de tendência de marketplace e seleção de produtos 3D novos
+- Análise de métricas dos anúncios
+- Peças de conteúdo pro catálogo (carrossel, legenda, foto de produto)
+- Descrição de produto pro marketplace
+
+## Tom de voz
+
+Direto e curto. Fala em "nosso" e "você", como quem explica o produto pra
+alguém na loja. Informação concreta antes de adjetivo: material, tamanho,
+prazo, o que vem na caixa.
+
+Referência real: "Esse é o nosso portfólio de produtos sob demanda que você pode pedir."
+
+**Evitar sempre:** emoji, travessão no texto, jargão de marketing
+("alavancar", "sinergia", "vamos juntos"), promoção gritada ("imperdível",
+"corra"), formalidade de "caro cliente".
+
+Detalhe completo em `_memoria/preferencias.md`.
+
+## Regras do sistema
+
+- Toda peça visual respeita `identidade/design-guide.md`: fundo preto, destaque ciano, sem emoji, sem travessão
+- Dado de marketplace entra em `dados/marketplace/<data>/<canal>/` antes de qualquer análise
+- Achados de pesquisa de produto ficam em `pesquisa/`, um arquivo por rodada, com data no nome
+- Peças de conteúdo vão pra `marketing/`
+- Relatórios de marketplace vão pra `marketing/marketplace/relatorios/`
+- Toda sugestão de rotina precisa caber numa operação de uma pessoa só
+- **Nunca inventar número.** Painel que não abriu vira "não coletado" no relatório, nunca estimativa
+
+## Como os dados de marketplace são coletados
+
+As três plataformas bloqueiam acesso automatizado de fora. Testado e confirmado em 21/08/2026: Shopee devolve página vazia e 403 nos endpoints de catálogo, Mercado Livre devolve 403 no site e exige token OAuth na API, TikTok Shop exige login.
+
+O canal de coleta é o browser logado, via extensão Claude in Chrome. A skill `/marketplace` faz a leitura. Não tentar contornar com fetch nem curl, já foi testado e não funciona.
+
+## Ferramentas conectadas
+
+- [x] Shopee (loja fcs3dstudio, shop_id 1478228631)
+- [x] Mercado Livre (FCS 3D STUDIO, nickname a capturar)
+- [x] TikTok Shop (FCS 3D STUDIO)
+- [x] Claude in Chrome (conectado em 27/09/2026 com `/chrome` na sessão do terminal; na extensão do VS Code as ferramentas do Chrome não aparecem, usar o terminal)
+- [x] FCS SPY (extensão própria, `mini-projetos/fcs-spy/`, carregada sem compactação a partir de `extensao/dist`)
+- [ ] Google Ads
+- [ ] Meta Ads
+- [ ] Instagram / Facebook (scripts em `scripts/`, precisa de `.env`)
+- [ ] OpenAI (geração de imagem, precisa de `.env`)
+
+*(Marcar conforme for configurando)*
 
 ---
 
 ## Contexto do negócio
 
-No início de toda conversa, ler os seguintes arquivos (quando existirem
-e estiverem preenchidos):
+No início de toda conversa, ler os seguintes arquivos:
 
 1. `_memoria/empresa.md` — quem é o usuário, o que faz, como funciona o negócio
 2. `_memoria/preferencias.md` — tom de voz, estilo de escrita, o que evitar
@@ -57,9 +148,9 @@ próxima vez..."), perguntar:
 
 Se sim, identificar onde faz mais sentido salvar:
 
-- **Sobre o negócio** (clientes, serviços, mercado) → `_memoria/empresa.md`
+- **Sobre o negócio** (clientes, produtos, marketplace) → `_memoria/empresa.md`
 - **Sobre preferências e estilo** (tom de voz, formato, o que evitar) → `_memoria/preferencias.md`
-- **Sobre prioridades e foco** (projetos, metas, prazos) → `_memoria/estrategia.md`
+- **Sobre prioridades e foco** (metas, prazos, campanhas) → `_memoria/estrategia.md`
 - **Regra de comportamento nessa pasta** → próprio `CLAUDE.md`
 
 Salvar com uma linha nova clara, sem reformatar o arquivo inteiro.
@@ -73,15 +164,15 @@ valor duradouro.
 
 ## Manter contexto atualizado
 
-Ao terminar uma tarefa que mudou algo relevante (cliente novo, skill
-nova, mudança de foco, processo novo, ferramenta instalada, estrutura
+Ao terminar uma tarefa que mudou algo relevante (produto novo no catálogo,
+canal novo, skill nova, mudança de foco, ferramenta configurada, estrutura
 alterada), perguntar:
 
 > "Isso mudou algo no teu contexto. Quer que eu atualize a memória?"
 
 Se sim, identificar o que atualizar:
 
-- **Cliente, serviço, ferramenta, equipe** → `_memoria/empresa.md`
+- **Produto, canal, ferramenta, fornecedor** → `_memoria/empresa.md`
 - **Mudança de prioridade ou foco** → `_memoria/estrategia.md`
 - **Tom ou estilo** → `_memoria/preferencias.md`
 - **Pasta, regra de organização, skill criada** → `CLAUDE.md`
@@ -91,7 +182,7 @@ Mostrar o que vai mudar antes de salvar. Não reformatar o arquivo
 inteiro, só adicionar ou editar a linha relevante.
 
 **Quando NÃO perguntar:**
-- Tarefas pontuais sem impacto no contexto (escrever um email avulso, criar um post)
+- Tarefas pontuais sem impacto no contexto (escrever uma legenda avulsa)
 - Perguntas simples ou conversas sem ação
 - Mudanças já salvas pelo bloco "Aprender com correções"
 

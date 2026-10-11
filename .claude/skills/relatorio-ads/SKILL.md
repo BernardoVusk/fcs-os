@@ -1,4 +1,4 @@
-﻿---
+---
 name: relatorio-ads
 description: >
   Gera relatório semanal de performance de anúncios pagos (Google Ads + Meta Ads). Lê CSVs
@@ -73,9 +73,9 @@ Uma página, leitura de 2 minutos. Estrutura:
 
 ## Resumo executivo
 
-**Investimento:** R$ X.XXX (▼/▲ Y% vs semana anterior)
-**Conversões:** N (▼/▲ Y%)
-**CPA médio:** R$ X.XX (▼/▲ Y%)
+**Investimento:** R$ X.XXX (sobe/cai Y% vs semana anterior)
+**Conversões:** N (sobe/cai Y%)
+**CPA médio:** R$ X.XX (sobe/cai Y%)
 
 **Canais:**
 - Google Ads: R$ X.XXX → N conversões (CPA R$ X.XX)
@@ -97,16 +97,16 @@ Pra cada canal, listar:
 
 ### Passo 5 — Alertas automáticos
 
-Varrer os dados e gerar alertas em vermelho/amarelo:
+Varrer os dados e gerar alertas por nível. Sem emoji, conforme `_memoria/preferencias.md`:
 
-| Alerta | Critério |
-|---|---|
-| 🔴 Queima de orçamento | Campanha gastou >R$X com 0 conversões |
-| 🔴 CTR despencou | CTR caiu >30% vs semana anterior |
-| 🟡 Frequência alta (Meta) | Conjunto com freq > 3.0 — público saturado |
-| 🟡 Conv. rate baixa | <1% em campanha Search |
-| 🟡 CPC subindo | CPC médio +20% vs semana anterior |
-| 🟢 Oportunidade | Campanha com CTR/conv acima da média + orçamento limitado → considerar aumentar |
+| Nível | Alerta | Critério |
+|---|---|---|
+| GRAVE | Queima de orçamento | Campanha gastou acima de R$X com 0 conversões |
+| GRAVE | CTR despencou | CTR caiu mais de 30% vs semana anterior |
+| ATENÇÃO | Frequência alta (Meta) | Conjunto com freq acima de 3.0, público saturado |
+| ATENÇÃO | Conv. rate baixa | Abaixo de 1% em campanha Search |
+| ATENÇÃO | CPC subindo | CPC médio 20% acima da semana anterior |
+| OPORTUNIDADE | Escalar | Campanha com CTR e conversão acima da média e orçamento limitado. Considerar aumentar |
 
 ### Passo 6 — Recomendações pra semana
 
@@ -156,7 +156,7 @@ Se sim, chamar `/email-profissional` com o resumo executivo + link/anexo.
 
 - **Nunca inventar números.** Se o export tá truncado ou ilegível, dizer "dados incompletos" e seguir só com o que dá.
 - **Comparação é o que importa.** Número solto ("R$ 1.200 essa semana") não significa nada sem o comparativo.
-- **Alertas em ordem.** Vermelho primeiro, amarelo depois, verde por último.
+- **Alertas em ordem.** GRAVE primeiro, ATENÇÃO depois, OPORTUNIDADE por último.
 - **Recomendações concretas.** "Pausar Grupo X" > "Otimizar campanhas". Nome da campanha, valor, motivo.
 - **Linguagem do dono.** Seguir `_memoria/preferencias.md`. CPM, CTR, CPA são OK se o dono já entende; se não, traduzir ("custo por mil pessoas que viram", "% de quem clicou", "quanto custou cada cliente").
 - **Frequência boa pra Meta:** 1.5–3.0. Acima de 3.0 já satura. Acima de 4.0 vira ruído.
