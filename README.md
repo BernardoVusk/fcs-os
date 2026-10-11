@@ -1,10 +1,10 @@
-# MazyOS
+# VuskVS
 
 > O sistema operacional do seu negócio dentro do Claude Code.
 
-Você acaba de instalar o MazyOS. Em alguns minutos, sua empresa vai
+Você acaba de instalar o VuskVS. Em alguns minutos, sua empresa vai
 ter uma memória própria, uma identidade visual aplicada em tudo que
-o sistema gerar, e 15 skills prontas pra fazer marketing, SEO, ads
+o sistema gerar, e 17 skills prontas pra fazer marketing, SEO, ads, site, segurança
 e operação rodarem com você dirigindo.
 
 Bora voar.
@@ -20,7 +20,7 @@ Dois caminhos. Escolhe o que combina contigo.
 Abre o Claude Code em qualquer pasta e cola:
 
 ```
-Clona o https://github.com/mazzeoia/MazyOS.git na pasta atual,
+Clona o https://github.com/<seu-usuario>/VuskVS.git na pasta atual,
 entra nela e roda o /instalar.
 ```
 
@@ -30,8 +30,8 @@ só responde.
 ### Pelo terminal (mais previsível)
 
 ```
-git clone https://github.com/mazzeoia/MazyOS.git
-cd MazyOS
+git clone https://github.com/<seu-usuario>/VuskVS.git
+cd VuskVS
 code .
 ```
 
@@ -39,9 +39,9 @@ Na janela do VS Code que abrir: terminal integrado → `claude` → `/instalar`.
 
 ---
 
-Quando o `/instalar` terminar, renomeia a pasta `MazyOS/` pro nome do teu
+Quando o `/instalar` terminar, renomeia a pasta `VuskVS/` pro nome do teu
 negócio (fecha o VS Code, renomeia no Explorer/Finder, abre de novo). A
-pasta não fica como "MazyOS" — ela é o teu negócio agora.
+pasta não fica como "VuskVS" — ela é o teu negócio agora.
 
 O `/instalar` roda uma vez só. Te entrevista sobre o negócio, monta a
 memória e configura o sistema. Depois disso, é só usar.
@@ -63,7 +63,9 @@ sem foto IA) · `/publicar-tema` pega um tema e entrega artigo de blog +
 carrossel + 3 legendas amarradas · `/seo` roda fluxo completo de 8 passos
 (demanda, concorrência, GMB, on-page, conteúdo, ads, monitoramento, GEO)
 · `/responder-avaliacoes` escreve respostas humanas pras reviews do
-Google · `/aprovar-post` publica blog + Instagram + Facebook num comando.
+Google · `/aprovar-post` publica blog + Instagram + Facebook num comando
+· `/criar-site` conduz o site do zero — direção de arte, referências com
+veredito, Design System, plano aprovado e implementação seção por seção.
 
 **Anúncios pagos** — onde o dinheiro entra
 `/anuncio-google` monta a campanha inteira em CSV pronto pra importar
@@ -73,6 +75,12 @@ e devolve relatório semanal com alertas e recomendações.
 **Produção** — ferramentas do dia a dia
 `/analisar-dados` lê CSV/XLSX/PDF e gera resumo executivo ·
 `/email-profissional` rascunha email a partir de contexto livre.
+
+**Segurança** — antes que vire prejuízo
+`/auditoria-seguranca` audita o código em 14 matrizes de ameaça (segredos
+expostos, IDOR, webhooks forjados, race conditions, RLS, SSRF, injeção,
+billing, cache cross-tenant, dependências), classifica cada achado por
+severidade com evidência em `arquivo:linha` e entrega o código da correção.
 
 ---
 
@@ -84,27 +92,22 @@ que ela roda.
 A diferença não é velocidade. É capacidade nova — uma pessoa com IA
 constrói o que antes exigia time inteiro. Cada processo crítico que hoje
 roda em open loop (decide → executa → não mede → repete cego) vira
-closed loop dentro do MazyOS (decide → executa → captura → realimenta →
+closed loop dentro do VuskVS (decide → executa → captura → realimenta →
 ajusta sozinho).
 
 O sistema não substitui você. Vira parte da sua empresa.
 
 ---
 
-## Como o MazyOS pensa
+## Como o VuskVS pensa
 
 `_memoria/` é o cérebro. Tudo que importa do seu negócio mora aqui —
 quem é a empresa, como ela fala, o que tá em foco essa semana. O Claude
 lê isso antes de cada resposta. Quanto melhor a memória, melhor o sistema.
 
 `identidade/` é o rosto. Cores, fontes, logo, padrão visual. Todo
-carrossel, slide, peça que o sistema gera respeita isso.
+carrossel, slide, peça que o sistema gera respeita isso. Os playbooks
+`designpremium.md` e `antidesignia.md` são a base do `/criar-site`.
 
 `marketing/`, `saidas/` e `scripts/` são o resultado. O sistema produz,
 versiona no GitHub, fica tudo seu.
-
----
-
-## Quando precisar
-
-[mazzeoia.com.br](https://mazzeoia.com.br)

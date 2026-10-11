@@ -1,6 +1,6 @@
-# marketing/ — saídas do MazyOS
+# marketing/ — saídas do VuskVS
 
-Tudo que as skills de marketing produzem cai aqui. Skills do MazyOS já sabem onde salvar — você raramente precisa criar pasta manualmente.
+Tudo que as skills de marketing produzem cai aqui. Skills do VuskVS já sabem onde salvar — você raramente precisa criar pasta manualmente.
 
 ## Estrutura padrão
 

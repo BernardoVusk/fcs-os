@@ -1,4 +1,4 @@
-﻿---
+---
 name: novo-projeto
 description: >
   Cria uma pasta de projeto nova com `CLAUDE.md` dedicado, depois de uma entrevista curta sobre

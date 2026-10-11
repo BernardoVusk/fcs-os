@@ -1,4 +1,4 @@
-﻿---
+---
 name: abrir
 description: >
   Abre uma sessão de trabalho carregando a memória do negócio (empresa, preferências, estratégia, identidade)
