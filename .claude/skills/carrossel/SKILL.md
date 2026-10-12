@@ -138,6 +138,8 @@ Ao terminar de renderizar os PNGs, gerar **automaticamente** a legenda do post e
 ### Passo 1 — Entender e planejar
 
 1. Ler `_memoria/preferencias.md` e `_memoria/empresa.md`
+   - Se o pedido citar um item do planejamento do ERP (por id, título ou "o carrossel de quinta"), ler o item pelo MCP `fcs-erp`: `plan_listar` (mês, tipo `conteudo`, termo) para achar e `plan_obter` (id) para o briefing, CTA, legenda, produto ligado, referências e checklist. Esse briefing manda sobre qualquer suposição; se faltar algo, perguntar antes de inventar
+   - Ao terminar, lembrar o usuário de marcar as etapas do checklist no ERP (Planejamento > item) e, depois de postar, registrar as métricas lá
 2. Ler `identidade/design-guide.md` pra cores, fontes e logo
 3. Identificar o tipo de conteúdo (1, 2 ou 3)
 4. Definir o tema e o ângulo

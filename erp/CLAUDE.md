@@ -37,7 +37,7 @@ Aplicação Next.js 16 do sistema de gestão da FCS 3D STUDIO. Spec aprovada: `d
 
 ## Áreas críticas
 
-Permissões (`lib/auth/papeis.ts` e policies), auditoria (`app.auditar`), servidor MCP (`src/mcp/`, escopos e filtro de segredos), motor de custos (`src/dominio/custos`, `src/dominio/precos`, `docs/formulas-de-custo.md`), estoque (funções SQL de 0007 a 0009), produção (`concluir_ordem_producao` e `reabrir_ordem_producao` em 0013), pedidos (`mudar_status_pedido` em 0014), financeiro (`realizar_lancamento`, `cancelar_lancamento`, `estornar_lancamento`, `garantir_recebivel` e os gatilhos de 0015). Mudança nessas áreas exige teste de integração novo.
+Permissões (`lib/auth/papeis.ts` e policies), auditoria (`app.auditar`), servidor MCP (`src/mcp/`, escopos e filtro de segredos), motor de custos (`src/dominio/custos`, `src/dominio/precos`, `docs/formulas-de-custo.md`), estoque (funções SQL de 0007 a 0009), produção (`concluir_ordem_producao` e `reabrir_ordem_producao` em 0013), pedidos (`mudar_status_pedido` em 0014), financeiro (`realizar_lancamento`, `cancelar_lancamento`, `estornar_lancamento`, `garantir_recebivel` e os gatilhos de 0015), planejamento (`validar_item_plano` e `historico_item_plano` em 0016). Mudança nessas áreas exige teste de integração novo.
 
 ## Antes de dizer que terminou
 

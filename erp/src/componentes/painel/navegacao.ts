@@ -2,7 +2,7 @@ import { podeLer, type Area, type Papel } from "@/lib/auth/papeis";
 import type { NomeIcone } from "./Icone";
 
 /** Fase mais recente entregue. Itens de fases futuras ficam ocultos. */
-export const FASE_ATUAL = 7;
+export const FASE_ATUAL = 8;
 
 export type ItemNav = {
   rota: string;
@@ -178,6 +178,34 @@ export const GRUPOS: GrupoNav[] = [
         area: "planejamento",
         fase: 8,
       },
+      {
+        rota: "/planejamento/lista",
+        rotulo: "Lista",
+        icone: "lista",
+        area: "planejamento",
+        fase: 8,
+      },
+      {
+        rota: "/planejamento/conteudos",
+        rotulo: "Conteúdos",
+        icone: "conteudos",
+        area: "planejamento",
+        fase: 8,
+      },
+      {
+        rota: "/planejamento/campanhas",
+        rotulo: "Campanhas",
+        icone: "campanhas",
+        area: "planejamento",
+        fase: 8,
+      },
+      {
+        rota: "/planejamento/modelos",
+        rotulo: "Modelos",
+        icone: "modelos",
+        area: "planejamento",
+        fase: 8,
+      },
     ],
   },
   {
@@ -298,6 +326,12 @@ const ROTULOS_SEGMENTO: Record<string, string> = {
   clientes: "Clientes",
   editar: "Editar",
   lancamentos: "Lançamentos",
+  quadro: "Quadro",
+  lista: "Lista",
+  conteudos: "Conteúdos",
+  campanhas: "Campanhas",
+  modelos: "Modelos",
+  itens: "Itens",
   recorrencias: "Recorrências",
   impostos: "Impostos",
   conciliar: "Conciliar repasses",

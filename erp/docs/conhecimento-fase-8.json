@@ -1,0 +1,23 @@
+[
+  {
+    "titulo": "Planejamento: um só item para tarefa, conteúdo e projeto, status por fluxo editável, modelos e recorrência",
+    "tipo": "decisao",
+    "categoria": "Decisões de negócio",
+    "modulo": "planejamento",
+    "tags": ["planejamento", "calendario", "quadro", "conteudo", "modelos", "recorrencia", "mcp"],
+    "referencia": "supabase/migrations/0016_planejamento.sql; erp/src/dominio/planejamento; erp/docs/regras-de-negocio.md",
+    "resumo": "Tarefa, conteúdo e projeto vivem em plan_itens, com status validado contra plan_fluxos (lista editável pelo dono, com fechado e padrão). Mês do item vem do prazo ou do início. Modelo preenche campos e checklist; recorrência gera itens únicos por (recorrência, prazo). Claude Code lê o item por plan_listar e plan_obter.",
+    "estrutura": {
+      "contexto": "Uma pessoa planeja conteúdo para três canais e tarefas da operação. O módulo de marketing da FX já tinha mês na URL, quadro, lista e calendário, mas sem modelos editáveis nem recorrência, e com status fixos em código.",
+      "alternativas": [
+        "Tabelas separadas para tarefa e conteúdo",
+        "Status fixos em código, como na FX",
+        "Biblioteca de arrastar e soltar",
+        "Modelos só em código"
+      ],
+      "decisao": "Uma tabela plan_itens com tipo e campos opcionais de conteúdo; plan_fluxos por tipo validado por trigger, que carimba concluido_em e publicado_em ao entrar em status fechado; plan_historico por trigger; plan_modelos com campos_padrao e checklist_padrao em jsonb; plan_recorrencias apontando para o modelo e gerando até 60 dias à frente com índice único (recorrencia_id, prazo); quadro com arrastar nativo e seletor como alternativa; drawer ?item= em cima do calendário; MCP plan_listar e plan_obter no escopo operacao:ler.",
+      "consequencias": "Calendário, quadro e lista mostram os mesmos itens com as mesmas regras puras (dominio/planejamento). A skill /carrossel lê briefing, CTA e referências pelo MCP em vez de reinventar a pauta. Atrasado nunca é gravado. Apagar item é só do dono; o resto cancela pelo status."
+    },
+    "conteudo": "## Onde está\n\n- Domínio: `src/dominio/planejamento/{tipos,calendario,filtros}.ts` com testes.\n- Migração 0016: tabelas plan_*, triggers `validar_item_plano` e `historico_item_plano`, ramo `tarefa` na busca global.\n- Telas: Planejamento (calendário mensal e semanal com drawer), Quadro, Lista, Conteúdos, Campanhas, Modelos (modelos, recorrências e fluxos de status), item completo em `/planejamento/itens/[id]`.\n- MCP: `plan_listar` e `plan_obter`; skill `/carrossel` do workspace lê o item planejado."
+  }
+]

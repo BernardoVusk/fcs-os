@@ -33,8 +33,8 @@ export const ROTULO_TIPO: Record<TipoBusca, string> = {
   pedido: "Pedidos",
   cliente: "Clientes",
   lancamento: "Lançamentos",
+  tarefa: "Planejamento",
   conhecimento: "Conhecimento",
-  tarefa: "Tarefas",
 };
 
 /** Tipos que a função buscar_global já atende. Cada fase acrescenta os seus. */
@@ -54,6 +54,7 @@ export const TIPOS_DISPONIVEIS: TipoBusca[] = [
   "pedido",
   "cliente",
   "lancamento",
+  "tarefa",
 ];
 
 export type ResultadoBusca = {

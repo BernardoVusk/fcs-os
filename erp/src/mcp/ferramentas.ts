@@ -24,6 +24,16 @@ import {
   type EstoqueAtual,
 } from "@/dados/estoque/insumos";
 import { listarComponentesCom, obterParametrosVigentesCom } from "@/dados/custos/parametros";
+import { listarItensCom, obterItemCom } from "@/dados/planejamento/planejamento";
+import { intervaloDoMes, mesValido } from "@/dominio/planejamento/calendario";
+import {
+  lerChecklist,
+  lerLigacoes,
+  SKILL_PADRAO,
+  type Formato,
+} from "@/dominio/planejamento/tipos";
+import { aplicarFiltros, lerFiltros } from "@/dominio/planejamento/filtros";
+import { hojeSaoPaulo } from "@/lib/formatos/data";
 import { parametrosFaltantes } from "@/dominio/custos/parametros";
 import { VERSAO_MOTOR } from "@/dominio/custos/motor";
 import { Limitador } from "./limite";
@@ -538,6 +548,121 @@ export function registrarFerramentas(server: McpServer) {
         situacao: args.incluir_inativos ? "todos" : "ativos",
       });
       return texto({ total: lista.length, insumos: lista.map(resumir) });
+    },
+  );
+  server.registerTool(
+    "plan_listar",
+    {
+      description:
+        "Itens do planejamento (tarefas, conteúdos e projetos): título, tipo, status, prazo, canal, formato e progresso do checklist. Filtre por mês (AAAA-MM), tipo, status, termo ou só abertos. Use plan_obter para o briefing completo.",
+      inputSchema: z.object({
+        mes: z
+          .string()
+          .regex(/^\d{4}-\d{2}$/)
+          .optional()
+          .describe("Mês AAAA-MM; vazio traz os próximos 30 dias e os sem data"),
+        tipo: z.enum(["tarefa", "conteudo", "projeto"]).optional(),
+        status: z.string().max(30).optional(),
+        termo: z.string().max(80).optional(),
+        abertos: z.boolean().optional().describe("Só os que não estão em status fechado"),
+      }),
+    },
+    async (args, ctx) => {
+      const p = await preparar(ctx, "plan_listar");
+      if ("falha" in p) return p.falha;
+      if (!podeLer(p.sessao.papel, "planejamento")) return erro("Seu papel não lê o planejamento.");
+      const cliente = clienteDe(p.sessao);
+      const hoje = hojeSaoPaulo();
+      const intervalo = mesValido(args.mes)
+        ? intervaloDoMes(args.mes)
+        : {
+            inicio: hoje,
+            fim: new Date(Date.parse(hoje) + 30 * 86_400_000).toISOString().slice(0, 10),
+          };
+      const lista = await listarItensCom(cliente, {
+        ...intervalo,
+        incluirSemData: true,
+        tipo: args.tipo,
+        status: args.status,
+        abertos: args.abertos,
+        limite: 500,
+      });
+      const filtrados = aplicarFiltros(lista, lerFiltros({ q: args.termo ?? "" }), hoje);
+      return texto({
+        total: filtrados.length,
+        itens: filtrados.map((i) => {
+          const checklist = lerChecklist(i.checklist);
+          return {
+            id: i.id,
+            tipo: i.tipo,
+            titulo: i.titulo,
+            status: i.status,
+            status_nome: i.status_nome,
+            fechado: i.fechado,
+            prioridade: i.prioridade,
+            inicio: i.inicio,
+            prazo: i.prazo,
+            horario: i.horario,
+            canal_publicacao: i.canal_publicacao,
+            formato: i.formato,
+            campanha: i.campanha?.nome ?? null,
+            produto: i.produto?.nome ?? null,
+            checklist_feitos: checklist.filter((c) => c.feito).length,
+            checklist_total: checklist.length,
+            rota: `/planejamento/itens/${i.id}`,
+          };
+        }),
+      });
+    },
+  );
+
+  server.registerTool(
+    "plan_obter",
+    {
+      description:
+        "Um item do planejamento completo: briefing, CTA, legenda, links, referências, checklist, produto ligado, campanha, métricas e a skill sugerida para produzir a peça (por exemplo /carrossel).",
+      inputSchema: z.object({ id: z.uuid() }),
+    },
+    async (args, ctx) => {
+      const p = await preparar(ctx, "plan_obter");
+      if ("falha" in p) return p.falha;
+      if (!podeLer(p.sessao.papel, "planejamento")) return erro("Seu papel não lê o planejamento.");
+      const cliente = clienteDe(p.sessao);
+      const i = await obterItemCom(cliente, args.id);
+      if (!i) return erro("Item não encontrado.");
+      return texto({
+        id: i.id,
+        tipo: i.tipo,
+        titulo: i.titulo,
+        status: i.status,
+        status_nome: i.status_nome,
+        fechado: i.fechado,
+        prioridade: i.prioridade,
+        inicio: i.inicio,
+        prazo: i.prazo,
+        horario: i.horario,
+        responsavel: i.responsavel,
+        tags: i.tags,
+        canal_publicacao: i.canal_publicacao,
+        formato: i.formato,
+        skill_sugerida: i.formato ? SKILL_PADRAO[i.formato as Formato] : null,
+        briefing: i.briefing,
+        cta: i.cta,
+        legenda: i.legenda,
+        links: lerLigacoes(i.links),
+        referencias: lerLigacoes(i.referencias),
+        observacoes: i.observacoes,
+        checklist: lerChecklist(i.checklist),
+        produto: i.produto ? { id: i.produto_id, nome: i.produto.nome } : null,
+        campanha: i.campanha ? { id: i.campanha_id, nome: i.campanha.nome } : null,
+        pai: i.pai,
+        filhos: i.filhos,
+        relacoes: i.relacoes,
+        metricas: i.metricas,
+        publicado_em: i.publicado_em,
+        concluido_em: i.concluido_em,
+        rota: `/planejamento/itens/${i.id}`,
+      });
     },
   );
 }

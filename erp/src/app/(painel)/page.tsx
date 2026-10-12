@@ -7,12 +7,11 @@ import { CartaoIndicador } from "@/componentes/painel/CartaoIndicador";
 import { SeletorPeriodo, lerPeriodo, PERIODOS } from "@/componentes/painel/SeletorPeriodo";
 import { Banner } from "@/componentes/painel/Banner";
 import { Button } from "@/componentes/ui/button";
+import { ProximosItens } from "@/componentes/planejamento/ProximosItens";
 
 export const metadata = { title: "Início" };
 
-const FUTUROS: { rotulo: string; fase: number }[] = [
-  { rotulo: "Próximas tarefas e publicações", fase: 8 },
-];
+const FUTUROS: { rotulo: string; fase: number }[] = [];
 
 export default async function PaginaInicio({
   searchParams,
@@ -46,6 +45,13 @@ export default async function PaginaInicio({
         </Banner>
       )}
       <div className="grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-3">
+        {resumo.planejamento && (
+          <ProximosItens
+            proximos={resumo.planejamento.proximos}
+            atrasados={resumo.planejamento.atrasados}
+            hoje={resumo.planejamento.hoje}
+          />
+        )}
         <CartaoIndicador
           rotulo="Alertas abertos"
           valor={String(resumo.alertasAbertos)}

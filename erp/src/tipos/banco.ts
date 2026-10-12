@@ -2237,6 +2237,387 @@ export type Database = {
         };
         Relationships: [];
       };
+      plan_campanhas: {
+        Row: {
+          atualizado_em: string;
+          criado_em: string;
+          fim: string | null;
+          id: string;
+          inicio: string | null;
+          nome: string;
+          objetivo: string | null;
+          observacoes: string | null;
+          status: string;
+        };
+        Insert: {
+          atualizado_em?: string;
+          criado_em?: string;
+          fim?: string | null;
+          id?: string;
+          inicio?: string | null;
+          nome: string;
+          objetivo?: string | null;
+          observacoes?: string | null;
+          status?: string;
+        };
+        Update: {
+          atualizado_em?: string;
+          criado_em?: string;
+          fim?: string | null;
+          id?: string;
+          inicio?: string | null;
+          nome?: string;
+          objetivo?: string | null;
+          observacoes?: string | null;
+          status?: string;
+        };
+        Relationships: [];
+      };
+      plan_fluxos: {
+        Row: {
+          codigo: string;
+          cor: string | null;
+          fechado: boolean;
+          id: string;
+          nome: string;
+          ordem: number;
+          padrao: boolean;
+          tipo: string;
+        };
+        Insert: {
+          codigo: string;
+          cor?: string | null;
+          fechado?: boolean;
+          id?: string;
+          nome: string;
+          ordem?: number;
+          padrao?: boolean;
+          tipo: string;
+        };
+        Update: {
+          codigo?: string;
+          cor?: string | null;
+          fechado?: boolean;
+          id?: string;
+          nome?: string;
+          ordem?: number;
+          padrao?: boolean;
+          tipo?: string;
+        };
+        Relationships: [];
+      };
+      plan_historico: {
+        Row: {
+          campo: string;
+          de: string | null;
+          em: string;
+          id: string;
+          item_id: string;
+          para: string | null;
+          usuario_id: string | null;
+        };
+        Insert: {
+          campo: string;
+          de?: string | null;
+          em?: string;
+          id?: string;
+          item_id: string;
+          para?: string | null;
+          usuario_id?: string | null;
+        };
+        Update: {
+          campo?: string;
+          de?: string | null;
+          em?: string;
+          id?: string;
+          item_id?: string;
+          para?: string | null;
+          usuario_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "plan_historico_item_id_fkey";
+            columns: ["item_id"];
+            isOneToOne: false;
+            referencedRelation: "plan_itens";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      plan_itens: {
+        Row: {
+          atualizado_em: string;
+          briefing: string | null;
+          campanha_id: string | null;
+          canal_publicacao: string | null;
+          categoria_id: string | null;
+          checklist: Json;
+          concluido_em: string | null;
+          criado_em: string;
+          criado_por: string | null;
+          cta: string | null;
+          formato: string | null;
+          horario: string | null;
+          id: string;
+          inicio: string | null;
+          legenda: string | null;
+          links: Json;
+          metricas: Json;
+          modelo_id: string | null;
+          observacoes: string | null;
+          origem: string;
+          pai_id: string | null;
+          prazo: string | null;
+          prioridade: string;
+          produto_id: string | null;
+          publicado_em: string | null;
+          recorrencia_id: string | null;
+          referencias: Json;
+          responsavel: string | null;
+          status: string;
+          tags: string[];
+          tipo: string;
+          titulo: string;
+        };
+        Insert: {
+          atualizado_em?: string;
+          briefing?: string | null;
+          campanha_id?: string | null;
+          canal_publicacao?: string | null;
+          categoria_id?: string | null;
+          checklist?: Json;
+          concluido_em?: string | null;
+          criado_em?: string;
+          criado_por?: string | null;
+          cta?: string | null;
+          formato?: string | null;
+          horario?: string | null;
+          id?: string;
+          inicio?: string | null;
+          legenda?: string | null;
+          links?: Json;
+          metricas?: Json;
+          modelo_id?: string | null;
+          observacoes?: string | null;
+          origem?: string;
+          pai_id?: string | null;
+          prazo?: string | null;
+          prioridade?: string;
+          produto_id?: string | null;
+          publicado_em?: string | null;
+          recorrencia_id?: string | null;
+          referencias?: Json;
+          responsavel?: string | null;
+          status: string;
+          tags?: string[];
+          tipo: string;
+          titulo: string;
+        };
+        Update: {
+          atualizado_em?: string;
+          briefing?: string | null;
+          campanha_id?: string | null;
+          canal_publicacao?: string | null;
+          categoria_id?: string | null;
+          checklist?: Json;
+          concluido_em?: string | null;
+          criado_em?: string;
+          criado_por?: string | null;
+          cta?: string | null;
+          formato?: string | null;
+          horario?: string | null;
+          id?: string;
+          inicio?: string | null;
+          legenda?: string | null;
+          links?: Json;
+          metricas?: Json;
+          modelo_id?: string | null;
+          observacoes?: string | null;
+          origem?: string;
+          pai_id?: string | null;
+          prazo?: string | null;
+          prioridade?: string;
+          produto_id?: string | null;
+          publicado_em?: string | null;
+          recorrencia_id?: string | null;
+          referencias?: Json;
+          responsavel?: string | null;
+          status?: string;
+          tags?: string[];
+          tipo?: string;
+          titulo?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "plan_itens_campanha_id_fkey";
+            columns: ["campanha_id"];
+            isOneToOne: false;
+            referencedRelation: "plan_campanhas";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "plan_itens_categoria_id_fkey";
+            columns: ["categoria_id"];
+            isOneToOne: false;
+            referencedRelation: "categorias";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "plan_itens_modelo_id_fkey";
+            columns: ["modelo_id"];
+            isOneToOne: false;
+            referencedRelation: "plan_modelos";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "plan_itens_pai_id_fkey";
+            columns: ["pai_id"];
+            isOneToOne: false;
+            referencedRelation: "plan_itens";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "plan_itens_produto_id_fkey";
+            columns: ["produto_id"];
+            isOneToOne: false;
+            referencedRelation: "estoque_produtos";
+            referencedColumns: ["produto_id"];
+          },
+          {
+            foreignKeyName: "plan_itens_produto_id_fkey";
+            columns: ["produto_id"];
+            isOneToOne: false;
+            referencedRelation: "produtos";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "plan_itens_recorrencia_id_fkey";
+            columns: ["recorrencia_id"];
+            isOneToOne: false;
+            referencedRelation: "plan_recorrencias";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      plan_modelos: {
+        Row: {
+          ativo: boolean;
+          atualizado_em: string;
+          campos_padrao: Json;
+          checklist_padrao: Json;
+          criado_em: string;
+          id: string;
+          nome: string;
+          tipo: string;
+        };
+        Insert: {
+          ativo?: boolean;
+          atualizado_em?: string;
+          campos_padrao?: Json;
+          checklist_padrao?: Json;
+          criado_em?: string;
+          id?: string;
+          nome: string;
+          tipo: string;
+        };
+        Update: {
+          ativo?: boolean;
+          atualizado_em?: string;
+          campos_padrao?: Json;
+          checklist_padrao?: Json;
+          criado_em?: string;
+          id?: string;
+          nome?: string;
+          tipo?: string;
+        };
+        Relationships: [];
+      };
+      plan_recorrencias: {
+        Row: {
+          ativo: boolean;
+          atualizado_em: string;
+          criado_em: string;
+          dia: number | null;
+          fim: string | null;
+          frequencia: string;
+          id: string;
+          inicio: string;
+          modelo_id: string;
+          observacoes: string | null;
+        };
+        Insert: {
+          ativo?: boolean;
+          atualizado_em?: string;
+          criado_em?: string;
+          dia?: number | null;
+          fim?: string | null;
+          frequencia: string;
+          id?: string;
+          inicio: string;
+          modelo_id: string;
+          observacoes?: string | null;
+        };
+        Update: {
+          ativo?: boolean;
+          atualizado_em?: string;
+          criado_em?: string;
+          dia?: number | null;
+          fim?: string | null;
+          frequencia?: string;
+          id?: string;
+          inicio?: string;
+          modelo_id?: string;
+          observacoes?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "plan_recorrencias_modelo_id_fkey";
+            columns: ["modelo_id"];
+            isOneToOne: false;
+            referencedRelation: "plan_modelos";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      plan_relacoes: {
+        Row: {
+          criado_em: string;
+          de_id: string;
+          id: string;
+          para_id: string;
+          tipo: string;
+        };
+        Insert: {
+          criado_em?: string;
+          de_id: string;
+          id?: string;
+          para_id: string;
+          tipo?: string;
+        };
+        Update: {
+          criado_em?: string;
+          de_id?: string;
+          id?: string;
+          para_id?: string;
+          tipo?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "plan_relacoes_de_id_fkey";
+            columns: ["de_id"];
+            isOneToOne: false;
+            referencedRelation: "plan_itens";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "plan_relacoes_para_id_fkey";
+            columns: ["para_id"];
+            isOneToOne: false;
+            referencedRelation: "plan_itens";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       produtos: {
         Row: {
           atributos: Json;

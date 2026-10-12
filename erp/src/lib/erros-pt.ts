@@ -119,6 +119,13 @@ const ERROS: Record<string, string> = {
   tributo_nao_configurado:
     "Configure o regime e a alíquota em Financeiro > Impostos antes de provisionar.",
   dia_vencimento_invalido: "Dia de vencimento entre 1 e 28.",
+  titulo_obrigatorio: "Dê um título.",
+  item_nao_encontrado: "Item não encontrado.",
+  modelo_obrigatorio: "Escolha o modelo.",
+  relacao_reflexiva: "Um item não se relaciona com ele mesmo.",
+  prazo_antes_do_inicio: "O prazo não pode ser antes do início.",
+  status_padrao_nao_apagavel: "O status padrão do tipo não pode ser removido.",
+  status_em_uso: "Há itens nesse status. Mova-os antes de remover.",
 };
 
 export function erroPt(chave: string | undefined): string | undefined {

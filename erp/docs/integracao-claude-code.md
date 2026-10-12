@@ -30,6 +30,8 @@ Claude Code ── skills kb-* ── token ──▶ /api/mcp (mcp-handler, Str
 | `produto_custo` | custos:ler | custo atual do produto por SKU ou nome, quebra do último cálculo, preços vigentes e margem por canal |
 | `alertas_abertos` | operacao:ler | alertas em aberto |
 | `estoque_insumo` | operacao:ler | saldo, valor, custo médio e lotes dos insumos (Fase 3) |
+| `plan_listar` | operacao:ler | itens do planejamento por mês, tipo, status, termo ou só abertos (Fase 8) |
+| `plan_obter` | operacao:ler | item completo: briefing, cta, legenda, checklist, links, produto, campanha, relações e skill sugerida (Fase 8) |
 
 ## Configuração no workspace
 
