@@ -101,3 +101,10 @@ Casos de referência: Anexo A da spec (B1, B2), reproduzidos em `src/dominio/est
 - Exportação: CSV com BOM, ponto e vírgula e vírgula decimal; XLSX gerado sem biblioteca (zip sem compressão, inline strings). Célula que começa com `=`, `+`, `-`, `@`, tab ou retorno recebe apóstrofo e vai como texto nos dois formatos. "Tudo em XLSX" traz uma aba por relatório.
 - Alertas: um aberto por (tipo, entidade). `gerar_alertas()` roda todo dia às 9h (pg_cron) e pelo botão Verificar agora: abre o que passou a valer, atualiza título e severidade do que mudou e resolve o que deixou de valer, para os tipos prazo vencido (planejamento), ordem atrasada, pedido pago sem envio há mais de 5 dias, lançamentos vencidos (um alerta agregado, sem valores, porque operador e leitura também veem alertas) e manutenção prevista (horas de uso acima da próxima manutenção). Alertas de estoque continuam por trigger. Resolver fecha; silenciar por 7 ou 30 dias esconde e, se a condição continuar, o alerta volta sozinho ao fim do silêncio. Leitura não gera, resolve nem silencia.
 - Auditoria: só o dono consulta; filtros por tabela, ação, origem, período e id; os campos alterados são calculados comparando antes e depois (ignorando `atualizado_em`).
+
+## Sessão e segurança (Fase 10)
+
+- Verificação em duas etapas (TOTP) é opcional por usuário e recomendada para o dono. Com fator verificado, o login pede o código e nenhuma rota do painel abre em AAL1; actions recusam com `mfa_pendente`. Desativar exige o código atual; inscrições não confirmadas são descartadas ao começar outra.
+- Função `security definer` chamável por rpc checa o papel por dentro (`gerar_alertas`, `garantir_recebivel`); gatilhos e pg_cron (sem `auth.uid()`) passam.
+- Toda resposta leva `X-Frame-Options: DENY`, `nosniff`, `Referrer-Policy`, `Permissions-Policy` e HSTS. Parâmetro de data vindo da URL só entra no filtro se for `AAAA-MM-DD`.
+- Backup semanal cifrado por GitHub Actions; restauração só no projeto de teste e com confirmação explícita.

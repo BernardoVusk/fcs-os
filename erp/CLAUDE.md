@@ -40,6 +40,13 @@ Aplicação Next.js 16 do sistema de gestão da FCS 3D STUDIO. Spec aprovada: `d
 
 Permissões (`lib/auth/papeis.ts` e policies), auditoria (`app.auditar`), servidor MCP (`src/mcp/`, escopos e filtro de segredos), motor de custos (`src/dominio/custos`, `src/dominio/precos`, `docs/formulas-de-custo.md`), estoque (funções SQL de 0007 a 0009), produção (`concluir_ordem_producao` e `reabrir_ordem_producao` em 0013), pedidos (`mudar_status_pedido` em 0014), financeiro (`realizar_lancamento`, `cancelar_lancamento`, `estornar_lancamento`, `garantir_recebivel` e os gatilhos de 0015), planejamento (`validar_item_plano` e `historico_item_plano` em 0016), alertas (`gerar_alertas` em 0017, job do pg_cron em 0018), exportação (`dominio/relatorios/{csv,xlsx}.ts`). Mudança nessas áreas exige teste de integração novo.
 
+## Segurança e sessão
+
+- Verificação em duas etapas (TOTP do Supabase): quem tem fator verificado precisa de AAL2; o proxy lê o claim `aal` do JWT, `exigirLeitura` redireciona para `/login/verificar` e `exigirEscrita` lança `mfa_pendente`. Nunca remover fator sem o código atual.
+- Cabeçalhos de segurança ficam em `next.config.ts` (sem CSP por enquanto). Função `security definer` exposta por rpc precisa checar papel dentro dela (`0019_seguranca.sql`).
+- Auditoria de segurança: `/auditoria-seguranca` com relatório em `saidas/seguranca/`; achados e pendências em `docs/validacao.md`.
+- Revisão visual: `node ferramentas/capturas.mjs` gera capturas nos dois temas e três larguras em `testes/relatorios/capturas/` (ignorado pelo git).
+
 ## Antes de dizer que terminou
 
-`npm run lint && npm run typecheck && npm test && npm run build`. Se tocou em banco ou permissão, `npm run test:integracao`. Se tocou em tela, `npm run e2e`.
+`npm run lint && npm run typecheck && npm test && npm run build`. Se tocou em banco ou permissão, `npm run test:integracao`. Se tocou em tela, `npm run e2e`. Implantação e backup: `docs/implantacao.md` e `docs/backups-e-recuperacao.md`.

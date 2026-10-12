@@ -1,0 +1,72 @@
+name: backup
+# Dump semanal do banco de produção, cifrado antes de sair do runner, guardado como artefato por 90 dias.
+# Restauração só no projeto de teste, por acionamento manual com confirmação.
+on:
+  schedule:
+    - cron: "0 6 * * 1" # segunda, 3h em São Paulo
+  workflow_dispatch:
+    inputs:
+      restaurar_no_teste:
+        description: "Restaurar o último dump no projeto de TESTE (digite RESTAURAR para confirmar)"
+        required: false
+        default: ""
+
+jobs:
+  dump:
+    runs-on: ubuntu-latest
+    steps:
+      - name: cliente do PostgreSQL 17
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq postgresql-common >/dev/null
+          sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh -y >/dev/null
+          sudo apt-get install -y -qq postgresql-client-17 >/dev/null
+      - name: dump cifrado
+        env:
+          BANCO_URL: ${{ secrets.SUPABASE_DB_URL }}
+          SENHA_BACKUP: ${{ secrets.BACKUP_PASSPHRASE }}
+        run: |
+          test -n "$BANCO_URL" || { echo "defina o segredo SUPABASE_DB_URL"; exit 1; }
+          test -n "$SENHA_BACKUP" || { echo "defina o segredo BACKUP_PASSPHRASE"; exit 1; }
+          data=$(date -u +%Y-%m-%d)
+          pg_dump "$BANCO_URL" --format=custom --no-owner --no-privileges \
+            --schema=public --schema=app --schema=auth --schema=storage \
+            --file="fcs-os-$data.dump"
+          gpg --batch --yes --symmetric --cipher-algo AES256 --passphrase "$SENHA_BACKUP" \
+            --output "fcs-os-$data.dump.gpg" "fcs-os-$data.dump"
+          rm -f "fcs-os-$data.dump"
+          ls -la "fcs-os-$data.dump.gpg"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: fcs-os-dump
+          path: fcs-os-*.dump.gpg
+          retention-days: 90
+          if-no-files-found: error
+
+  restaurar-no-teste:
+    needs: dump
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.restaurar_no_teste == 'RESTAURAR'
+    runs-on: ubuntu-latest
+    steps:
+      - name: cliente do PostgreSQL 17
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq postgresql-common >/dev/null
+          sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh -y >/dev/null
+          sudo apt-get install -y -qq postgresql-client-17 >/dev/null
+      - uses: actions/download-artifact@v4
+        with:
+          name: fcs-os-dump
+      - name: restaurar no projeto de teste e conferir
+        env:
+          TESTE_URL: ${{ secrets.SUPABASE_TESTE_DB_URL }}
+          SENHA_BACKUP: ${{ secrets.BACKUP_PASSPHRASE }}
+        run: |
+          test -n "$TESTE_URL" || { echo "defina o segredo SUPABASE_TESTE_DB_URL"; exit 1; }
+          case "$TESTE_URL" in *fcs-os-teste*|*teste*) ;; *) echo "a URL de teste precisa apontar para o projeto de teste"; exit 1;; esac
+          arquivo=$(ls fcs-os-*.dump.gpg | tail -1)
+          gpg --batch --yes --decrypt --passphrase "$SENHA_BACKUP" --output restaurar.dump "$arquivo"
+          # Só o schema public: auth e storage do projeto de teste ficam como estão.
+          pg_restore --dbname="$TESTE_URL" --clean --if-exists --no-owner --no-privileges \
+            --schema=public --jobs=4 restaurar.dump
+          psql "$TESTE_URL" -At -c "select 'produtos', count(*) from public.produtos union all select 'pedidos', count(*) from public.pedidos union all select 'lancamentos', count(*) from public.lancamentos union all select 'migracoes', count(*) from public.migracoes_aplicadas"

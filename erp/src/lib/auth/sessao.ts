@@ -23,10 +23,18 @@ export const usuarioAtual = cache(async (): Promise<UsuarioSessao | null> => {
   return { id: data.id, email: user.email ?? "", nome: data.nome, papel };
 });
 
+/** Verdadeiro quando o usuário tem fator verificado e a sessão ainda está em AAL1. */
+export const mfaPendente = cache(async (): Promise<boolean> => {
+  const supabase = await clienteServidor();
+  const { data } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+  return data?.nextLevel === "aal2" && data.currentLevel !== "aal2";
+});
+
 /** Páginas: redireciona quem não pode ler a área. */
 export async function exigirLeitura(area: Area): Promise<UsuarioSessao> {
   const usuario = await usuarioAtual();
   if (!usuario) redirect("/sem-acesso");
+  if (await mfaPendente()) redirect("/login/verificar");
   if (!podeLer(usuario.papel, area)) redirect(`/sem-acesso?area=${area}`);
   return usuario;
 }
@@ -35,5 +43,6 @@ export async function exigirLeitura(area: Area): Promise<UsuarioSessao> {
 export async function exigirEscrita(area: Area): Promise<UsuarioSessao> {
   const usuario = await usuarioAtual();
   if (!usuario || !podeEscrever(usuario.papel, area)) throw new Error("sem_permissao");
+  if (await mfaPendente()) throw new Error("mfa_pendente");
   return usuario;
 }

@@ -1,0 +1,23 @@
+[
+  {
+    "titulo": "Validação final: MFA TOTP, cabeçalhos de segurança, backup cifrado por workflow e capturas de tela como revisão visual",
+    "tipo": "decisao",
+    "categoria": "Decisões de arquitetura",
+    "modulo": "validacao",
+    "tags": ["seguranca", "mfa", "backup", "implantacao", "validacao", "auditoria"],
+    "referencia": "erp/docs/validacao.md; saidas/seguranca/2026-10-12-auditoria.md; .github/workflows/backup.yml; erp/docs/implantacao.md",
+    "resumo": "Verificação em duas etapas do Supabase (TOTP) com inscrição no perfil, segunda etapa em /login/verificar e exigência de AAL2 no middleware. Cabeçalhos de segurança no next.config. Backup semanal por GitHub Actions com pg_dump cifrado e job de restauração no projeto de teste. Auditoria em 14 matrizes sem achado crítico; quatro reforços aplicados. Hospedagem fica como decisão do usuário.",
+    "estrutura": {
+      "contexto": "Antes de o ERP virar a fonte de verdade do financeiro, precisava de proteção da conta do dono, backup fora do Supabase Free, revisão visual nos dois temas e uma auditoria com evidência.",
+      "alternativas": [
+        "MFA obrigatória para todos os papéis",
+        "Backup por script local com pg_dump (não há pg_dump na máquina)",
+        "Biblioteca de acessibilidade automatizada (axe) no e2e",
+        "Escolher o host sem o usuário"
+      ],
+      "decisao": "MFA opcional, recomendada para o dono, exigida no middleware só para quem tem fator verificado (claim aal do JWT, sem chamada de rede). Backup no GitHub Actions com gpg simétrico e artefato de 90 dias; restauração só no projeto de teste e com confirmação RESTAURAR. Capturas por Playwright (ferramentas/capturas.mjs) em 1440, 1024 e 390 nos dois temas para a revisão. Auditoria pela skill /auditoria-seguranca com relatório em saidas/seguranca; reforços sem mudança de comportamento aplicados na hora (papel em garantir_recebivel, cabeçalhos, shadcn fora de dependencies, datas validadas). Hospedagem documentada com recomendação (Netlify Starter) e decisão do usuário.",
+      "consequencias": "O teste de restauração só acontece depois do /salvar e dos segredos no GitHub (pendência registrada). Com fator ativo, qualquer rota do painel exige AAL2 e as actions recusam com mfa_pendente. O relatório de validação aponta o que ficou de fora: perfil de fatiador, extensão no upload, CSP com nonce."
+    },
+    "conteudo": "## Onde está\n\n- MFA: `src/acoes/mfa.ts`, `src/componentes/perfil/Mfa.tsx`, `src/app/(auth)/login/verificar`, `src/lib/supabase/proxy.ts` (claim aal), `src/lib/auth/sessao.ts` (`mfaPendente`).\n- Estados: `src/app/(painel)/{loading,error,not-found}.tsx`, `src/app/global-error.tsx`.\n- Segurança: `next.config.ts` (headers), `supabase/migrations/0019_seguranca.sql`.\n- Backup e implantação: `.github/workflows/backup.yml`, `docs/backups-e-recuperacao.md`, `docs/implantacao.md`.\n- Validação: `docs/validacao.md` (14 critérios com evidência)."
+  }
+]

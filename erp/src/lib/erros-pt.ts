@@ -119,6 +119,9 @@ const ERROS: Record<string, string> = {
   tributo_nao_configurado:
     "Configure o regime e a alíquota em Financeiro > Impostos antes de provisionar.",
   dia_vencimento_invalido: "Dia de vencimento entre 1 e 28.",
+  codigo_mfa_invalido: "Código inválido ou vencido. Confira o relógio do aparelho e tente de novo.",
+  mfa_indisponivel: "Não deu para falar com a verificação em duas etapas. Tente de novo.",
+  mfa_pendente: "Conclua a verificação em duas etapas antes de continuar.",
   titulo_obrigatorio: "Dê um título.",
   item_nao_encontrado: "Item não encontrado.",
   modelo_obrigatorio: "Escolha o modelo.",

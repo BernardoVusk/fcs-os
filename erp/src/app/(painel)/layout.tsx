@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { usuarioAtual } from "@/lib/auth/sessao";
+import { mfaPendente, usuarioAtual } from "@/lib/auth/sessao";
 import { COOKIE_TEMA, lerTema } from "@/lib/tema";
 import { gruposVisiveis } from "@/componentes/painel/navegacao";
 import { contarAlertasAbertos } from "@/dados/alertas";
@@ -12,6 +12,7 @@ import { BuscaGlobal } from "@/componentes/painel/BuscaGlobal";
 export default async function LayoutPainel({ children }: { children: React.ReactNode }) {
   const usuario = await usuarioAtual();
   if (!usuario) redirect("/sem-acesso");
+  if (await mfaPendente()) redirect("/login/verificar");
   const jar = await cookies();
   const aberta = jar.get("sidebar_state")?.value !== "false";
   const tema = lerTema(jar.get(COOKIE_TEMA)?.value);

@@ -41,7 +41,7 @@ export default async function PaginaInicio({
           }
         >
           {faltam} de {resumo.canaisTotal} canais ativos ainda não têm comissão registrada. Sem isso
-          a precificação (Fase 4) não calcula.
+          a precificação não calcula.
         </Banner>
       )}
       <div className="grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-3">
@@ -55,7 +55,7 @@ export default async function PaginaInicio({
         <CartaoIndicador
           rotulo="Alertas abertos"
           valor={String(resumo.alertasAbertos)}
-          rodape={<span className="text-xs text-texto-3">Central de alertas chega na Fase 9</span>}
+          link={{ href: "/alertas", rotulo: "Abrir alertas" }}
         />
         <CartaoIndicador
           rotulo="Materiais abaixo do mínimo"
@@ -164,8 +164,8 @@ export default async function PaginaInicio({
         ))}
       </div>
       <p className="text-xs text-texto-3">
-        O período vale para o consumo de filamento e, nas próximas fases, para vendas e financeiro.
-        Nenhum número aqui é estimativa.
+        O período vale para consumo, faturamento e financeiro; a variação compara com o período
+        anterior de mesma duração. Nenhum número aqui é estimativa.
       </p>
     </div>
   );

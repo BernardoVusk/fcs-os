@@ -22,5 +22,10 @@ export async function entrar(_: EstadoForm, fd: FormData): Promise<EstadoForm> {
   });
   if (error) return { erros: { _form: "credenciais_invalidas" } };
   const v = r.data.voltar;
+  const { data: nivel } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+  if (nivel?.nextLevel === "aal2" && nivel.currentLevel !== "aal2")
+    redirect(
+      `/login/verificar${v && v.startsWith("/") && !v.startsWith("//") ? `?voltar=${encodeURIComponent(v)}` : ""}`,
+    );
   redirect(v && v.startsWith("/") && !v.startsWith("//") ? v : "/");
 }

@@ -2,6 +2,8 @@ import { usuarioAtual } from "@/lib/auth/sessao";
 import { podeLer } from "@/lib/auth/papeis";
 import { listarLancamentos, type FiltrosLancamento } from "@/dados/financeiro/financeiro";
 
+const dataOuVazia = (v: string | null) => (v && /^\d{4}-\d{2}-\d{2}$/.test(v) ? v : undefined);
+
 /** Exportação CSV dos lançamentos com os mesmos filtros da tela. Valores sem fórmula injetável e com BOM para o Excel. */
 export async function GET(req: Request) {
   const usuario = await usuarioAtual();
@@ -11,8 +13,8 @@ export async function GET(req: Request) {
   const f: FiltrosLancamento = {
     estado: (url.searchParams.get("estado") as FiltrosLancamento["estado"]) || undefined,
     tipo: (url.searchParams.get("tipo") as FiltrosLancamento["tipo"]) || undefined,
-    inicio: url.searchParams.get("inicio") || undefined,
-    fim: url.searchParams.get("fim") || undefined,
+    inicio: dataOuVazia(url.searchParams.get("inicio")),
+    fim: dataOuVazia(url.searchParams.get("fim")),
     limite: 2000,
   };
   const itens = await listarLancamentos(f);

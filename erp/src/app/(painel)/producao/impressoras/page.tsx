@@ -28,7 +28,7 @@ export default async function PaginaImpressoras({
           <h1 className="text-[28px] leading-tight font-semibold tracking-tight">Impressoras</h1>
           <p className="mt-1 max-w-2xl text-sm text-texto-2">
             Cada impressora tem custo por hora de máquina (depreciação, manutenção, consumíveis) e
-            de energia. Fila, horas de uso e manutenções chegam na Fase 5.
+            de energia, horas de uso e manutenções.
           </p>
         </div>
         {editar && (

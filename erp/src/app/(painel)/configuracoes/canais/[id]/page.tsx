@@ -51,7 +51,7 @@ export default async function PaginaCanal({ params }: { params: Promise<{ id: st
         {taxas.length === 0 ? (
           <EstadoVazio
             titulo="Nenhuma taxa registrada"
-            descricao="Sem taxas, a calculadora de preço (Fase 4) não consegue sugerir preço para este canal."
+            descricao="Sem taxas, a calculadora de preço não consegue sugerir preço para este canal."
           />
         ) : (
           <div className="overflow-x-auto rounded-2xl bg-card shadow-painel">

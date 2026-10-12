@@ -127,16 +127,14 @@ describe("gerar_alertas", () => {
         .select("id")
         .single()
     ).data!.id;
-    await c
-      .from("pedidos_itens")
-      .insert({
-        pedido_id: pedidoId,
-        ordem: 0,
-        titulo: "Item",
-        quantidade: 1,
-        preco_unitario: 50,
-        custo_unitario_estimado: 10,
-      });
+    await c.from("pedidos_itens").insert({
+      pedido_id: pedidoId,
+      ordem: 0,
+      titulo: "Item",
+      quantidade: 1,
+      preco_unitario: 50,
+      custo_unitario_estimado: 10,
+    });
     await atualizarResumoCom(c, pedidoId);
     await c.rpc("mudar_status_pedido", {
       p_pedido: pedidoId,

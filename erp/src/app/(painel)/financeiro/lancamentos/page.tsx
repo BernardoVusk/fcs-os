@@ -42,10 +42,13 @@ export default async function PaginaLancamentos({
   const estado = ESTADOS.some((e) => e.chave === f.estado)
     ? (f.estado as FiltrosLancamento["estado"])
     : undefined;
+  const dataOuVazia = (v?: string) => (v && /^\d{4}-\d{2}-\d{2}$/.test(v) ? v : undefined);
+  const inicio = dataOuVazia(f.inicio);
+  const fim = dataOuVazia(f.fim);
   const tipo =
     f.tipo === "receita" || f.tipo === "despesa" || f.tipo === "transferencia" ? f.tipo : undefined;
   const [itens, contas, categorias] = await Promise.all([
-    listarLancamentos({ estado, tipo, inicio: f.inicio, fim: f.fim, limite: 1000 }),
+    listarLancamentos({ estado, tipo, inicio, fim, limite: 1000 }),
     listarContas(),
     listarCategoriasFinanceiras(),
   ]);
