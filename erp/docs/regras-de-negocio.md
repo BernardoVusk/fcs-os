@@ -36,4 +36,13 @@ Toda alteração em cadastro gera linha em `auditoria` com origem (`web`, `mcp`,
 
 Casos de referência: Anexo A da spec (B1, B2), reproduzidos em `src/dominio/estoque/estoque.test.ts` e `testes/integracao/estoque.test.ts`.
 
-As regras de custos, pedidos e financeiro estão na spec (seções 5.4 a 5.7 e 7) e entram aqui quando forem implementadas.
+## Custos e preço (Fase 4)
+
+- Fórmulas e casos de referência: `docs/formulas-de-custo.md` (fonte única). O motor é puro (`src/dominio/custos`, `src/dominio/precos`) e versionado (`VERSAO_MOTOR`).
+- Parâmetros globais são versionados: editar cria versão com `vigente_desde`; a vigente é a mais recente até hoje. Nascem nulos e a calculadora fica bloqueada até tarifa, mão de obra e método de fixo existirem. Imposto sem valor bloqueia só o preço por canal.
+- Componentes podem ser desligados pelo dono; entram como zero nos próximos cálculos e o snapshot guarda a lista de desligados.
+- Impressora só entra na calculadora com todos os campos de custo preenchidos. Canal só forma preço com comissão, pagamento, ads, taxa fixa e frete subsidiado preenchidos (zero é um valor; vazio não é).
+- O custo do filamento vem de `custoDeReposicao` do insumo (média, última compra ou manual) ou de um valor por quilo digitado na hora; o snapshot guarda o custo por grama e a origem fica implícita no insumo escolhido.
+- Salvar cálculo: o servidor recalcula a partir das entradas e grava entradas, resultado, versão do motor e dos parâmetros. Nada é alterado depois; o histórico compara o custo do filamento do snapshot com o atual e marca o que vale revisar. Recálculo em lote e alerta `margem_reduzida` por produto chegam na Fase 5, com BOM e preço por canal.
+
+As regras de produtos, pedidos e financeiro estão na spec (seções 5.5 a 5.7) e entram aqui quando forem implementadas.

@@ -23,6 +23,9 @@ import {
   obterEstoqueDoInsumoCom,
   type EstoqueAtual,
 } from "@/dados/estoque/insumos";
+import { listarComponentesCom, obterParametrosVigentesCom } from "@/dados/custos/parametros";
+import { parametrosFaltantes } from "@/dominio/custos/parametros";
+import { VERSAO_MOTOR } from "@/dominio/custos/motor";
 import { Limitador } from "./limite";
 import { verificarToken, type SessaoMcp } from "./autenticacao";
 
@@ -319,15 +322,56 @@ export function registrarFerramentas(server: McpServer) {
   server.registerTool(
     "custos_regras",
     {
-      description: "Fórmulas e parâmetros vigentes do motor de custos.",
-      inputSchema: z.object({ componente: z.string().max(60).optional() }),
+      description:
+        "Fórmulas do motor de custos, parâmetros vigentes (versão, valores e o que falta) e componentes ligados. Consulte antes de explicar um custo ou propor mudança de precificação.",
+      inputSchema: z.object({
+        componente: z.string().max(60).optional().describe("Código de um componente para detalhar"),
+      }),
     },
-    async (_args, ctx) => {
+    async (args, ctx) => {
       const p = await preparar(ctx, "custos_regras");
       if ("falha" in p) return p.falha;
-      return texto(
-        "Disponível na Fase 4 do ERP (motor de custos). Até lá, as fórmulas estão em erp/docs/superpowers/specs/2026-10-11-erp-fcs-design.md, seção 7.",
-      );
+      const cliente = clienteDe(p.sessao);
+      const [vigente, componentes] = await Promise.all([
+        obterParametrosVigentesCom(cliente),
+        listarComponentesCom(cliente),
+      ]);
+      const lista = args.componente
+        ? componentes.filter((c) => c.codigo === args.componente)
+        : componentes;
+      return texto({
+        versao_motor: VERSAO_MOTOR,
+        documentacao: "erp/docs/formulas-de-custo.md",
+        formulas: {
+          fator_falha: "1 / (1 - f); incide em material, maquina, energia, preparo e fixo por hora",
+          material: "peso_g * (1 + w) * fator_falha * custo_g (custo de reposicao do insumo)",
+          maquina:
+            "horas_por_peca_boa * (depreciacao + manutencao + consumiveis) por hora; energia = horas * potencia/1000 * tarifa",
+          mao_de_obra:
+            "preparo por ciclo / pecas por ciclo * fator_falha; acabamento e embalagem por peca boa sem falha",
+          fixo: "hora: horas_por_peca_boa * custo_fixo_mensal / horas_produtivas_mes; peca: custo_fixo_mensal / volume_mensal",
+          preco:
+            "P0 = (C+F)/(1-t); Pm = (C+F)/(1-t-m); Pk = (C(1+k)+F)/(1-t); t = comissao+pagamento+imposto+ads; F = taxa fixa + frete subsidiado + complementares por pedido",
+          arredondamento:
+            "componentes 4 casas, custo por grama 6, preco sugerido para cima a 2 casas",
+        },
+        parametros_vigentes: vigente
+          ? {
+              versao: vigente.versao,
+              vigente_desde: vigente.vigente_desde,
+              valores: vigente.dados,
+              faltam: parametrosFaltantes(vigente.dados),
+            }
+          : null,
+        componentes: lista.map((c) => ({
+          codigo: c.codigo,
+          nome: c.nome,
+          grupo: c.grupo,
+          metodo: c.metodo,
+          ativo: c.ativo,
+          descricao: c.descricao,
+        })),
+      });
     },
   );
 
@@ -340,7 +384,9 @@ export function registrarFerramentas(server: McpServer) {
     async (_args, ctx) => {
       const p = await preparar(ctx, "produto_custo");
       if ("falha" in p) return p.falha;
-      return texto("Disponível na Fase 4 do ERP (motor de custos).");
+      return texto(
+        "Disponível na Fase 5 do ERP, quando existirem produtos com ficha e BOM. Até lá, use custos_regras e a calculadora em /catalogo/precificacao.",
+      );
     },
   );
 

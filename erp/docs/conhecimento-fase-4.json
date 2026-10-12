@@ -1,0 +1,18 @@
+[
+  {
+    "titulo": "Motor de custos: fator de falha só no que se perde, preço com percentuais no denominador, snapshot imutável",
+    "tipo": "decisao",
+    "categoria": "Decisões de negócio",
+    "modulo": "custos",
+    "tags": ["custos", "precificacao", "margem", "markup", "snapshot"],
+    "referencia": "erp/docs/formulas-de-custo.md; erp/src/dominio/custos; erp/src/dominio/precos; supabase/migrations/0010_custos.sql",
+    "resumo": "Custo por peça boa aplica 1/(1-f) a material, máquina, energia, preparo e fixo por hora, nunca a acabamento, embalagem e complementares; desperdício só no material. Preço resolve as taxas percentuais no denominador e arredonda para cima. Cada cálculo salvo guarda entradas, resultado e versão do motor e dos parâmetros.",
+    "estrutura": {
+      "contexto": "A calculadora do FCS SPY somava custos simples e não separava falha de desperdício nem resolvia a dependência circular das taxas sobre o preço. Era preciso um motor auditável, reproduzível e com os mesmos números em qualquer tela ou integração.",
+      "alternativas": ["Repetir a fórmula do FCS SPY (perda única sobre o material, preço por markup simples)", "Aplicar o fator de falha a todos os componentes", "Arredondar o preço para o mais próximo", "Guardar só o resultado do cálculo, sem as entradas"],
+      "decisao": "Domínio puro em decimal.js: fator de falha em material, máquina, energia, preparo e fixo por hora; desperdício (1 + w) só no material; preço P0 = (C+F)/(1-t), Pm = (C+F)/(1-t-m), Pk = (C(1+k)+F)/(1-t), inviável explicado quando o denominador zera; preço sugerido arredondado para cima a 2 casas; snapshot com entradas, resultado, versão do motor e versão dos parâmetros. Parâmetros globais versionados e nulos por padrão; componentes podem ser desligados pelo dono; impressora e canal só entram completos.",
+      "consequencias": "Os casos A1 a A4 e o da seção 7.4 da spec passam no unitário e aparecem iguais na tela. Cálculo salvo nunca muda quando o filamento ou os parâmetros mudam; o histórico só sinaliza a diferença. Markup e margem são mostrados lado a lado porque não são a mesma coisa. Recálculo por produto e alerta margem_reduzida ficam para a Fase 5."
+    },
+    "conteudo": "## Onde está\n\n- Fórmulas e tabela de casos: `erp/docs/formulas-de-custo.md` (fixture em `src/dominio/custos/casos.json`).\n- Motor: `src/dominio/custos/custo-peca.ts`, `src/dominio/precos/preco.ts`, `src/dominio/custos/motor.ts` (`VERSAO_MOTOR`).\n- Banco: `parametros_custo` (versões), `componentes_custo`, `impressoras`, `calculos_custo` (insert-only).\n- Telas: Configurações > Parâmetros de custo, Produção > Impressoras, Catálogo > Precificação e Histórico.\n- MCP: `custos_regras` devolve fórmulas, parâmetros vigentes e componentes.\n\n## Regras que não podem quebrar\n\nFalha nunca em acabamento, embalagem e complementares. Desperdício nunca no tempo. Taxa fixa dentro do numerador, percentuais no denominador. Preço para cima. Snapshot imutável."
+  }
+]

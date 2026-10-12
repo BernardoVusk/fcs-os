@@ -1,4 +1,4 @@
-# Modelo de dados (Fases 1 a 3)
+# Modelo de dados (Fases 1 a 4)
 
 Convenções: `id uuid`, `criado_em`, `atualizado_em` (trigger `app.carimbar_atualizacao`), RLS em tudo, auditoria por trigger nas tabelas de cadastro. Percentuais como fração (`numeric(7,6)`), dinheiro `numeric(14,2)`.
 
@@ -20,12 +20,16 @@ Convenções: `id uuid`, `criado_em`, `atualizado_em` (trigger `app.carimbar_atu
 | `lotes_insumo` | um rolo é um lote: `quantidade_atual` e `valor_atual` são a verdade, `custo_unitario` é derivado; `divergente` quando ficou negativo com override | todo usuário ativo | insert e update por dono e operador, nunca delete |
 | `movimentacoes_estoque` | razão imutável: tipo (entrada, consumo_producao, saida, ajuste, perda, devolucao, estorno), quantidade e valor com sinal, custo do momento, motivo, justificativa, origem | todo usuário ativo | insert por dono e operador, nunca update ou delete |
 | `estoque_atual` (view) | por insumo: saldo, valor, saldo negativo, lotes com saldo, custos, `abaixo_minimo` | idem | |
+| `parametros_custo` | versões dos parâmetros globais do motor (`dados` jsonb: tarifa, mão de obra, falha e desperdício padrão, fixo e método de rateio, imposto estimado, metas); vigência por data; a view `parametros_custo_vigentes` devolve a vigente | todo usuário ativo | insert só dono; nunca update |
+| `componentes_custo` | catálogo dos componentes do custo (grupo, método, `chave_motor`, ativo); desligado entra como zero nos próximos cálculos | todo usuário ativo | update só dono |
+| `impressoras` | nome, fabricante, modelo, custo de aquisição, residual, vida útil, potência, manutenção e consumíveis por ano, horas produtivas, status; campos nulos = não configurado | todo usuário ativo | dono e operador |
+| `calculos_custo` | snapshot imutável: `entradas`, `resultado`, versão do motor e dos parâmetros, custo variável e total, preço sugerido, método e metas, refs a insumo, impressora e canal (produto e ordem na Fase 5) | todo usuário ativo | insert por dono e operador; nunca update ou delete |
 | `migracoes_aplicadas` | controle do `migrar.mjs` | ninguém via API | script |
 | `conhecimentos` | título, resumo, conteúdo (markdown), tipo, categoria, tags, módulo, origem, referência, confidencialidade, estrutura (decisão), validado, status, versão, `busca` (tsvector `app.pt`) | ativo: interno para todos, restrito só dono | dono e operador |
 | `conhecimentos_versoes` | estado anterior a cada alteração, com autor, origem e motivo (`x-motivo`) | quem lê o registro | trigger |
 | `conhecimentos_relacoes` | relacionado, substitui, deriva_de | todo usuário ativo | dono e operador |
 | `conhecimentos_anexos` | arquivos no bucket privado `anexos-conhecimento` (10 MB) | quem lê o registro | dono e operador |
 
-Funções: `app.normalizar(texto)`, `app.papel_atual()`, `app.eh_dono()`, `app.pode_escrever()`, `app.usuario_ativo()`, `app.origem_atual()`, `app.usuario_da_requisicao()` (sessão ou cabeçalho `x-usuario-id` pela service role), `app.motivo_atual()`, `app.auditar([coluna_chave])`, `app.versionar_conhecimento()`, `app.conhecimento_busca(...)`, `public.buscar_global(termo, tipos, limite)` com ramos canal, categoria, unidade, conhecimento, insumo, fornecedor, lote e compra. Estoque: `app.recalcular_custos_insumo(insumo)`, `app.verificar_estoque_minimo(insumo)`, `public.confirmar_compra(compra)`, `public.movimentar_estoque(insumo, lote, tipo, quantidade, motivo, origem_tipo, origem_id, permitir_negativo, justificativa)` e `public.estornar_movimentacao(movimentacao, motivo)`, todas `security invoker` (RLS vale) e atômicas. Configuração de busca `app.pt` (português sem acento).
+Funções: `app.normalizar(texto)`, `app.papel_atual()`, `app.eh_dono()`, `app.pode_escrever()`, `app.usuario_ativo()`, `app.origem_atual()`, `app.usuario_da_requisicao()` (sessão ou cabeçalho `x-usuario-id` pela service role), `app.motivo_atual()`, `app.auditar([coluna_chave])`, `app.versionar_conhecimento()`, `app.conhecimento_busca(...)`, `public.buscar_global(termo, tipos, limite)` com ramos canal, categoria, unidade, conhecimento, insumo, fornecedor, lote, compra, impressora e cálculo. Estoque: `app.recalcular_custos_insumo(insumo)`, `app.verificar_estoque_minimo(insumo)`, `public.confirmar_compra(compra)`, `public.movimentar_estoque(insumo, lote, tipo, quantidade, motivo, origem_tipo, origem_id, permitir_negativo, justificativa)` e `public.estornar_movimentacao(movimentacao, motivo)`, todas `security invoker` (RLS vale) e atômicas. Configuração de busca `app.pt` (português sem acento).
 
 As tabelas das fases seguintes estão na spec (`docs/superpowers/specs/2026-10-11-erp-fcs-design.md`, seção 5) e entram aqui conforme forem criadas.

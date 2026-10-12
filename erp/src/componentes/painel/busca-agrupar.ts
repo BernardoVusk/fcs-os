@@ -6,6 +6,8 @@ export const TIPOS_BUSCA = [
   "lote",
   "fornecedor",
   "compra",
+  "impressora",
+  "calculo",
   "produto",
   "ordem",
   "pedido",
@@ -24,6 +26,8 @@ export const ROTULO_TIPO: Record<TipoBusca, string> = {
   lote: "Lotes",
   fornecedor: "Fornecedores",
   compra: "Compras",
+  impressora: "Impressoras",
+  calculo: "Cálculos de custo",
   produto: "Produtos",
   ordem: "Ordens de produção",
   pedido: "Pedidos",
@@ -43,6 +47,8 @@ export const TIPOS_DISPONIVEIS: TipoBusca[] = [
   "lote",
   "fornecedor",
   "compra",
+  "impressora",
+  "calculo",
 ];
 
 export type ResultadoBusca = {

@@ -84,6 +84,131 @@ export type Database = {
         };
         Relationships: [];
       };
+      calculos_custo: {
+        Row: {
+          canal_id: string | null;
+          criado_em: string;
+          criado_por: string | null;
+          custo_unitario_total: number;
+          custo_variavel: number;
+          entradas: Json;
+          id: string;
+          impressora_id: string | null;
+          insumo_id: string | null;
+          margem_alvo: number | null;
+          markup_alvo: number | null;
+          metodo_margem: string | null;
+          motivo: string;
+          nome: string;
+          observacoes: string | null;
+          ordem_producao_id: string | null;
+          parametros_versao: number | null;
+          preco_sugerido: number | null;
+          produto_id: string | null;
+          resultado: Json;
+          variacao_id: string | null;
+          versao_motor: string;
+        };
+        Insert: {
+          canal_id?: string | null;
+          criado_em?: string;
+          criado_por?: string | null;
+          custo_unitario_total: number;
+          custo_variavel: number;
+          entradas: Json;
+          id?: string;
+          impressora_id?: string | null;
+          insumo_id?: string | null;
+          margem_alvo?: number | null;
+          markup_alvo?: number | null;
+          metodo_margem?: string | null;
+          motivo?: string;
+          nome: string;
+          observacoes?: string | null;
+          ordem_producao_id?: string | null;
+          parametros_versao?: number | null;
+          preco_sugerido?: number | null;
+          produto_id?: string | null;
+          resultado: Json;
+          variacao_id?: string | null;
+          versao_motor: string;
+        };
+        Update: {
+          canal_id?: string | null;
+          criado_em?: string;
+          criado_por?: string | null;
+          custo_unitario_total?: number;
+          custo_variavel?: number;
+          entradas?: Json;
+          id?: string;
+          impressora_id?: string | null;
+          insumo_id?: string | null;
+          margem_alvo?: number | null;
+          markup_alvo?: number | null;
+          metodo_margem?: string | null;
+          motivo?: string;
+          nome?: string;
+          observacoes?: string | null;
+          ordem_producao_id?: string | null;
+          parametros_versao?: number | null;
+          preco_sugerido?: number | null;
+          produto_id?: string | null;
+          resultado?: Json;
+          variacao_id?: string | null;
+          versao_motor?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "calculos_custo_canal_id_fkey";
+            columns: ["canal_id"];
+            isOneToOne: false;
+            referencedRelation: "canais_venda";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "calculos_custo_canal_id_fkey";
+            columns: ["canal_id"];
+            isOneToOne: false;
+            referencedRelation: "canais_venda_vigentes";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "calculos_custo_impressora_id_fkey";
+            columns: ["impressora_id"];
+            isOneToOne: false;
+            referencedRelation: "impressoras";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "calculos_custo_insumo_id_fkey";
+            columns: ["insumo_id"];
+            isOneToOne: false;
+            referencedRelation: "estoque_atual";
+            referencedColumns: ["insumo_id"];
+          },
+          {
+            foreignKeyName: "calculos_custo_insumo_id_fkey";
+            columns: ["insumo_id"];
+            isOneToOne: false;
+            referencedRelation: "insumos";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "calculos_custo_parametros_versao_fkey";
+            columns: ["parametros_versao"];
+            isOneToOne: false;
+            referencedRelation: "parametros_custo";
+            referencedColumns: ["versao"];
+          },
+          {
+            foreignKeyName: "calculos_custo_parametros_versao_fkey";
+            columns: ["parametros_versao"];
+            isOneToOne: false;
+            referencedRelation: "parametros_custo_vigentes";
+            referencedColumns: ["versao"];
+          },
+        ];
+      };
       canais_venda: {
         Row: {
           ativo: boolean;
@@ -214,6 +339,48 @@ export type Database = {
             referencedColumns: ["id"];
           },
         ];
+      };
+      componentes_custo: {
+        Row: {
+          ativo: boolean;
+          atualizado_em: string;
+          chave_motor: string | null;
+          codigo: string;
+          descricao: string | null;
+          grupo: string;
+          id: string;
+          metodo: string;
+          nome: string;
+          ordem: number;
+          parametros: Json;
+        };
+        Insert: {
+          ativo?: boolean;
+          atualizado_em?: string;
+          chave_motor?: string | null;
+          codigo: string;
+          descricao?: string | null;
+          grupo: string;
+          id?: string;
+          metodo: string;
+          nome: string;
+          ordem?: number;
+          parametros?: Json;
+        };
+        Update: {
+          ativo?: boolean;
+          atualizado_em?: string;
+          chave_motor?: string | null;
+          codigo?: string;
+          descricao?: string | null;
+          grupo?: string;
+          id?: string;
+          metodo?: string;
+          nome?: string;
+          ordem?: number;
+          parametros?: Json;
+        };
+        Relationships: [];
       };
       compras: {
         Row: {
@@ -609,6 +776,66 @@ export type Database = {
         };
         Relationships: [];
       };
+      impressoras: {
+        Row: {
+          atualizado_em: string;
+          criado_em: string;
+          custo_aquisicao: number | null;
+          custo_consumiveis_ano: number | null;
+          custo_manutencao_ano: number | null;
+          data_aquisicao: string | null;
+          fabricante: string | null;
+          horas_produtivas_ano: number | null;
+          horas_uso: number;
+          id: string;
+          modelo: string | null;
+          nome: string;
+          observacoes: string | null;
+          potencia_media_w: number | null;
+          status: string;
+          valor_residual: number;
+          vida_util_horas: number | null;
+        };
+        Insert: {
+          atualizado_em?: string;
+          criado_em?: string;
+          custo_aquisicao?: number | null;
+          custo_consumiveis_ano?: number | null;
+          custo_manutencao_ano?: number | null;
+          data_aquisicao?: string | null;
+          fabricante?: string | null;
+          horas_produtivas_ano?: number | null;
+          horas_uso?: number;
+          id?: string;
+          modelo?: string | null;
+          nome: string;
+          observacoes?: string | null;
+          potencia_media_w?: number | null;
+          status?: string;
+          valor_residual?: number;
+          vida_util_horas?: number | null;
+        };
+        Update: {
+          atualizado_em?: string;
+          criado_em?: string;
+          custo_aquisicao?: number | null;
+          custo_consumiveis_ano?: number | null;
+          custo_manutencao_ano?: number | null;
+          data_aquisicao?: string | null;
+          fabricante?: string | null;
+          horas_produtivas_ano?: number | null;
+          horas_uso?: number;
+          id?: string;
+          modelo?: string | null;
+          nome?: string;
+          observacoes?: string | null;
+          potencia_media_w?: number | null;
+          status?: string;
+          valor_residual?: number;
+          vida_util_horas?: number | null;
+        };
+        Relationships: [];
+      };
       insumos: {
         Row: {
           ativo: boolean;
@@ -839,6 +1066,36 @@ export type Database = {
           },
         ];
       };
+      parametros_custo: {
+        Row: {
+          criado_em: string;
+          criado_por: string | null;
+          dados: Json;
+          id: string;
+          observacoes: string | null;
+          versao: number;
+          vigente_desde: string;
+        };
+        Insert: {
+          criado_em?: string;
+          criado_por?: string | null;
+          dados?: Json;
+          id?: string;
+          observacoes?: string | null;
+          versao?: number;
+          vigente_desde?: string;
+        };
+        Update: {
+          criado_em?: string;
+          criado_por?: string | null;
+          dados?: Json;
+          id?: string;
+          observacoes?: string | null;
+          versao?: number;
+          vigente_desde?: string;
+        };
+        Relationships: [];
+      };
       tokens_integracao: {
         Row: {
           criado_em: string;
@@ -991,6 +1248,18 @@ export type Database = {
             referencedColumns: ["codigo"];
           },
         ];
+      };
+      parametros_custo_vigentes: {
+        Row: {
+          criado_em: string | null;
+          criado_por: string | null;
+          dados: Json | null;
+          id: string | null;
+          observacoes: string | null;
+          versao: number | null;
+          vigente_desde: string | null;
+        };
+        Relationships: [];
       };
     };
     Functions: {

@@ -241,15 +241,13 @@ export async function enviarAnexo(id: string, fd: FormData): Promise<ResultadoAc
     .from("anexos-conhecimento")
     .upload(caminho, arquivo, { contentType: arquivo.type });
   if (erroUpload) return { ok: false, erro: "erro_inesperado" };
-  const { error } = await supabase
-    .from("conhecimentos_anexos")
-    .insert({
-      conhecimento_id: id,
-      storage_path: caminho,
-      nome: arquivo.name.slice(0, 200),
-      tamanho: arquivo.size,
-      tipo: arquivo.type,
-    });
+  const { error } = await supabase.from("conhecimentos_anexos").insert({
+    conhecimento_id: id,
+    storage_path: caminho,
+    nome: arquivo.name.slice(0, 200),
+    tamanho: arquivo.size,
+    tipo: arquivo.type,
+  });
   if (error) {
     await supabase.storage.from("anexos-conhecimento").remove([caminho]);
     return { ok: false, erro: "erro_inesperado" };

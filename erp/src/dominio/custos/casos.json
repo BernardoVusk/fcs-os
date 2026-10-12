@@ -1,0 +1,99 @@
+{
+  "_nota": "Casos de referência da spec (Anexo A e seção 7.4). Valores hipotéticos de teste, não são taxas reais. Fonte humana: docs/formulas-de-custo.md.",
+  "impressora_anexo": {
+    "custo_aquisicao": 4500,
+    "valor_residual": 500,
+    "vida_util_horas": 8000,
+    "potencia_media_w": 120,
+    "custo_manutencao_ano": 400,
+    "custo_consumiveis_ano": 200,
+    "horas_produtivas_ano": 2000
+  },
+  "tarifa_kwh": 0.95,
+  "custo_hora_anexo": { "depreciacao": 0.5, "manutencao": 0.2, "consumiveis": 0.1, "energia": 0.114 },
+  "casos": [
+    {
+      "id": "A1",
+      "nome": "Peça simples (f 0, w 0, fixos desligados)",
+      "peca": {
+        "peso_g": 40, "tempo_ciclo_min": 120, "pecas_por_ciclo": 1, "taxa_falha": 0, "desperdicio": 0, "custo_g": 0.125,
+        "preparo_ciclo_min": 5, "acabamento_peca_min": 4, "embalagem_peca_min": 3, "custo_hora_mao_obra": 30,
+        "complementares_peca": 0.4, "complementares_pedido": 0,
+        "fixo": { "metodo": "desligado", "custo_fixo_mensal": 0, "horas_produtivas_mes": 0, "volume_mensal_estimado": 0 }
+      },
+      "canal": { "comissao_pct": 0.14, "taxa_pagamento_pct": 0.02, "imposto_pct": 0.06, "ads_pct": 0, "taxa_fixa_item": 4, "frete_subsidio": 0 },
+      "margem_alvo": 0.25,
+      "markup_alvo": null,
+      "esperado": {
+        "componentes": { "material": 5, "depreciacao": 1, "manutencao": 0.4, "consumiveis": 0.2, "energia": 0.228, "preparo": 2.5, "acabamento": 2, "embalagem": 1.5, "complementares_peca": 0.4, "fixo_rateado": 0 },
+        "custo_total": 13.228, "t": 0.22, "F": 4,
+        "preco_equilibrio": 22.09, "preco_margem": 32.51,
+        "taxas_no_preco": 11.1522, "margem_contribuicao": 8.1298, "margem_pct": 25.01
+      }
+    },
+    {
+      "id": "A2",
+      "nome": "Mesa de 6 peças (f 0,10, w 0,05, fixos por hora)",
+      "peca": {
+        "peso_g": 25, "tempo_ciclo_min": 300, "pecas_por_ciclo": 6, "taxa_falha": 0.1, "desperdicio": 0.05, "custo_g": 0.125,
+        "preparo_ciclo_min": 10, "acabamento_peca_min": 3, "embalagem_peca_min": 2, "custo_hora_mao_obra": 30,
+        "complementares_peca": 0.8, "complementares_pedido": 0,
+        "fixo": { "metodo": "hora", "custo_fixo_mensal": 300, "horas_produtivas_mes": 150, "volume_mensal_estimado": 0 }
+      },
+      "canal": { "comissao_pct": 0.17, "taxa_pagamento_pct": 0, "imposto_pct": 0.06, "ads_pct": 0.03, "taxa_fixa_item": 6.75, "frete_subsidio": 0 },
+      "margem_alvo": 0.2,
+      "markup_alvo": null,
+      "esperado": {
+        "pecas_boas_por_tentativa": 5.4, "gramas_por_peca_boa": 29.1667, "horas_por_peca_boa": 0.9259,
+        "componentes": { "material": 3.6458, "depreciacao": 0.463, "manutencao": 0.1852, "consumiveis": 0.0926, "energia": 0.1056, "preparo": 0.9259, "acabamento": 1.5, "embalagem": 1, "complementares_peca": 0.8, "fixo_rateado": 1.8519 },
+        "custo_variavel": 8.7181, "custo_total": 10.5699, "t": 0.26, "F": 6.75,
+        "preco_equilibrio": 23.41, "preco_margem": 32.08,
+        "margem_contribuicao": 8.2711, "resultado_liquido": 6.4193, "margem_pct": 20.01,
+        "controle_preco_abaixo": { "preco": 32.07, "margem_pct": 19.99 }
+      }
+    },
+    {
+      "id": "A3",
+      "nome": "Inviável: percentuais sobre o preço somam 100 %",
+      "peca": "A1",
+      "canal": { "comissao_pct": 0.2, "taxa_pagamento_pct": 0.05, "imposto_pct": 0.15, "ads_pct": 0.1, "taxa_fixa_item": 4, "frete_subsidio": 0 },
+      "margem_alvo": 0.5,
+      "markup_alvo": null,
+      "esperado": { "t": 0.5, "preco_equilibrio": 34.46, "margem_viavel": false, "soma_percentuais": 1, "margem_maxima_exclusiva": 0.5 },
+      "canal_t_105": { "comissao_pct": 0.75, "taxa_pagamento_pct": 0.05, "imposto_pct": 0.15, "ads_pct": 0.1, "taxa_fixa_item": 4, "frete_subsidio": 0 }
+    },
+    {
+      "id": "A4",
+      "nome": "Markup 50 % contra margem 50 % (entradas de A1)",
+      "peca": "A1",
+      "canal": "A1",
+      "margem_alvo": 0.5,
+      "markup_alvo": 0.5,
+      "esperado": {
+        "markup": { "preco": 30.57, "lucro": 6.6166, "lucro_sobre_custo_pct": 50.02, "lucro_sobre_preco_pct": 21.64 },
+        "margem": { "preco": 61.53, "lucro": 30.7654, "lucro_sobre_custo_pct": 232.58, "lucro_sobre_preco_pct": 50 }
+      }
+    },
+    {
+      "id": "REF-7.4",
+      "nome": "Caso de referência da seção 7.4",
+      "impressora": { "custo_aquisicao": 2000, "valor_residual": 0, "vida_util_horas": 4000, "potencia_media_w": 120, "custo_manutencao_ano": 300, "custo_consumiveis_ano": 0, "horas_produtivas_ano": 1500 },
+      "peca": {
+        "peso_g": 50, "tempo_ciclo_min": 240, "pecas_por_ciclo": 1, "taxa_falha": 0.05, "desperdicio": 0.05, "custo_g": 0.06,
+        "preparo_ciclo_min": 10, "acabamento_peca_min": 10, "embalagem_peca_min": 0, "custo_hora_mao_obra": 30,
+        "complementares_peca": 1.5, "complementares_pedido": 0,
+        "fixo": { "metodo": "hora", "custo_fixo_mensal": 600, "horas_produtivas_mes": 200, "volume_mensal_estimado": 0 }
+      },
+      "canal": { "comissao_pct": 0.2, "taxa_pagamento_pct": 0, "imposto_pct": 0.06, "ads_pct": 0, "taxa_fixa_item": 4, "frete_subsidio": 0 },
+      "margem_alvo": 0.25,
+      "markup_alvo": 0.25,
+      "esperado": {
+        "componentes": { "material": 3.3158, "energia": 0.48, "preparo": 5.2632, "acabamento": 5, "complementares_peca": 1.5, "fixo_rateado": 12.6316 },
+        "maquina": 2.9474,
+        "custo_total": 31.1379, "custo_total_exato_prefixo": "31.137894",
+        "preco_equilibrio": 47.49, "preco_margem": 71.71, "preco_markup": 58.01,
+        "margem_pct_no_preco_margem": 25, "margem_pct_no_preco_markup": 13.4
+      }
+    }
+  ]
+}

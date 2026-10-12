@@ -74,6 +74,11 @@ export default async function PaginaInicio({
           link={{ href: "/estoque/movimentacoes?tipo=consumo_producao", rotulo: "Ver consumo" }}
         />
         <CartaoIndicador
+          rotulo="Cálculos de custo salvos"
+          valor={String(resumo.calculosSalvos)}
+          link={{ href: "/catalogo/precificacao", rotulo: "Abrir a calculadora" }}
+        />
+        <CartaoIndicador
           rotulo="Canais com taxas"
           valor={`${resumo.canaisComTaxas} de ${resumo.canaisTotal}`}
           link={{ href: "/configuracoes/canais", rotulo: "Configurar canais" }}

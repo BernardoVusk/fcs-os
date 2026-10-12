@@ -5,6 +5,7 @@ import { intervaloDoPeriodo } from "@/lib/formatos/periodo";
 import { contarAlertasAbertos } from "./alertas";
 import { contarConhecimentosAtivos } from "./conhecimento";
 import { consumoFilamentoNoPeriodo, contarAbaixoMinimo } from "./estoque/insumos";
+import { contarCalculos } from "./custos/calculos";
 
 export type ResumoInicial = {
   alertasAbertos: number;
@@ -14,6 +15,7 @@ export type ResumoInicial = {
   insumosAbaixoMinimo: number;
   /** Gramas consumidas no período; null quando não há filamento cadastrado. */
   consumoFilamentoG: number | null;
+  calculosSalvos: number;
 };
 
 export async function resumoInicial(periodo: Periodo): Promise<ResumoInicial> {
@@ -25,12 +27,14 @@ export async function resumoInicial(periodo: Periodo): Promise<ResumoInicial> {
     conhecimentosAtivos,
     insumosAbaixoMinimo,
     consumoFilamentoG,
+    calculosSalvos,
   ] = await Promise.all([
     supabase.from("canais_venda_vigentes").select("id, comissao_pct").eq("ativo", true),
     contarAlertasAbertos(),
     contarConhecimentosAtivos(),
     contarAbaixoMinimo(),
     consumoFilamentoNoPeriodo(inicio, fim),
+    contarCalculos(),
   ]);
   const lista = canais ?? [];
   return {
@@ -38,6 +42,7 @@ export async function resumoInicial(periodo: Periodo): Promise<ResumoInicial> {
     conhecimentosAtivos,
     insumosAbaixoMinimo,
     consumoFilamentoG,
+    calculosSalvos,
     canaisTotal: lista.length,
     canaisComTaxas: lista.filter((c) => c.comissao_pct !== null).length,
   };
