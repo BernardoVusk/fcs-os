@@ -64,6 +64,14 @@ test.beforeAll(async () => {
 test.afterAll(async () => {
   const admin = await servico();
   if (!admin) return;
+  // Lançamentos e alertas criados por gatilho (pedido pago, compra confirmada) não têm FK para o que o teste apagou.
+  const { data: lancs } = await admin.from("lancamentos").select("id").ilike("descricao", "%E2E%");
+  const idsLanc = (lancs ?? []).map((l) => l.id);
+  if (idsLanc.length) {
+    await admin.from("lancamentos_realizacoes").delete().in("lancamento_id", idsLanc);
+    await admin.from("lancamentos").delete().in("id", idsLanc);
+  }
+  await admin.from("alertas").delete().ilike("titulo", "%E2E%");
   if (canalId) await admin.from("pedidos").delete().eq("canal_id", canalId);
   if (produtoId) await admin.from("produtos").delete().eq("id", produtoId);
   if (canalId) await admin.from("canais_venda").delete().eq("id", canalId);

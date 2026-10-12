@@ -26,7 +26,7 @@ marketing e produção.
 - `scripts/` — automações (geração de imagem, publicação em Instagram e Facebook)
 - `templates/` — moldes de skills, perfis e identidade
 - `mini-projetos/` — ferramentas internas pequenas, uma pasta por projeto, cada uma com `docs/` (estudo, spec, plano, checagem). Primeira: `fcs-spy/`, extensão de Chrome de estudo de mercado na Shopee
-- `erp/` — FCS ERP, o sistema de gestão (Next.js + Supabase). Regras próprias em `erp/CLAUDE.md`; plano aprovado em `erp/docs/superpowers/specs/2026-10-11-erp-fcs-design.md`; migrações do banco ficam em `supabase/migrations/` na raiz. Fases 1 a 10 concluídas em 12/10/2026 (`erp/docs/validacao.md`); hospedagem decidida: Vercel, plano Pro (passo a passo em `erp/docs/implantacao.md`); falta o `/salvar`, criar o projeto na Vercel e o primeiro backup com restauração (`erp/docs/backups-e-recuperacao.md`)
+- `erp/` — FCS ERP, o sistema de gestão (Next.js + Supabase). Regras próprias em `erp/CLAUDE.md`; plano aprovado em `erp/docs/superpowers/specs/2026-10-11-erp-fcs-design.md`; migrações do banco ficam em `supabase/migrations/` na raiz. Fases 1 a 10 concluídas em 12/10/2026 (`erp/docs/validacao.md`); publicado em https://fcs-erp.vercel.app em 12/10/2026 (Vercel, projeto `fcs-erp`, branch `main`; `erp/docs/implantacao.md`); faltam plano Pro, domínio, MFA do dono e o primeiro backup com restauração (`erp/docs/backups-e-recuperacao.md`)
 - `saidas/seguranca/` — relatórios da skill `/auditoria-seguranca`
 
 A ficha de produto vive no ERP (Fase 5), não em pasta.
@@ -94,7 +94,8 @@ O canal de coleta é o browser logado, via extensão Claude in Chrome. A skill `
 - [x] TikTok Shop (FCS 3D STUDIO)
 - [x] Claude in Chrome (conectado em 27/09/2026 com `/chrome` na sessão do terminal; na extensão do VS Code as ferramentas do Chrome não aparecem, usar o terminal)
 - [x] FCS SPY (extensão própria, `mini-projetos/fcs-spy/`, carregada sem compactação a partir de `extensao/dist`)
-- [x] GitHub (repositório privado `BernardoVusk/fcs-os`, criado em 11/10/2026; salvar com `/salvar`)
+- [x] GitHub (repositório privado `BernardoVusk/fcs-os`, criado em 11/10/2026; salvar com `/salvar`; token do `gh` tem escopo `workflow` desde 12/10/2026)
+- [x] Vercel (time Vusk's projects, projeto `fcs-erp`, https://fcs-erp.vercel.app, deploy automático da branch `main`; o usuário está logado na Vercel no Chrome)
 - [x] Supabase (organização LABSFCS, plano gratuito; projeto `fcs-os`, ref `jdjbyxysxtnyhztypeai`, São Paulo sa-east-1, criado em 11/10/2026. O primeiro, em us-east-1, virou `fcs-os-antigo-eua` e está pausado, vazio). Acesso total autorizado pelo usuário: criar e alterar projetos, tabelas, funções e buckets sem pedir. Token e chaves no `.env` (`SUPABASE_ACCESS_TOKEN`, `SUPABASE_DB_PASSWORD`, `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`); nunca copiar esses valores para arquivo versionado nem para a memória. Usar a Management API (`api.supabase.com/v1/projects/<ref>/database/query`) e guardar cada mudança de estrutura como migração em `supabase/migrations/`. Projeto de teste `fcs-os-teste` (sa-east-1) criado em 11/10/2026 para os testes de integração do ERP
 - [x] FCS ERP via MCP (servidor `fcs-erp` em `.mcp.json`, aponta para `/api/mcp` do ERP; token criado em Configurações > Integrações e guardado nas variáveis `FCS_ERP_URL` e `FCS_ERP_MCP_TOKEN` do usuário, nunca em arquivo versionado; skills `/kb-buscar`, `/kb-salvar`, `/kb-decisao`, `/kb-procedimento`; detalhes em `erp/docs/integracao-claude-code.md`)
 - [ ] Google Ads

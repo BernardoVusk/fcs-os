@@ -12,6 +12,14 @@ test.afterAll(async () => {
   const admin = createClient(url, chave, {
     auth: { persistSession: false, autoRefreshToken: false },
   });
+  // Lançamentos e alertas criados por gatilho (pedido pago, compra confirmada) não têm FK para o que o teste apagou.
+  const { data: lancs } = await admin.from("lancamentos").select("id").ilike("descricao", "%E2E%");
+  const idsLanc = (lancs ?? []).map((l) => l.id);
+  if (idsLanc.length) {
+    await admin.from("lancamentos_realizacoes").delete().in("lancamento_id", idsLanc);
+    await admin.from("lancamentos").delete().in("id", idsLanc);
+  }
+  await admin.from("alertas").delete().ilike("titulo", "%E2E%");
   const { data: insumos } = await admin.from("insumos").select("id").like("nome", "E2E %");
   const ids = (insumos ?? []).map((i) => i.id);
   if (ids.length) {

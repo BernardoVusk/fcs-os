@@ -73,7 +73,18 @@ test.beforeAll(async () => {
 test.afterAll(async () => {
   const admin = await servico();
   if (!admin) return;
+  // Lançamentos e alertas criados por gatilho (pedido pago, compra confirmada) não têm FK para o que o teste apagou.
+  const { data: lancs } = await admin.from("lancamentos").select("id").ilike("descricao", "%E2E%");
+  const idsLanc = (lancs ?? []).map((l) => l.id);
+  if (idsLanc.length) {
+    await admin.from("lancamentos_realizacoes").delete().in("lancamento_id", idsLanc);
+    await admin.from("lancamentos").delete().in("id", idsLanc);
+  }
+  await admin.from("alertas").delete().ilike("titulo", "%E2E%");
   await admin.from("calculos_custo").delete().like("nome", "E2E %");
+  // Cálculo salvo sem nome E2E ainda aponta para a impressora e a versão do teste.
+  if (impressoraId) await admin.from("calculos_custo").delete().eq("impressora_id", impressoraId);
+  if (versao) await admin.from("calculos_custo").delete().eq("parametros_versao", versao);
   if (impressoraId) await admin.from("impressoras").delete().eq("id", impressoraId);
   if (canalId) await admin.from("canais_venda").delete().eq("id", canalId);
   if (versao) await admin.from("parametros_custo").delete().eq("versao", versao);

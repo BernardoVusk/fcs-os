@@ -2,6 +2,12 @@
 
 Decisão D4 tomada em 12/10/2026: Vercel. O plano precisa ser o **Pro** (US$ 20 por assento/mês): o Hobby proíbe uso comercial nos termos de serviço, e o ERP é a operação de uma loja. O repositório já está pronto para a Vercel; o que falta é o que só o dono da conta faz.
 
+## Situação em 12/10/2026
+
+Publicado: **https://fcs-erp.vercel.app** (projeto `fcs-erp`, time Vusk's projects, Root Directory `erp`, Production Branch `main`, região `gru1`). Conferido depois do deploy: `/` redireciona para `/login`, cabeçalhos de segurança presentes, login com conta real entra no painel, MCP em produção responde com as 11 ferramentas. No Supabase, `site_url` e `uri_allow_list` já apontam para a URL de produção (e `localhost:3000` para o dev), feito pela Management API. `main` passou a ser a branch publicada: `erp-fase-1` foi levada a `main` por fast-forward.
+
+Ainda falta (só o dono faz): plano Pro na Vercel (o time está no Hobby), domínio próprio, verificação em duas etapas no perfil, segredos e primeiro backup no GitHub.
+
 ## O que já está no repositório
 
 - `erp/vercel.json`: framework Next.js e região `gru1` (São Paulo), a mesma do Supabase `fcs-os` (sa-east-1).
@@ -12,11 +18,11 @@ Decisão D4 tomada em 12/10/2026: Vercel. O plano precisa ser o **Pro** (US$ 20 
 
 ## Passo a passo
 
-1. **Publicar o código:** `/salvar` na raiz do workspace (envia a branch `erp-fase-1`; depois, se quiser, abrir PR para `main`).
+1. **Publicar o código:** `/salvar` na raiz do workspace. A branch publicada é `main`; `erp-fase-1` é a de trabalho e vai para `main` por fast-forward quando estiver verde.
 2. **Criar o projeto na Vercel:** Add New > Project > importar `BernardoVusk/fcs-os`.
    - Root Directory: `erp` (clicar em Edit ao lado do diretório raiz).
    - Framework Preset: Next.js (detectado). Build `npm run build`, install `npm ci`, output padrão.
-   - Production Branch: `erp-fase-1` até o merge em `main` (Settings > Git).
+   - Production Branch: `main`.
 3. **Variáveis de ambiente** (Settings > Environment Variables, marcar Production e Preview):
    - `SUPABASE_URL` = `https://jdjbyxysxtnyhztypeai.supabase.co`
    - `SUPABASE_ANON_KEY` = chave anon do projeto `fcs-os` (Supabase > Project Settings > API)

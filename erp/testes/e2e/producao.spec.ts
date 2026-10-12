@@ -86,6 +86,14 @@ test.beforeAll(async () => {
 test.afterAll(async () => {
   const admin = await servico();
   if (!admin) return;
+  // Lançamentos e alertas criados por gatilho (pedido pago, compra confirmada) não têm FK para o que o teste apagou.
+  const { data: lancs } = await admin.from("lancamentos").select("id").ilike("descricao", "%E2E%");
+  const idsLanc = (lancs ?? []).map((l) => l.id);
+  if (idsLanc.length) {
+    await admin.from("lancamentos_realizacoes").delete().in("lancamento_id", idsLanc);
+    await admin.from("lancamentos").delete().in("id", idsLanc);
+  }
+  await admin.from("alertas").delete().ilike("titulo", "%E2E%");
   const { data: produtos } = await admin.from("produtos").select("id").like("nome", "E2E %");
   const ids = (produtos ?? []).map((p) => p.id);
   if (ids.length) {
@@ -95,6 +103,9 @@ test.afterAll(async () => {
     await admin.from("alertas").delete().in("entidade_id", ids);
     await admin.from("produtos").delete().in("id", ids);
   }
+  if (insumoId) await admin.from("calculos_custo").delete().eq("insumo_id", insumoId);
+  if (impressoraId) await admin.from("calculos_custo").delete().eq("impressora_id", impressoraId);
+  if (versao) await admin.from("calculos_custo").delete().eq("parametros_versao", versao);
   if (insumoId) {
     const { data: lotes } = await admin.from("lotes_insumo").select("id").eq("insumo_id", insumoId);
     await admin
