@@ -236,6 +236,7 @@ export type Database = {
           atualizado_em: string;
           criado_em: string;
           id: string;
+          mapeamento_pedidos: Json;
           nome: string;
           observacoes: string | null;
           tipo: string;
@@ -245,6 +246,7 @@ export type Database = {
           atualizado_em?: string;
           criado_em?: string;
           id?: string;
+          mapeamento_pedidos?: Json;
           nome: string;
           observacoes?: string | null;
           tipo: string;
@@ -254,6 +256,7 @@ export type Database = {
           atualizado_em?: string;
           criado_em?: string;
           id?: string;
+          mapeamento_pedidos?: Json;
           nome?: string;
           observacoes?: string | null;
           tipo?: string;
@@ -357,6 +360,63 @@ export type Database = {
             columns: ["pai_id"];
             isOneToOne: false;
             referencedRelation: "categorias";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      clientes: {
+        Row: {
+          anonimizado: boolean;
+          atualizado_em: string;
+          canal_origem_id: string | null;
+          criado_em: string;
+          documento: string | null;
+          email: string | null;
+          endereco: Json;
+          id: string;
+          nome: string;
+          observacoes: string | null;
+          telefone: string | null;
+        };
+        Insert: {
+          anonimizado?: boolean;
+          atualizado_em?: string;
+          canal_origem_id?: string | null;
+          criado_em?: string;
+          documento?: string | null;
+          email?: string | null;
+          endereco?: Json;
+          id?: string;
+          nome: string;
+          observacoes?: string | null;
+          telefone?: string | null;
+        };
+        Update: {
+          anonimizado?: boolean;
+          atualizado_em?: string;
+          canal_origem_id?: string | null;
+          criado_em?: string;
+          documento?: string | null;
+          email?: string | null;
+          endereco?: Json;
+          id?: string;
+          nome?: string;
+          observacoes?: string | null;
+          telefone?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "clientes_canal_origem_id_fkey";
+            columns: ["canal_origem_id"];
+            isOneToOne: false;
+            referencedRelation: "canais_venda";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "clientes_canal_origem_id_fkey";
+            columns: ["canal_origem_id"];
+            isOneToOne: false;
+            referencedRelation: "canais_venda_vigentes";
             referencedColumns: ["id"];
           },
         ];
@@ -796,6 +856,66 @@ export type Database = {
           site?: string | null;
         };
         Relationships: [];
+      };
+      importacoes: {
+        Row: {
+          atualizadas: number;
+          canal_id: string | null;
+          criadas: number;
+          em: string;
+          erros: Json;
+          hash_sha256: string;
+          id: string;
+          ignoradas: number;
+          nome_arquivo: string;
+          tipo: string;
+          total_linhas: number;
+          usuario_id: string | null;
+        };
+        Insert: {
+          atualizadas?: number;
+          canal_id?: string | null;
+          criadas?: number;
+          em?: string;
+          erros?: Json;
+          hash_sha256: string;
+          id?: string;
+          ignoradas?: number;
+          nome_arquivo: string;
+          tipo?: string;
+          total_linhas?: number;
+          usuario_id?: string | null;
+        };
+        Update: {
+          atualizadas?: number;
+          canal_id?: string | null;
+          criadas?: number;
+          em?: string;
+          erros?: Json;
+          hash_sha256?: string;
+          id?: string;
+          ignoradas?: number;
+          nome_arquivo?: string;
+          tipo?: string;
+          total_linhas?: number;
+          usuario_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "importacoes_canal_id_fkey";
+            columns: ["canal_id"];
+            isOneToOne: false;
+            referencedRelation: "canais_venda";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "importacoes_canal_id_fkey";
+            columns: ["canal_id"];
+            isOneToOne: false;
+            referencedRelation: "canais_venda_vigentes";
+            referencedColumns: ["id"];
+          },
+        ];
       };
       impressoras: {
         Row: {
@@ -1368,6 +1488,13 @@ export type Database = {
         };
         Relationships: [
           {
+            foreignKeyName: "ordens_pedido_item_fk";
+            columns: ["pedido_item_id"];
+            isOneToOne: false;
+            referencedRelation: "pedidos_itens";
+            referencedColumns: ["id"];
+          },
+          {
             foreignKeyName: "ordens_producao_calculo_estimado_id_fkey";
             columns: ["calculo_estimado_id"];
             isOneToOne: false;
@@ -1438,6 +1565,316 @@ export type Database = {
           observacoes?: string | null;
           versao?: number;
           vigente_desde?: string;
+        };
+        Relationships: [];
+      };
+      pedidos: {
+        Row: {
+          atualizado_em: string;
+          canal_id: string;
+          cliente_id: string | null;
+          codigo: string;
+          codigo_externo: string | null;
+          comissao_pct: number | null;
+          criado_em: string;
+          criado_por: string | null;
+          data_conclusao: string | null;
+          data_envio: string | null;
+          data_pagamento: string | null;
+          data_pedido: string;
+          descontos_vendedor: number;
+          frete_cobrado: number;
+          frete_pago: number;
+          id: string;
+          importacao_id: string | null;
+          observacoes: string | null;
+          origem: string;
+          resumo: Json | null;
+          status_canal: string | null;
+          status_id: string;
+          status_pagamento: string;
+          taxa_fixa_item: number | null;
+          taxa_pagamento_pct: number | null;
+          taxas_canal_informadas: number | null;
+          taxas_pagamento_informadas: number | null;
+          total_bruto_informado: number | null;
+        };
+        Insert: {
+          atualizado_em?: string;
+          canal_id: string;
+          cliente_id?: string | null;
+          codigo?: string;
+          codigo_externo?: string | null;
+          comissao_pct?: number | null;
+          criado_em?: string;
+          criado_por?: string | null;
+          data_conclusao?: string | null;
+          data_envio?: string | null;
+          data_pagamento?: string | null;
+          data_pedido?: string;
+          descontos_vendedor?: number;
+          frete_cobrado?: number;
+          frete_pago?: number;
+          id?: string;
+          importacao_id?: string | null;
+          observacoes?: string | null;
+          origem?: string;
+          resumo?: Json | null;
+          status_canal?: string | null;
+          status_id: string;
+          status_pagamento?: string;
+          taxa_fixa_item?: number | null;
+          taxa_pagamento_pct?: number | null;
+          taxas_canal_informadas?: number | null;
+          taxas_pagamento_informadas?: number | null;
+          total_bruto_informado?: number | null;
+        };
+        Update: {
+          atualizado_em?: string;
+          canal_id?: string;
+          cliente_id?: string | null;
+          codigo?: string;
+          codigo_externo?: string | null;
+          comissao_pct?: number | null;
+          criado_em?: string;
+          criado_por?: string | null;
+          data_conclusao?: string | null;
+          data_envio?: string | null;
+          data_pagamento?: string | null;
+          data_pedido?: string;
+          descontos_vendedor?: number;
+          frete_cobrado?: number;
+          frete_pago?: number;
+          id?: string;
+          importacao_id?: string | null;
+          observacoes?: string | null;
+          origem?: string;
+          resumo?: Json | null;
+          status_canal?: string | null;
+          status_id?: string;
+          status_pagamento?: string;
+          taxa_fixa_item?: number | null;
+          taxa_pagamento_pct?: number | null;
+          taxas_canal_informadas?: number | null;
+          taxas_pagamento_informadas?: number | null;
+          total_bruto_informado?: number | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "pedidos_canal_id_fkey";
+            columns: ["canal_id"];
+            isOneToOne: false;
+            referencedRelation: "canais_venda";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "pedidos_canal_id_fkey";
+            columns: ["canal_id"];
+            isOneToOne: false;
+            referencedRelation: "canais_venda_vigentes";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "pedidos_cliente_id_fkey";
+            columns: ["cliente_id"];
+            isOneToOne: false;
+            referencedRelation: "clientes";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "pedidos_importacao_id_fkey";
+            columns: ["importacao_id"];
+            isOneToOne: false;
+            referencedRelation: "importacoes";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "pedidos_status_id_fkey";
+            columns: ["status_id"];
+            isOneToOne: false;
+            referencedRelation: "pedidos_status";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      pedidos_eventos: {
+        Row: {
+          de_status_id: string | null;
+          em: string;
+          id: string;
+          nota: string | null;
+          origem: string;
+          para_status_id: string;
+          pedido_id: string;
+          usuario_id: string | null;
+        };
+        Insert: {
+          de_status_id?: string | null;
+          em?: string;
+          id?: string;
+          nota?: string | null;
+          origem?: string;
+          para_status_id: string;
+          pedido_id: string;
+          usuario_id?: string | null;
+        };
+        Update: {
+          de_status_id?: string | null;
+          em?: string;
+          id?: string;
+          nota?: string | null;
+          origem?: string;
+          para_status_id?: string;
+          pedido_id?: string;
+          usuario_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "pedidos_eventos_de_status_id_fkey";
+            columns: ["de_status_id"];
+            isOneToOne: false;
+            referencedRelation: "pedidos_status";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "pedidos_eventos_para_status_id_fkey";
+            columns: ["para_status_id"];
+            isOneToOne: false;
+            referencedRelation: "pedidos_status";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "pedidos_eventos_pedido_id_fkey";
+            columns: ["pedido_id"];
+            isOneToOne: false;
+            referencedRelation: "pedidos";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      pedidos_itens: {
+        Row: {
+          calculo_custo_id: string | null;
+          codigo_anuncio: string | null;
+          criado_em: string;
+          custo_unitario_estimado: number | null;
+          custo_unitario_realizado: number | null;
+          desconto: number;
+          id: string;
+          ordem: number;
+          pedido_id: string;
+          preco_unitario: number;
+          produto_id: string | null;
+          quantidade: number;
+          titulo: string | null;
+          variacao_id: string | null;
+        };
+        Insert: {
+          calculo_custo_id?: string | null;
+          codigo_anuncio?: string | null;
+          criado_em?: string;
+          custo_unitario_estimado?: number | null;
+          custo_unitario_realizado?: number | null;
+          desconto?: number;
+          id?: string;
+          ordem?: number;
+          pedido_id: string;
+          preco_unitario: number;
+          produto_id?: string | null;
+          quantidade: number;
+          titulo?: string | null;
+          variacao_id?: string | null;
+        };
+        Update: {
+          calculo_custo_id?: string | null;
+          codigo_anuncio?: string | null;
+          criado_em?: string;
+          custo_unitario_estimado?: number | null;
+          custo_unitario_realizado?: number | null;
+          desconto?: number;
+          id?: string;
+          ordem?: number;
+          pedido_id?: string;
+          preco_unitario?: number;
+          produto_id?: string | null;
+          quantidade?: number;
+          titulo?: string | null;
+          variacao_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "pedidos_itens_calculo_custo_id_fkey";
+            columns: ["calculo_custo_id"];
+            isOneToOne: false;
+            referencedRelation: "calculos_custo";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "pedidos_itens_pedido_id_fkey";
+            columns: ["pedido_id"];
+            isOneToOne: false;
+            referencedRelation: "pedidos";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "pedidos_itens_produto_id_fkey";
+            columns: ["produto_id"];
+            isOneToOne: false;
+            referencedRelation: "estoque_produtos";
+            referencedColumns: ["produto_id"];
+          },
+          {
+            foreignKeyName: "pedidos_itens_produto_id_fkey";
+            columns: ["produto_id"];
+            isOneToOne: false;
+            referencedRelation: "produtos";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "pedidos_itens_variacao_id_fkey";
+            columns: ["variacao_id"];
+            isOneToOne: false;
+            referencedRelation: "produtos_variacoes";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      pedidos_status: {
+        Row: {
+          ativo: boolean;
+          baixa_estoque: boolean;
+          codigo: string;
+          cor: string | null;
+          fechado: boolean;
+          gera_recebivel: boolean;
+          id: string;
+          nome: string;
+          ordem: number;
+          padrao: boolean;
+        };
+        Insert: {
+          ativo?: boolean;
+          baixa_estoque?: boolean;
+          codigo: string;
+          cor?: string | null;
+          fechado?: boolean;
+          gera_recebivel?: boolean;
+          id?: string;
+          nome: string;
+          ordem: number;
+          padrao?: boolean;
+        };
+        Update: {
+          ativo?: boolean;
+          baixa_estoque?: boolean;
+          codigo?: string;
+          cor?: string | null;
+          fechado?: boolean;
+          gera_recebivel?: boolean;
+          id?: string;
+          nome?: string;
+          ordem?: number;
+          padrao?: boolean;
         };
         Relationships: [];
       };
@@ -2279,6 +2716,7 @@ export type Database = {
       };
     };
     Functions: {
+      anonimizar_cliente: { Args: { p_cliente: string }; Returns: undefined };
       buscar_global: {
         Args: { limite?: number; termo: string; tipos?: string[] };
         Returns: {
@@ -2307,6 +2745,10 @@ export type Database = {
         Returns: Json;
       };
       confirmar_compra: { Args: { p_compra: string }; Returns: Json };
+      devolver_pedido: {
+        Args: { p_nota?: string; p_pedido: string };
+        Returns: Json;
+      };
       estornar_movimentacao: {
         Args: { p_motivo: string; p_movimentacao: string };
         Returns: string;
@@ -2364,6 +2806,15 @@ export type Database = {
           p_permitir_negativo?: boolean;
           p_quantidade: number;
           p_tipo: string;
+        };
+        Returns: Json;
+      };
+      mudar_status_pedido: {
+        Args: {
+          p_nota?: string;
+          p_origem?: string;
+          p_pedido: string;
+          p_status_codigo: string;
         };
         Returns: Json;
       };

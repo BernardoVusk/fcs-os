@@ -8,6 +8,7 @@ import { consumoFilamentoNoPeriodo, contarAbaixoMinimo } from "./estoque/insumos
 import { contarCalculos } from "./custos/calculos";
 import { contarOrdensAbertas } from "./producao/ordens";
 import { totalPecasProntas } from "./produtos/estoque-produtos";
+import { contarPedidosAbertos, faturamentoNoPeriodo } from "./vendas/pedidos";
 
 export type ResumoInicial = {
   alertasAbertos: number;
@@ -20,6 +21,9 @@ export type ResumoInicial = {
   calculosSalvos: number;
   ordensAbertas: number;
   pecasProntas: number;
+  pedidosAbertos: number;
+  /** Base de vendas dos pedidos pagos no período; null quando não há pedido nenhum. */
+  faturamento: { total: number; pedidos: number } | null;
 };
 
 export async function resumoInicial(periodo: Periodo): Promise<ResumoInicial> {
@@ -34,6 +38,8 @@ export async function resumoInicial(periodo: Periodo): Promise<ResumoInicial> {
     calculosSalvos,
     ordensAbertas,
     pecasProntas,
+    pedidosAbertos,
+    faturamento,
   ] = await Promise.all([
     supabase.from("canais_venda_vigentes").select("id, comissao_pct").eq("ativo", true),
     contarAlertasAbertos(),
@@ -43,6 +49,8 @@ export async function resumoInicial(periodo: Periodo): Promise<ResumoInicial> {
     contarCalculos(),
     contarOrdensAbertas(),
     totalPecasProntas(),
+    contarPedidosAbertos(),
+    faturamentoNoPeriodo(inicio, fim),
   ]);
   const lista = canais ?? [];
   return {
@@ -53,6 +61,8 @@ export async function resumoInicial(periodo: Periodo): Promise<ResumoInicial> {
     calculosSalvos,
     ordensAbertas,
     pecasProntas,
+    pedidosAbertos,
+    faturamento,
     canaisTotal: lista.length,
     canaisComTaxas: lista.filter((c) => c.comissao_pct !== null).length,
   };

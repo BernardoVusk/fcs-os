@@ -91,28 +91,24 @@ export async function importarCatalogo(_: EstadoForm, fd: FormData): Promise<Est
       ignoradas.push(`${l.canal} ${l.codigo_externo}: ${e1.message}`);
       continue;
     }
-    const { error: e2 } = await supabase
-      .from("produtos_anuncios")
-      .insert({
-        produto_id: produto.id,
-        canal_id: canalId,
-        codigo_externo: l.codigo_externo,
-        ...metricas,
-      });
+    const { error: e2 } = await supabase.from("produtos_anuncios").insert({
+      produto_id: produto.id,
+      canal_id: canalId,
+      codigo_externo: l.codigo_externo,
+      ...metricas,
+    });
     if (e2) {
       ignoradas.push(`${l.canal} ${l.codigo_externo}: ${e2.message}`);
       continue;
     }
     if (l.preco != null) {
-      await supabase
-        .from("produtos_precos_canal")
-        .insert({
-          produto_id: produto.id,
-          canal_id: canalId,
-          preco_venda: l.preco,
-          vigente_desde: l.coletado_em ?? new Date().toISOString().slice(0, 10),
-          origem: "importacao",
-        });
+      await supabase.from("produtos_precos_canal").insert({
+        produto_id: produto.id,
+        canal_id: canalId,
+        preco_venda: l.preco,
+        vigente_desde: l.coletado_em ?? new Date().toISOString().slice(0, 10),
+        origem: "importacao",
+      });
     }
     criadas++;
   }
@@ -143,13 +139,11 @@ async function registrarPrecoSeMudou(
     .is("variacao_id", null)
     .maybeSingle();
   if (vigente && Number(vigente.preco_venda) === preco) return;
-  await supabase
-    .from("produtos_precos_canal")
-    .insert({
-      produto_id: produtoId,
-      canal_id: canalId,
-      preco_venda: preco,
-      vigente_desde: data ?? new Date().toISOString().slice(0, 10),
-      origem: "importacao",
-    });
+  await supabase.from("produtos_precos_canal").insert({
+    produto_id: produtoId,
+    canal_id: canalId,
+    preco_venda: preco,
+    vigente_desde: data ?? new Date().toISOString().slice(0, 10),
+    origem: "importacao",
+  });
 }

@@ -79,12 +79,10 @@ export async function salvarArquivo(_: EstadoForm, fd: FormData): Promise<Estado
     tamanho = arquivo.size;
     if (!nome) nome = arquivo.name;
     storagePath = `${r.data.produto_id}/${Date.now()}-${normalizarNome(arquivo.name) || "arquivo"}`;
-    const { error: e1 } = await supabase.storage
-      .from(bucket)
-      .upload(storagePath, buffer, {
-        contentType: arquivo.type || "application/octet-stream",
-        upsert: false,
-      });
+    const { error: e1 } = await supabase.storage.from(bucket).upload(storagePath, buffer, {
+      contentType: arquivo.type || "application/octet-stream",
+      upsert: false,
+    });
     if (e1)
       return { erros: { _form: e1.message.includes("mime") ? "arquivo_tipo" : "erro_inesperado" } };
   }

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { exigirLeitura } from "@/lib/auth/sessao";
 import { resumoInicial } from "@/dados/dashboard";
 import { formatarQuantidade } from "@/lib/formatos/numero";
+import { formatarMoeda } from "@/lib/formatos/moeda";
 import { CartaoIndicador } from "@/componentes/painel/CartaoIndicador";
 import { SeletorPeriodo, lerPeriodo, PERIODOS } from "@/componentes/painel/SeletorPeriodo";
 import { Banner } from "@/componentes/painel/Banner";
@@ -10,7 +11,6 @@ import { Button } from "@/componentes/ui/button";
 export const metadata = { title: "Início" };
 
 const FUTUROS: { rotulo: string; fase: number }[] = [
-  { rotulo: "Faturamento do período", fase: 6 },
   { rotulo: "Receita recebida", fase: 7 },
   { rotulo: "Despesas pagas", fase: 7 },
   { rotulo: "A pagar e a receber", fase: 7 },
@@ -71,6 +71,24 @@ export default async function PaginaInicio({
           }
           dica="Cadastre um filamento em Estoque"
           link={{ href: "/estoque/movimentacoes?tipo=consumo_producao", rotulo: "Ver consumo" }}
+        />
+        <CartaoIndicador
+          rotulo={`Faturamento (${rotuloPeriodo})`}
+          valor={resumo.faturamento === null ? null : formatarMoeda(resumo.faturamento.total)}
+          dica="Nenhum pedido registrado"
+          rodape={
+            resumo.faturamento ? (
+              <span className="text-xs text-texto-3">
+                {resumo.faturamento.pedidos} pedido(s) pago(s); base de vendas
+              </span>
+            ) : undefined
+          }
+          link={{ href: "/vendas/pedidos", rotulo: "Ver pedidos" }}
+        />
+        <CartaoIndicador
+          rotulo="Pedidos abertos"
+          valor={String(resumo.pedidosAbertos)}
+          link={{ href: "/vendas/pedidos", rotulo: "Abrir pedidos" }}
         />
         <CartaoIndicador
           rotulo="Ordens em andamento"

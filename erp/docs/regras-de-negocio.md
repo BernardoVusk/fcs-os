@@ -62,4 +62,12 @@ Casos de referência: Anexo A da spec (B1, B2), reproduzidos em `src/dominio/est
 - Peças prontas entram em `movimentacoes_produto` ao custo por peça boa; o estoque de peças é média móvel por produto e variação.
 - Reabrir estorna cada movimentação de estoque e a entrada de peças (movimentações opostas), devolve as horas e volta para acabamento. Nada é apagado.
 
-As regras de pedidos e financeiro estão na spec (seções 5.6 e 5.7) e entram aqui quando forem implementadas.
+## Pedidos (Fase 6)
+
+- Chave de idempotência: (canal, código externo). Reimportar o mesmo arquivo (hash) não faz nada; linha conhecida atualiza valores e só avança o status (nunca volta); pedido novo entra no status inicial com evento.
+- Resumo financeiro (spec 7.7, caso C1): base das taxas = receita bruta menos descontos do vendedor (frete fora); base de vendas = base das taxas mais frete cobrado; taxas = comissão e pagamento arredondados a 2 casas mais taxa fixa por item; valor a receber = base de vendas menos taxas menos frete pago; imposto estimado é análise; custo estimado só quando todos os itens têm, idem realizado. Taxas informadas pelo canal prevalecem (origem `canal`).
+- Mudança de status é função SQL: ao entrar no status que gera recebível, marca pago, grava a data e congela `custo_unitario_estimado` pelo custo variável atual do produto ou variação (com o cálculo que o gerou); ao entrar no status de expedição, exige peças prontas, baixa pela média móvel e grava `custo_unitario_realizado`. Cancelar depois do envio exige devolução, que devolve as peças pelo custo que saíram.
+- O recebível e a conciliação com o repasse do canal nascem na Fase 7, ligados ao mesmo evento de pagamento aprovado.
+- Cliente é opcional; anonimizar apaga nome, contato, documento e endereço e mantém o histórico.
+
+As regras do financeiro estão na spec (seção 5.7) e entram aqui quando forem implementadas.

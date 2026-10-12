@@ -62,17 +62,15 @@ beforeAll(async () => {
       .select("id")
       .single()
   ).data!.id;
-  await c
-    .from("canais_venda_taxas")
-    .insert({
-      canal_id: canalId,
-      vigente_desde: "2026-01-01",
-      comissao_pct: 0.14,
-      taxa_pagamento_pct: 0.02,
-      ads_pct_padrao: 0,
-      taxa_fixa_item: 4,
-      frete_subsidio_padrao: 0,
-    });
+  await c.from("canais_venda_taxas").insert({
+    canal_id: canalId,
+    vigente_desde: "2026-01-01",
+    comissao_pct: 0.14,
+    taxa_pagamento_pct: 0.02,
+    ads_pct_padrao: 0,
+    taxa_fixa_item: 4,
+    frete_subsidio_padrao: 0,
+  });
   plaId = (
     await c
       .from("insumos")
@@ -133,16 +131,14 @@ beforeAll(async () => {
       .select("id")
       .single()
   ).data!.id;
-  await c
-    .from("produtos_materiais")
-    .insert({
-      produto_id: produtoId,
-      insumo_id: imaId,
-      quantidade: 1,
-      unidade: "un",
-      papel: "complementar",
-      por: "peca",
-    });
+  await c.from("produtos_materiais").insert({
+    produto_id: produtoId,
+    insumo_id: imaId,
+    quantidade: 1,
+    unidade: "un",
+    papel: "complementar",
+    por: "peca",
+  });
   await c.from("produtos_precos_canal").insert([
     { produto_id: produtoId, canal_id: canalId, preco_venda: 30, vigente_desde: "2026-01-01" },
     { produto_id: produtoId, canal_id: canalId, preco_venda: 32.51, vigente_desde: "2026-06-01" },

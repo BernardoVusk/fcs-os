@@ -24,7 +24,7 @@ test.beforeAll(async () => {
   const { data: v } = await admin
     .from("parametros_custo")
     .insert({
-      vigente_desde: "2026-01-03",
+      vigente_desde: new Date().toISOString().slice(0, 10),
       dados: {
         tarifa_kwh: 0.95,
         custo_hora_mao_obra: 30,

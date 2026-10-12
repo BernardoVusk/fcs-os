@@ -1,0 +1,29 @@
+[
+  {
+    "titulo": "Pedidos: status com papéis fixos, custo congelado ao pagar, peças baixadas ao enviar, importação idempotente",
+    "tipo": "decisao",
+    "categoria": "Decisões de negócio",
+    "modulo": "vendas",
+    "tags": [
+      "pedidos",
+      "status",
+      "importacao",
+      "resumo financeiro",
+      "pecas prontas"
+    ],
+    "referencia": "supabase/migrations/0014_vendas.sql; erp/src/dominio/vendas; erp/docs/regras-de-negocio.md",
+    "resumo": "A lista de status é editável, mas três papéis são fixos: inicial, gera recebível (marca pago e congela o custo estimado) e expedição (baixa peças prontas ao custo médio). Mudar status é função SQL com evento. Importação de CSV é idempotente por hash do arquivo e por (canal, código externo); status importado só avança.",
+    "estrutura": {
+      "contexto": "Pedidos chegam de três canais com exportações diferentes e precisam virar receita, custo e consumo de peças sem duplicar nada nem reabrir o que já foi pago ou enviado.",
+      "alternativas": [
+        "Status fixos em código",
+        "Baixar peças ao criar o pedido",
+        "Custo do pedido recalculado a cada mudança de preço de filamento",
+        "Importação sem chave externa"
+      ],
+      "decisao": "Status em tabela com flags únicas (índices parciais); mudar_status_pedido grava evento, congela custo_unitario_estimado ao entrar no status que gera recebível e baixa movimentacoes_produto ao entrar no status de expedição; devolver_pedido devolve as peças; importação por mapeamento de colunas por canal (defaults como hipótese, editáveis) com hash único.",
+      "consequencias": "O resultado estimado do pedido não muda quando o filamento muda de preço. Expedição sem peça pronta é bloqueada: a ordem de produção precisa estar concluída. Na Fase 7 o recebível nasce no mesmo evento de pagamento aprovado."
+    },
+    "conteudo": "## Onde está\n\n- Resumo financeiro (caso C1): `src/dominio/vendas/resumo-pedido.ts`.\n- Status e regras: `src/dominio/vendas/status.ts`; importação: `importacao-pedidos.ts`.\n- Funções SQL: `mudar_status_pedido`, `devolver_pedido`, `anonimizar_cliente` (0014).\n- Telas: Vendas > Pedidos (lista, novo, detalhe com resumo e linha do tempo), Clientes, Importar; Configurações > Status de pedido."
+  }
+]

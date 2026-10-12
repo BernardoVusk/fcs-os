@@ -89,6 +89,23 @@ const ERROS: Record<string, string> = {
   produto_sem_insumo: "O produto não tem filamento definido na ficha.",
   produto_sem_calculo: "O produto ainda não tem cálculo de custo.",
   calculo_incompleto: "Faltam dados para calcular. Veja a lista na aba Custo.",
+  pedido_sem_itens: "Adicione pelo menos um item ao pedido.",
+  pedido_fechado: "Pedido fechado ou já enviado: não dá mais para editar itens.",
+  pedido_nao_encontrado: "Pedido não encontrado.",
+  pedido_ja_enviado: "Pedido já enviado: registre a devolução antes de cancelar.",
+  pedido_nao_enviado: "Só pedidos enviados podem ter devolução.",
+  pedido_ja_devolvido: "Este pedido já teve devolução registrada.",
+  sem_pecas_prontas:
+    "Não há peças prontas suficientes para expedir. Conclua a ordem de produção antes.",
+  status_invalido: "Status inválido ou inativo.",
+  status_estrutural:
+    "Esse status é estrutural (inicial, gera recebível ou baixa estoque) e não pode ser desligado.",
+  status_um_gera_recebivel: "Exatamente um status deve gerar recebível.",
+  status_um_baixa_estoque: "No máximo um status baixa o estoque.",
+  status_um_padrao: "Exatamente um status deve ser o inicial.",
+  importacao_repetida: "Este arquivo já foi importado (mesmo conteúdo).",
+  csv_colunas_faltando: "Colunas obrigatórias não encontradas. Ajuste o mapeamento do canal.",
+  cliente_nao_encontrado: "Cliente não encontrado.",
 };
 
 export function erroPt(chave: string | undefined): string | undefined {
