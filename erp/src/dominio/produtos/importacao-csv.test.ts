@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import { lerCatalogo, nomeSugerido, separarCsv } from "./importacao-csv";
@@ -27,7 +27,9 @@ describe("parser CSV", () => {
     ]);
     expect(() => lerCatalogo("a,b\n1,2")).toThrow("csv_sem_colunas:canal,id,titulo");
   });
-  it("lê o catálogo real de 21/08/2026 inteiro", () => {
+  // O CSV real fica fora do git (dados/ é local); no CI o caso é pulado.
+  const catalogoReal = resolve(__dirname, "../../../../dados/catalogo/2026-08-21-catalogo.csv");
+  it.skipIf(!existsSync(catalogoReal))("lê o catálogo real de 21/08/2026 inteiro", () => {
     const csv = readFileSync(
       resolve(__dirname, "../../../../dados/catalogo/2026-08-21-catalogo.csv"),
       "utf8",
