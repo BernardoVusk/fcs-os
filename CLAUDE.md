@@ -92,6 +92,8 @@ O canal de coleta é o browser logado, via extensão Claude in Chrome. A skill `
 - [x] TikTok Shop (FCS 3D STUDIO)
 - [x] Claude in Chrome (conectado em 27/09/2026 com `/chrome` na sessão do terminal; na extensão do VS Code as ferramentas do Chrome não aparecem, usar o terminal)
 - [x] FCS SPY (extensão própria, `mini-projetos/fcs-spy/`, carregada sem compactação a partir de `extensao/dist`)
+- [x] GitHub (repositório privado `BernardoVusk/fcs-os`, criado em 11/10/2026; salvar com `/salvar`)
+- [x] Supabase (projeto `fcs-os`, ref `ufdadtttodhavqfrjhin`, us-east-1, configurado em 11/10/2026). Acesso total autorizado pelo usuário: criar e alterar tabelas, funções e buckets sem pedir. Token e chaves no `.env` (`SUPABASE_ACCESS_TOKEN`, `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`); nunca copiar esses valores para arquivo versionado nem para a memória. Usar a Management API (`api.supabase.com/v1/projects/<ref>/database/query`) e guardar cada mudança de estrutura como migração em `supabase/migrations/`
 - [ ] Google Ads
 - [ ] Meta Ads
 - [ ] Instagram / Facebook (scripts em `scripts/`, precisa de `.env`)
