@@ -28,6 +28,7 @@ Claude Code ── skills kb-* ── token ──▶ /api/mcp (mcp-handler, Str
 | `kb_decisoes` | conhecimento:ler | decisões ativas por módulo |
 | `custos_regras`, `produto_custo` | custos:ler | chegam na Fase 4 |
 | `alertas_abertos` | operacao:ler | alertas em aberto |
+| `estoque_insumo` | operacao:ler | saldo, valor, custo médio e lotes dos insumos (Fase 3) |
 
 ## Configuração no workspace
 

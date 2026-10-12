@@ -1,4 +1,9 @@
-export const ESCOPOS = ["conhecimento:ler", "conhecimento:escrever", "custos:ler", "operacao:ler"] as const;
+export const ESCOPOS = [
+  "conhecimento:ler",
+  "conhecimento:escrever",
+  "custos:ler",
+  "operacao:ler",
+] as const;
 export type Escopo = (typeof ESCOPOS)[number];
 export const ESCOPO_ROTULO: Record<Escopo, string> = {
   "conhecimento:ler": "Ler a base de conhecimento",
@@ -8,7 +13,15 @@ export const ESCOPO_ROTULO: Record<Escopo, string> = {
 };
 
 export const FERRAMENTAS_MCP = [
-  "kb_buscar", "kb_obter", "kb_salvar", "kb_atualizar", "kb_decisoes", "custos_regras", "produto_custo", "alertas_abertos",
+  "kb_buscar",
+  "kb_obter",
+  "kb_salvar",
+  "kb_atualizar",
+  "kb_decisoes",
+  "custos_regras",
+  "produto_custo",
+  "alertas_abertos",
+  "estoque_insumo",
 ] as const;
 export type FerramentaMcp = (typeof FERRAMENTAS_MCP)[number];
 
@@ -21,6 +34,7 @@ const ESCOPO_POR_FERRAMENTA: Record<FerramentaMcp, Escopo> = {
   custos_regras: "custos:ler",
   produto_custo: "custos:ler",
   alertas_abertos: "operacao:ler",
+  estoque_insumo: "operacao:ler",
 };
 
 export function escopoPara(ferramenta: FerramentaMcp): Escopo {

@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { formatarNumero, lerNumeroPt, percentualParaFracao } from "./numero";
+import { formatarNumero, lerNumeroPt, percentualParaFracao, numeroParaCampo } from "./numero";
 
 describe("numero", () => {
   it("lê número no formato brasileiro e no americano", () => {
@@ -20,5 +20,19 @@ describe("numero", () => {
   it("formata com separadores brasileiros", () => {
     expect(formatarNumero(1234.5, 2)).toBe("1.234,50");
     expect(formatarNumero(null)).toBe("Sem dados");
+  });
+});
+
+describe("campos numéricos (Fase 3)", () => {
+  it("lê milhar com ponto sem vírgula como pt-BR e devolve valor sem agrupamento para inputs", () => {
+    expect(lerNumeroPt("1.000")).toBe(1000);
+    expect(lerNumeroPt("12.345.678")).toBe(12345678);
+    expect(lerNumeroPt("0.125")).toBe(0.125);
+    expect(lerNumeroPt("1.5")).toBe(1.5);
+    expect(lerNumeroPt("1.000,50")).toBe(1000.5);
+    expect(numeroParaCampo(1000, 0)).toBe("1000");
+    expect(numeroParaCampo(0.10165, 6)).toBe("0,10165");
+    expect(numeroParaCampo(95, 2)).toBe("95");
+    expect(numeroParaCampo(null)).toBe("");
   });
 });

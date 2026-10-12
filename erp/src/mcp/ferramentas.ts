@@ -6,8 +6,23 @@ import { podeEscrever, podeLer } from "@/lib/auth/papeis";
 import { escopoPara, temEscopo, type FerramentaMcp } from "@/dominio/conhecimento/escopos";
 import { contemSegredo } from "@/dominio/conhecimento/segredos";
 import { CONFIDENCIALIDADES, lerTags, TIPOS_CONHECIMENTO } from "@/dominio/conhecimento/tipos";
-import { listarConhecimentosCom, listarDecisoesCom, obterConhecimentoCom } from "@/dados/conhecimento";
-import { atualizarConhecimento, criarConhecimento, type DadosAtualizacao, type DadosConhecimento } from "@/dados/conhecimento-escrita";
+import {
+  listarConhecimentosCom,
+  listarDecisoesCom,
+  obterConhecimentoCom,
+} from "@/dados/conhecimento";
+import {
+  atualizarConhecimento,
+  criarConhecimento,
+  type DadosAtualizacao,
+  type DadosConhecimento,
+} from "@/dados/conhecimento-escrita";
+import {
+  listarEstoqueCom,
+  listarLotesCom,
+  obterEstoqueDoInsumoCom,
+  type EstoqueAtual,
+} from "@/dados/estoque/insumos";
 import { Limitador } from "./limite";
 import { verificarToken, type SessaoMcp } from "./autenticacao";
 
@@ -19,19 +34,30 @@ type Ctx = { http?: { authInfo?: { token: string } } };
 type Resposta = { content: { type: "text"; text: string }[]; isError?: boolean };
 
 function texto(dados: unknown): Resposta {
-  return { content: [{ type: "text", text: typeof dados === "string" ? dados : JSON.stringify(dados, null, 2) }] };
+  return {
+    content: [
+      { type: "text", text: typeof dados === "string" ? dados : JSON.stringify(dados, null, 2) },
+    ],
+  };
 }
 function erro(mensagem: string): Resposta {
   return { content: [{ type: "text", text: mensagem }], isError: true };
 }
 
-async function preparar(ctx: Ctx, ferramenta: FerramentaMcp): Promise<{ sessao: SessaoMcp } | { falha: Resposta }> {
+async function preparar(
+  ctx: Ctx,
+  ferramenta: FerramentaMcp,
+): Promise<{ sessao: SessaoMcp } | { falha: Resposta }> {
   const token = ctx.http?.authInfo?.token;
   const sessao = token ? await verificarToken(token) : null;
   if (!sessao) return { falha: erro("Token inválido, revogado ou expirado.") };
   const escopo = escopoPara(ferramenta);
   if (!temEscopo(sessao.escopos, escopo)) {
-    return { falha: erro(`Token sem o escopo ${escopo}. Crie outro em Configurações > Integrações do ERP.`) };
+    return {
+      falha: erro(
+        `Token sem o escopo ${escopo}. Crie outro em Configurações > Integrações do ERP.`,
+      ),
+    };
   }
   if (!limitador.permitir(sessao.tokenId).permitido) {
     return { falha: erro("Limite de 60 chamadas por minuto atingido. Aguarde um instante.") };
@@ -68,7 +94,8 @@ export function registrarFerramentas(server: McpServer) {
     async (args, ctx) => {
       const p = await preparar(ctx, "kb_buscar");
       if ("falha" in p) return p.falha;
-      if (!podeLer(p.sessao.papel, "conhecimento")) return erro("Seu papel não lê a base de conhecimento.");
+      if (!podeLer(p.sessao.papel, "conhecimento"))
+        return erro("Seu papel não lê a base de conhecimento.");
       const lista = await listarConhecimentosCom(clienteDe(p.sessao), {
         termo: args.termo,
         tipo: args.tipo,
@@ -103,7 +130,8 @@ export function registrarFerramentas(server: McpServer) {
       const p = await preparar(ctx, "kb_obter");
       if ("falha" in p) return p.falha;
       const r = await obterConhecimentoCom(clienteDe(p.sessao), args.id);
-      if (!r || !visivel(p.sessao, r.confidencialidade)) return erro("Conhecimento não encontrado.");
+      if (!r || !visivel(p.sessao, r.confidencialidade))
+        return erro("Conhecimento não encontrado.");
       return texto({
         id: r.id,
         slug: r.slug,
@@ -135,11 +163,19 @@ export function registrarFerramentas(server: McpServer) {
         resumo: z.string().max(400).optional(),
         conteudo: z.string().min(1).max(60000).describe("Markdown"),
         tipo: z.enum(TIPOS_CONHECIMENTO),
-        categoria: z.string().max(80).optional().describe("Nome de uma categoria do escopo conhecimento"),
+        categoria: z
+          .string()
+          .max(80)
+          .optional()
+          .describe("Nome de uma categoria do escopo conhecimento"),
         tags: z.array(z.string().max(40)).max(20).optional(),
         modulo: z.string().max(60).optional(),
         projeto: z.string().max(80).optional(),
-        referencia: z.string().max(500).optional().describe("Arquivos, commit ou contexto de origem"),
+        referencia: z
+          .string()
+          .max(500)
+          .optional()
+          .describe("Arquivos, commit ou contexto de origem"),
         confidencialidade: z.enum(CONFIDENCIALIDADES).optional(),
         estrutura: z
           .object({
@@ -155,10 +191,14 @@ export function registrarFerramentas(server: McpServer) {
     async (args, ctx) => {
       const p = await preparar(ctx, "kb_salvar");
       if ("falha" in p) return p.falha;
-      if (!podeEscrever(p.sessao.papel, "conhecimento")) return erro("Seu papel não grava na base de conhecimento.");
+      if (!podeEscrever(p.sessao.papel, "conhecimento"))
+        return erro("Seu papel não grava na base de conhecimento.");
       for (const campo of [args.titulo, args.resumo, args.conteudo]) {
         const s = contemSegredo(campo);
-        if (s.achou) return erro(`Recusado: o texto parece conter um segredo (${s.padrao}). Remova e tente de novo.`);
+        if (s.achou)
+          return erro(
+            `Recusado: o texto parece conter um segredo (${s.padrao}). Remova e tente de novo.`,
+          );
       }
       const cliente = clienteDe(p.sessao);
       let categoriaId: string | null = null;
@@ -200,7 +240,8 @@ export function registrarFerramentas(server: McpServer) {
   server.registerTool(
     "kb_atualizar",
     {
-      description: "Atualiza um conhecimento existente e guarda a versão anterior com o motivo. Só depois de o usuário confirmar.",
+      description:
+        "Atualiza um conhecimento existente e guarda a versão anterior com o motivo. Só depois de o usuário confirmar.",
       inputSchema: z.object({
         id: z.uuid(),
         motivo: z.string().min(3).max(300),
@@ -216,14 +257,16 @@ export function registrarFerramentas(server: McpServer) {
     async (args, ctx) => {
       const p = await preparar(ctx, "kb_atualizar");
       if ("falha" in p) return p.falha;
-      if (!podeEscrever(p.sessao.papel, "conhecimento")) return erro("Seu papel não grava na base de conhecimento.");
+      if (!podeEscrever(p.sessao.papel, "conhecimento"))
+        return erro("Seu papel não grava na base de conhecimento.");
       for (const campo of [args.titulo, args.resumo, args.conteudo]) {
         const s = contemSegredo(campo);
         if (s.achou) return erro(`Recusado: o texto parece conter um segredo (${s.padrao}).`);
       }
       const cliente = clienteDe(p.sessao);
       const atual = await obterConhecimentoCom(cliente, args.id);
-      if (!atual || !visivel(p.sessao, atual.confidencialidade)) return erro("Conhecimento não encontrado.");
+      if (!atual || !visivel(p.sessao, atual.confidencialidade))
+        return erro("Conhecimento não encontrado.");
       const dados: DadosAtualizacao = {};
       if (args.titulo) dados.titulo = args.titulo.trim();
       if (args.resumo !== undefined) dados.resumo = args.resumo.trim() || null;
@@ -234,15 +277,24 @@ export function registrarFerramentas(server: McpServer) {
       if (args.status) dados.status = args.status;
       const r = await atualizarConhecimento(cliente, args.id, dados, args.motivo);
       if (!r.ok) return erro(`Não foi possível atualizar (${r.erro}).`);
-      return texto({ id: r.id, rota: rota(r.id), versao_anterior: atual.versao, mensagem: "Atualizado; a versão anterior ficou no histórico." });
+      return texto({
+        id: r.id,
+        rota: rota(r.id),
+        versao_anterior: atual.versao,
+        mensagem: "Atualizado; a versão anterior ficou no histórico.",
+      });
     },
   );
 
   server.registerTool(
     "kb_decisoes",
     {
-      description: "Lista as decisões ativas (contexto, alternativas, decisão, consequências). Consulte antes de propor mudança de arquitetura ou de processo.",
-      inputSchema: z.object({ modulo: z.string().max(60).optional(), desde: z.iso.date().optional() }),
+      description:
+        "Lista as decisões ativas (contexto, alternativas, decisão, consequências). Consulte antes de propor mudança de arquitetura ou de processo.",
+      inputSchema: z.object({
+        modulo: z.string().max(60).optional(),
+        desde: z.iso.date().optional(),
+      }),
     },
     async (args, ctx) => {
       const p = await preparar(ctx, "kb_decisoes");
@@ -250,24 +302,41 @@ export function registrarFerramentas(server: McpServer) {
       const lista = await listarDecisoesCom(clienteDe(p.sessao), args.modulo, args.desde);
       return texto({
         total: lista.length,
-        decisoes: lista.map((d) => ({ id: d.id, titulo: d.titulo, modulo: d.modulo, validada: d.validado, atualizado_em: d.atualizado_em, estrutura: d.estrutura, resumo: d.resumo, rota: rota(d.id) })),
+        decisoes: lista.map((d) => ({
+          id: d.id,
+          titulo: d.titulo,
+          modulo: d.modulo,
+          validada: d.validado,
+          atualizado_em: d.atualizado_em,
+          estrutura: d.estrutura,
+          resumo: d.resumo,
+          rota: rota(d.id),
+        })),
       });
     },
   );
 
   server.registerTool(
     "custos_regras",
-    { description: "Fórmulas e parâmetros vigentes do motor de custos.", inputSchema: z.object({ componente: z.string().max(60).optional() }) },
+    {
+      description: "Fórmulas e parâmetros vigentes do motor de custos.",
+      inputSchema: z.object({ componente: z.string().max(60).optional() }),
+    },
     async (_args, ctx) => {
       const p = await preparar(ctx, "custos_regras");
       if ("falha" in p) return p.falha;
-      return texto("Disponível na Fase 4 do ERP (motor de custos). Até lá, as fórmulas estão em erp/docs/superpowers/specs/2026-10-11-erp-fcs-design.md, seção 7.");
+      return texto(
+        "Disponível na Fase 4 do ERP (motor de custos). Até lá, as fórmulas estão em erp/docs/superpowers/specs/2026-10-11-erp-fcs-design.md, seção 7.",
+      );
     },
   );
 
   server.registerTool(
     "produto_custo",
-    { description: "Custo atual, quebra por componente e preço por canal de um produto.", inputSchema: z.object({ sku: z.string().min(1).max(60) }) },
+    {
+      description: "Custo atual, quebra por componente e preço por canal de um produto.",
+      inputSchema: z.object({ sku: z.string().min(1).max(60) }),
+    },
     async (_args, ctx) => {
       const p = await preparar(ctx, "produto_custo");
       if ("falha" in p) return p.falha;
@@ -277,7 +346,10 @@ export function registrarFerramentas(server: McpServer) {
 
   server.registerTool(
     "alertas_abertos",
-    { description: "Alertas em aberto do ERP (estoque baixo, vencimentos, margem reduzida).", inputSchema: z.object({ tipo: z.string().max(60).optional() }) },
+    {
+      description: "Alertas em aberto do ERP (estoque baixo, vencimentos, margem reduzida).",
+      inputSchema: z.object({ tipo: z.string().max(60).optional() }),
+    },
     async (args, ctx) => {
       const p = await preparar(ctx, "alertas_abertos");
       if ("falha" in p) return p.falha;
@@ -291,6 +363,68 @@ export function registrarFerramentas(server: McpServer) {
       const { data, error } = await q;
       if (error) return erro("Não foi possível ler os alertas.");
       return texto({ total: data.length, alertas: data });
+    },
+  );
+
+  server.registerTool(
+    "estoque_insumo",
+    {
+      description:
+        "Situação de estoque dos insumos (filamento, embalagem, componentes): saldo na unidade base, valor, custo médio e última compra, lotes com saldo. Filtre por termo, id ou só abaixo do mínimo.",
+      inputSchema: z.object({
+        termo: z.string().max(80).optional().describe("Parte do nome do insumo"),
+        id: z.uuid().optional().describe("Devolve um insumo com os lotes"),
+        abaixo_minimo: z.boolean().optional(),
+        incluir_inativos: z.boolean().optional(),
+      }),
+    },
+    async (args, ctx) => {
+      const p = await preparar(ctx, "estoque_insumo");
+      if ("falha" in p) return p.falha;
+      if (!podeLer(p.sessao.papel, "estoque")) return erro("Seu papel não lê o estoque.");
+      const cliente = clienteDe(p.sessao);
+      const resumir = (e: EstoqueAtual) => ({
+        id: e.insumo_id,
+        nome: e.nome,
+        tipo: e.tipo,
+        unidade: e.unidade_base,
+        saldo: e.saldo,
+        saldo_negativo: Number(e.saldo_negativo ?? 0) < 0 ? e.saldo_negativo : undefined,
+        valor_em_estoque: e.valor,
+        custo_medio_por_unidade: e.custo_medio,
+        ultimo_custo_por_unidade: e.ultimo_custo,
+        origem_custo_para_precificar: e.origem_custo,
+        estoque_minimo: e.estoque_minimo,
+        abaixo_minimo: e.abaixo_minimo,
+        lotes_com_saldo: e.lotes_com_saldo,
+        ativo: e.ativo,
+        rota: `/estoque/insumos/${e.insumo_id}`,
+      });
+      if (args.id) {
+        const [e, lotes] = await Promise.all([
+          obterEstoqueDoInsumoCom(cliente, args.id),
+          listarLotesCom(cliente, args.id),
+        ]);
+        if (!e) return erro("Insumo não encontrado.");
+        return texto({
+          ...resumir(e),
+          lotes: lotes.map((l) => ({
+            id: l.id,
+            codigo: l.codigo,
+            saldo: l.quantidade_atual,
+            valor: l.valor_atual,
+            custo_unitario: l.custo_unitario,
+            aberto_em: l.aberto_em,
+            divergente: l.divergente,
+          })),
+        });
+      }
+      const lista = await listarEstoqueCom(cliente, {
+        termo: args.termo,
+        abaixoMinimo: args.abaixo_minimo,
+        situacao: args.incluir_inativos ? "todos" : "ativos",
+      });
+      return texto({ total: lista.length, insumos: lista.map(resumir) });
     },
   );
 }

@@ -8,7 +8,9 @@ test.afterAll(async () => {
   const chave = process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (!url || !chave) return;
   const { createClient } = await import("@supabase/supabase-js");
-  const admin = createClient(url, chave, { auth: { persistSession: false, autoRefreshToken: false } });
+  const admin = createClient(url, chave, {
+    auth: { persistSession: false, autoRefreshToken: false },
+  });
   await admin.from("conhecimentos").delete().like("titulo", "E2E conhecimento %");
 });
 
@@ -27,7 +29,9 @@ test("cria, abre, edita (versão 2), acha na busca e valida", async ({ page }) =
   await expect(page.getByText("Secar o PETG.")).toBeVisible();
 
   await page.getByRole("link", { name: "Editar" }).click();
-  await page.getByLabel("Conteúdo").fill("## Passos\n\n1. Secar o PETG por 6 horas.\n2. Mesa a 85 graus.");
+  await page
+    .getByLabel("Conteúdo")
+    .fill("## Passos\n\n1. Secar o PETG por 6 horas.\n2. Mesa a 85 graus.");
   await page.getByLabel("Motivo da alteração").fill("tempo de secagem");
   await page.getByRole("button", { name: "Salvar alterações" }).click();
   await expect(page.getByText("Secar o PETG por 6 horas.")).toBeVisible();
@@ -38,7 +42,9 @@ test("cria, abre, edita (versão 2), acha na busca e valida", async ({ page }) =
   await expect(page.getByText("Marcado como validado.")).toBeVisible();
 
   await page.keyboard.press("Control+k");
-  await page.getByPlaceholder("Buscar canal, categoria, unidade...").fill("e2e conhecimento");
+  await page
+    .getByPlaceholder("Buscar insumo, lote, compra, conhecimento...")
+    .fill("e2e conhecimento");
   await expect(page.getByRole("option", { name: new RegExp(titulo) })).toBeVisible();
   await page.keyboard.press("Escape");
 

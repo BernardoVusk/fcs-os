@@ -62,7 +62,9 @@ export function BuscaGlobal() {
   }, [termo, tipos]);
 
   function alternarTipo(tipo: TipoBusca) {
-    setTipos((atual) => (atual.includes(tipo) ? atual.filter((x) => x !== tipo) : [...atual, tipo]));
+    setTipos((atual) =>
+      atual.includes(tipo) ? atual.filter((x) => x !== tipo) : [...atual, tipo],
+    );
   }
 
   function ir(rota: string) {
@@ -82,39 +84,57 @@ export function BuscaGlobal() {
       description="Busque por nome, código ou categoria"
     >
       <Command shouldFilter={false} className="bg-transparent">
-      <CommandInput placeholder="Buscar canal, categoria, unidade..." value={termo} onValueChange={setTermo} />
-      <div className="flex flex-wrap gap-1 border-b border-borda px-3 py-2" role="group" aria-label="Filtrar por tipo">
-        {TIPOS_DISPONIVEIS.map((tipo) => (
-          <button
-            key={tipo}
-            type="button"
-            onClick={() => alternarTipo(tipo)}
-            aria-pressed={tipos.includes(tipo)}
-            className={cn(
-              "rounded-sm border px-2 py-0.5 text-xs",
-              tipos.includes(tipo) ? "border-acao bg-acao-suave text-texto" : "border-borda text-texto-2",
-            )}
-          >
-            {ROTULO_TIPO[tipo]}
-          </button>
-        ))}
-      </div>
-      <CommandList>
-        {termoLimpo && !pendente && grupos.length === 0 && (
-          <CommandEmpty>Nada encontrado para &quot;{termoLimpo}&quot;.</CommandEmpty>
-        )}
-        {!termoLimpo && <CommandEmpty>Digite para buscar. Setas para navegar, Enter para abrir.</CommandEmpty>}
-        {grupos.map((g) => (
-          <CommandGroup key={g.tipo} heading={g.rotulo}>
-            {g.itens.map((r) => (
-              <CommandItem key={`${r.tipo}-${r.id}`} value={`${r.tipo}-${r.id}`} onSelect={() => ir(r.rota)}>
-                <span className="truncate">{r.titulo}</span>
-                {r.subtitulo && <span className="ml-auto truncate text-xs text-texto-3">{r.subtitulo}</span>}
-              </CommandItem>
-            ))}
-          </CommandGroup>
-        ))}
-      </CommandList>
+        <CommandInput
+          placeholder="Buscar insumo, lote, compra, conhecimento..."
+          value={termo}
+          onValueChange={setTermo}
+        />
+        <div
+          className="flex flex-wrap gap-1 border-b border-borda px-3 py-2"
+          role="group"
+          aria-label="Filtrar por tipo"
+        >
+          {TIPOS_DISPONIVEIS.map((tipo) => (
+            <button
+              key={tipo}
+              type="button"
+              onClick={() => alternarTipo(tipo)}
+              aria-pressed={tipos.includes(tipo)}
+              className={cn(
+                "rounded-sm border px-2 py-0.5 text-xs",
+                tipos.includes(tipo)
+                  ? "border-acao bg-acao-suave text-texto"
+                  : "border-borda text-texto-2",
+              )}
+            >
+              {ROTULO_TIPO[tipo]}
+            </button>
+          ))}
+        </div>
+        <CommandList>
+          {termoLimpo && !pendente && grupos.length === 0 && (
+            <CommandEmpty>Nada encontrado para &quot;{termoLimpo}&quot;.</CommandEmpty>
+          )}
+          {!termoLimpo && (
+            <CommandEmpty>Digite para buscar. Setas para navegar, Enter para abrir.</CommandEmpty>
+          )}
+          {grupos.map((g) => (
+            <CommandGroup key={g.tipo} heading={g.rotulo}>
+              {g.itens.map((r) => (
+                <CommandItem
+                  key={`${r.tipo}-${r.id}`}
+                  value={`${r.tipo}-${r.id}`}
+                  onSelect={() => ir(r.rota)}
+                >
+                  <span className="truncate">{r.titulo}</span>
+                  {r.subtitulo && (
+                    <span className="ml-auto truncate text-xs text-texto-3">{r.subtitulo}</span>
+                  )}
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          ))}
+        </CommandList>
       </Command>
     </CommandDialog>
   );

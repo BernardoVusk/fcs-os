@@ -9,7 +9,9 @@ test.afterAll(async () => {
   const chave = process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (!url || !chave) return;
   const { createClient } = await import("@supabase/supabase-js");
-  const admin = createClient(url, chave, { auth: { persistSession: false, autoRefreshToken: false } });
+  const admin = createClient(url, chave, {
+    auth: { persistSession: false, autoRefreshToken: false },
+  });
   await admin.from("categorias").delete().like("nome", "E2E %");
 });
 
@@ -24,7 +26,9 @@ test("cria categoria, encontra na busca e inativa", async ({ page }) => {
   await expect(page.getByRole("cell", { name: nome })).toBeVisible();
 
   await page.keyboard.press("Control+k");
-  await page.getByPlaceholder("Buscar canal, categoria, unidade...").fill(nome.toLowerCase());
+  await page
+    .getByPlaceholder("Buscar insumo, lote, compra, conhecimento...")
+    .fill(nome.toLowerCase());
   const opcao = page.getByRole("option", { name: new RegExp(nome) });
   await expect(opcao).toBeVisible();
   await opcao.click();

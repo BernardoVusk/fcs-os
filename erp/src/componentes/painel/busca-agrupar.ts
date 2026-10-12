@@ -5,6 +5,7 @@ export const TIPOS_BUSCA = [
   "insumo",
   "lote",
   "fornecedor",
+  "compra",
   "produto",
   "ordem",
   "pedido",
@@ -22,6 +23,7 @@ export const ROTULO_TIPO: Record<TipoBusca, string> = {
   insumo: "Insumos",
   lote: "Lotes",
   fornecedor: "Fornecedores",
+  compra: "Compras",
   produto: "Produtos",
   ordem: "Ordens de produção",
   pedido: "Pedidos",
@@ -32,7 +34,16 @@ export const ROTULO_TIPO: Record<TipoBusca, string> = {
 };
 
 /** Tipos que a função buscar_global já atende. Cada fase acrescenta os seus. */
-export const TIPOS_DISPONIVEIS: TipoBusca[] = ["canal", "categoria", "unidade"];
+export const TIPOS_DISPONIVEIS: TipoBusca[] = [
+  "canal",
+  "categoria",
+  "unidade",
+  "conhecimento",
+  "insumo",
+  "lote",
+  "fornecedor",
+  "compra",
+];
 
 export type ResultadoBusca = {
   tipo: TipoBusca;

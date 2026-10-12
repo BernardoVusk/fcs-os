@@ -83,11 +83,12 @@ describe("autenticação do MCP", () => {
 });
 
 describe("ferramentas do MCP", () => {
-  it("registra as oito ferramentas", () => {
+  it("registra as nove ferramentas", () => {
     expect([...ferramentas.keys()].sort()).toEqual(
       [
         "alertas_abertos",
         "custos_regras",
+        "estoque_insumo",
         "kb_atualizar",
         "kb_buscar",
         "kb_decisoes",

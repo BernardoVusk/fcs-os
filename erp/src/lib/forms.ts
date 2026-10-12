@@ -1,7 +1,12 @@
 import { z, type ZodError } from "zod";
 import { lerNumeroPt, percentualParaFracao } from "@/lib/formatos/numero";
 
-export type EstadoForm = { erros: Record<string, string>; ok?: boolean; mensagem?: string };
+export type EstadoForm = {
+  erros: Record<string, string>;
+  ok?: boolean;
+  mensagem?: string;
+  id?: string;
+};
 export const FORM_INICIAL: EstadoForm = { erros: {} };
 export type ResultadoAcao = { ok: boolean; mensagem?: string; erro?: string };
 

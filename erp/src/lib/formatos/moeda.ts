@@ -14,3 +14,16 @@ export function formatarPercentual(fracao: number | string | null | undefined, c
   if (!Number.isFinite(n)) return "Não configurado";
   return `${formatarNumero(n * 100, casas)} %`;
 }
+
+/** Custo por unidade base; para gramas mostra também por quilo. */
+export function formatarCustoUnitario(
+  valor: number | string | null | undefined,
+  unidade: string | null | undefined,
+): { base: string; kg?: string } {
+  if (valor == null || valor === "") return { base: "Sem dados" };
+  const n = typeof valor === "string" ? Number(valor) : valor;
+  if (!Number.isFinite(n)) return { base: "Sem dados" };
+  if (unidade === "g")
+    return { base: `R$ ${formatarNumero(n, 5)} /g`, kg: `R$ ${formatarNumero(n * 1000, 2)} /kg` };
+  return { base: `R$ ${formatarNumero(n, 4)} /${unidade ?? "un"}` };
+}

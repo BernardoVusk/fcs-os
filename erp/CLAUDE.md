@@ -4,7 +4,7 @@ Aplicação Next.js 16 do sistema de gestão da FCS 3D STUDIO. Spec aprovada: `d
 
 ## Comandos
 
-`npm run dev`, `npm run build`, `npm run lint`, `npm run typecheck`, `npm test`, `npm run test:integracao` (projeto de teste), `npm run e2e`, `npm run migrar -- --alvo dev|teste`, `npm run tipos`, `npm run formatar`, `node ferramentas/sql.mjs "select ..."`.
+`npm run dev`, `npm run build`, `npm run lint`, `npm run typecheck`, `npm test`, `npm run test:integracao` (projeto de teste), `npm run e2e`, `npm run migrar -- --alvo dev|teste`, `npm run tipos`, `npm run formatar` (rodar antes de commitar; toda a base já está formatada), `node ferramentas/sql.mjs "select ..."`.
 
 ## Regras de camadas
 
@@ -18,6 +18,10 @@ Aplicação Next.js 16 do sistema de gestão da FCS 3D STUDIO. Spec aprovada: `d
 - Migração nova = arquivo `supabase/migrations/NNNN_nome.sql` na raiz do repositório, aplicado em dev e em teste (`npm run migrar -- --alvo dev` e `--alvo teste`), seguido de `npm run tipos`. Nunca editar migração aplicada.
 - Toda tabela nasce com RLS e, se for cadastro, com trigger `app.auditar()`.
 - Nunca inventar número: campo sem dado real fica nulo e a tela mostra "Sem dados" ou "Não configurado".
+- O PostgREST roda com `safeupdate`: todo UPDATE ou DELETE precisa de WHERE, inclusive em tabela temporária dentro de função (`where true` resolve). A Management API, usada pelo `migrar.mjs`, não tem essa trava, então o erro só aparece em runtime.
+- Em plpgsql, `text[] || 'literal'` é lido como concatenação de arrays e falha com "malformed array literal"; usar `array_append`.
+- Parâmetro com default só depois dos obrigatórios. Para tornar opcional um parâmetro de função já aplicada, nova migração com `drop function` e `create` na nova ordem; o PostgREST chama por nome, então a ordem não afeta o código.
+- Escrita em mais de uma tabela (confirmar compra, movimentar estoque, estornar) é função SQL `security invoker` chamada por `rpc`, nunca várias chamadas da aplicação.
 
 ## Padrões
 

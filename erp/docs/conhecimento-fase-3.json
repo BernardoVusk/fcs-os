@@ -1,0 +1,28 @@
+[
+  {
+    "titulo": "Estoque: lote guarda quantidade e valor, saída ao custo do lote, média ponderada para precificar",
+    "tipo": "decisao",
+    "categoria": "Decisões de negócio",
+    "modulo": "estoque",
+    "tags": ["estoque", "filamento", "custo medio", "lote", "valoracao"],
+    "referencia": "supabase/migrations/0007_estoque.sql; erp/docs/regras-de-negocio.md; spec seção 5.3 e Anexo A (B1, B2)",
+    "resumo": "Cada rolo é um lote com quantidade e valor como verdade; consumo sai ao custo do lote (PEPS quando o lote em uso não basta); o custo que alimenta a precificação é a média ponderada dos lotes com saldo, com override por insumo para última compra ou manual.",
+    "estrutura": {
+      "contexto": "Filamento é comprado em rolos com preço, frete e desconto variando a cada compra. Era preciso decidir como valorar o consumo e qual custo alimenta o motor de custos, sem lote que zera em gramas e sobra centavos, e sem estoque negativo silencioso.",
+      "alternativas": ["Custo médio móvel por insumo sem lotes", "PEPS puro ignorando o rolo físico", "Último preço de compra sempre", "Lote por rolo com saída ao custo do lote e média ponderada como custo de reposição"],
+      "decisao": "Lote por rolo (quantidade e valor como verdade, custo unitário derivado). Saída ao custo do lote; ao zerar, leva o valor restante. Lote em uso insuficiente completa com o mais antigo e gera alerta lote_dividido. Custo para precificar = média ponderada dos lotes com saldo, com origem_custo por insumo (media, ultima_entrada, manual). Compra confirmada por função SQL atômica que rateia frete, desconto e outros por valor (resíduo na maior linha). Estoque negativo bloqueado, exceto consumo de produção com justificativa, que marca o lote divergente e abre alerta crítico. Nada é apagado: correção por estorno.",
+      "consequencias": "O custo realizado de uma ordem de produção (Fase 5) sai do lote que estava na impressora, não de uma média. O custo médio é estável contra uma compra promocional isolada. Cada compra precisa do peso útil por rolo. As regras vivem no banco (confirmar_compra, movimentar_estoque, estornar_movimentacao) e no domínio TypeScript para prévia e testes; os dois reproduzem os casos B1 e B2 do Anexo A."
+    },
+    "conteudo": "## Regras\n\n- Saldo na unidade base (filamento em g). Compra de filamento em rolos com `peso_util_g`; um rolo = um lote.\n- `confirmar_compra`: rateio por valor (ou quantidade) a 4 casas, resíduo na linha de maior base; `custo_unitario_final = landed / quantidade_base`.\n- `movimentar_estoque`: saída ao custo do lote; zera em 0,0000; PEPS para completar; override só em consumo de produção com lote e justificativa.\n- `estornar_movimentacao`: movimentação oposta, nunca apaga.\n- Alertas: `estoque_baixo` (resolve sozinho), `lote_dividido`, `estoque_negativo`.\n\nDetalhe e casos de teste: `erp/docs/regras-de-negocio.md`, seção Estoque."
+  },
+  {
+    "titulo": "Registrar uma compra de filamento no ERP",
+    "tipo": "procedimento",
+    "categoria": "Procedimentos operacionais",
+    "modulo": "estoque",
+    "tags": ["estoque", "compra", "filamento", "rotina"],
+    "referencia": "erp: Estoque > Compras > Nova compra",
+    "resumo": "Cadastrar o insumo (uma vez), registrar a compra com preço por rolo, frete e desconto, conferir o custo por quilo na prévia e confirmar para dar entrada nos lotes.",
+    "conteudo": "## Quando usar\n\nSempre que chegar rolo de filamento, embalagem ou componente.\n\n## Pré-requisitos\n\n- Insumo cadastrado em Estoque > Insumos (filamento: peso útil padrão do rolo preenchido).\n- Nota ou pedido com preço, frete e desconto.\n\n## Passos\n\n1. Estoque > Compras > Nova compra. Escolha o fornecedor (opcional), a data e o número do pedido ou nota.\n2. Informe frete, desconto do pedido e outros encargos. Se o preço do anúncio já incluía o frete, marque \"Preços já incluem o frete\".\n3. Adicione um item por insumo: rolos, preço por rolo, desconto do item e peso útil por rolo. A prévia mostra o custo por quilo de cada linha.\n4. Salve como rascunho e confira a tela da compra. Se precisar, edite.\n5. Clique em Confirmar compra. Cada rolo vira um lote com código pela data (ou o código que você digitou).\n\n## Como verificar\n\nNa ficha do insumo, o saldo soma os rolos e o custo médio bate com a prévia. Em Movimentações aparece uma entrada por lote com origem Compra.\n\n## Se der errado\n\n- \"Filamento comprado em rolos precisa do peso útil\": preencha o peso por rolo no item.\n- Confirmou errado: não dá para editar; estorne as entradas em Movimentações e registre a compra de novo."
+  }
+]
