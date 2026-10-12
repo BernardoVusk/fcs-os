@@ -1713,6 +1713,13 @@ export type Database = {
             referencedRelation: "ordens_producao";
             referencedColumns: ["id"];
           },
+          {
+            foreignKeyName: "ordens_consumo_ordem_id_fkey";
+            columns: ["ordem_id"];
+            isOneToOne: false;
+            referencedRelation: "rel_ordens_concluidas";
+            referencedColumns: ["ordem_id"];
+          },
         ];
       };
       ordens_producao: {
@@ -2109,6 +2116,13 @@ export type Database = {
             referencedRelation: "pedidos";
             referencedColumns: ["id"];
           },
+          {
+            foreignKeyName: "pedidos_eventos_pedido_id_fkey";
+            columns: ["pedido_id"];
+            isOneToOne: false;
+            referencedRelation: "rel_pedidos_pagos";
+            referencedColumns: ["pedido_id"];
+          },
         ];
       };
       pedidos_itens: {
@@ -2174,6 +2188,13 @@ export type Database = {
             isOneToOne: false;
             referencedRelation: "pedidos";
             referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "pedidos_itens_pedido_id_fkey";
+            columns: ["pedido_id"];
+            isOneToOne: false;
+            referencedRelation: "rel_pedidos_pagos";
+            referencedColumns: ["pedido_id"];
           },
           {
             foreignKeyName: "pedidos_itens_produto_id_fkey";
@@ -3713,6 +3734,173 @@ export type Database = {
           },
         ];
       };
+      rel_consumo_mensal: {
+        Row: {
+          insumo_id: string | null;
+          insumo_nome: string | null;
+          mes: string | null;
+          quantidade_g: number | null;
+          valor: number | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "movimentacoes_estoque_insumo_id_fkey";
+            columns: ["insumo_id"];
+            isOneToOne: false;
+            referencedRelation: "estoque_atual";
+            referencedColumns: ["insumo_id"];
+          },
+          {
+            foreignKeyName: "movimentacoes_estoque_insumo_id_fkey";
+            columns: ["insumo_id"];
+            isOneToOne: false;
+            referencedRelation: "insumos";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      rel_ordens_concluidas: {
+        Row: {
+          codigo: string | null;
+          custo_estimado: number | null;
+          custo_realizado: number | null;
+          fim_real: string | null;
+          impressora_id: string | null;
+          impressora_nome: string | null;
+          ordem_id: string | null;
+          produto_id: string | null;
+          produto_nome: string | null;
+          quantidade_aprovada: number | null;
+          quantidade_perdida: number | null;
+          tempo_previsto_min: number | null;
+          tempo_real_min: number | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "ordens_producao_impressora_id_fkey";
+            columns: ["impressora_id"];
+            isOneToOne: false;
+            referencedRelation: "impressoras";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "ordens_producao_produto_id_fkey";
+            columns: ["produto_id"];
+            isOneToOne: false;
+            referencedRelation: "estoque_produtos";
+            referencedColumns: ["produto_id"];
+          },
+          {
+            foreignKeyName: "ordens_producao_produto_id_fkey";
+            columns: ["produto_id"];
+            isOneToOne: false;
+            referencedRelation: "produtos";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      rel_pedidos_pagos: {
+        Row: {
+          base_vendas: number | null;
+          canal_id: string | null;
+          canal_nome: string | null;
+          codigo: string | null;
+          custo_estimado: number | null;
+          custo_realizado: number | null;
+          data_pagamento: string | null;
+          imposto_estimado: number | null;
+          pedido_id: string | null;
+          receita_bruta: number | null;
+          receita_liquida: number | null;
+          resultado_estimado: number | null;
+          resultado_real: number | null;
+          taxas_canal: number | null;
+          valor_a_receber: number | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "pedidos_canal_id_fkey";
+            columns: ["canal_id"];
+            isOneToOne: false;
+            referencedRelation: "canais_venda";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "pedidos_canal_id_fkey";
+            columns: ["canal_id"];
+            isOneToOne: false;
+            referencedRelation: "canais_venda_vigentes";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      rel_vendas_itens: {
+        Row: {
+          canal_id: string | null;
+          canal_nome: string | null;
+          custo_estimado: number | null;
+          custo_realizado: number | null;
+          data_pagamento: string | null;
+          pedido_codigo: string | null;
+          pedido_id: string | null;
+          produto_id: string | null;
+          produto_nome: string | null;
+          quantidade: number | null;
+          receita: number | null;
+          variacao_id: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "pedidos_canal_id_fkey";
+            columns: ["canal_id"];
+            isOneToOne: false;
+            referencedRelation: "canais_venda";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "pedidos_canal_id_fkey";
+            columns: ["canal_id"];
+            isOneToOne: false;
+            referencedRelation: "canais_venda_vigentes";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "pedidos_itens_pedido_id_fkey";
+            columns: ["pedido_id"];
+            isOneToOne: false;
+            referencedRelation: "pedidos";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "pedidos_itens_pedido_id_fkey";
+            columns: ["pedido_id"];
+            isOneToOne: false;
+            referencedRelation: "rel_pedidos_pagos";
+            referencedColumns: ["pedido_id"];
+          },
+          {
+            foreignKeyName: "pedidos_itens_produto_id_fkey";
+            columns: ["produto_id"];
+            isOneToOne: false;
+            referencedRelation: "estoque_produtos";
+            referencedColumns: ["produto_id"];
+          },
+          {
+            foreignKeyName: "pedidos_itens_produto_id_fkey";
+            columns: ["produto_id"];
+            isOneToOne: false;
+            referencedRelation: "produtos";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "pedidos_itens_variacao_id_fkey";
+            columns: ["variacao_id"];
+            isOneToOne: false;
+            referencedRelation: "produtos_variacoes";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
     };
     Functions: {
       anonimizar_cliente: { Args: { p_cliente: string }; Returns: undefined };
@@ -3761,6 +3949,7 @@ export type Database = {
         Returns: string;
       };
       garantir_recebivel: { Args: { p_pedido: string }; Returns: string };
+      gerar_alertas: { Args: never; Returns: Json };
       listar_conhecimentos: {
         Args: {
           p_categoria?: string;

@@ -1,0 +1,23 @@
+[
+  {
+    "titulo": "Relatórios sobre views de dado real, alertas gerados por função idempotente e exportação sem dependência",
+    "tipo": "decisao",
+    "categoria": "Decisões de arquitetura",
+    "modulo": "relatorios",
+    "tags": ["relatorios", "alertas", "auditoria", "exportacao", "csv", "xlsx", "pg_cron"],
+    "referencia": "supabase/migrations/0017_relatorios_alertas.sql; supabase/migrations/0018_cron_alertas.sql; erp/src/dominio/relatorios",
+    "resumo": "Views security invoker entregam linhas brutas (itens de pedidos pagos, resumo de pedidos pagos, ordens concluídas, consumo mensal); as agregações são puras e testadas. gerar_alertas() abre, atualiza e resolve alertas de prazo, ordem, pedido parado, lançamento vencido e manutenção, agendada pelo pg_cron às 9h e chamável pela tela. XLSX é gerado à mão (zip stored + XML).",
+    "estrutura": {
+      "contexto": "Relatórios precisam somar só o que aconteceu (pedido pago, ordem concluída, consumo registrado) sem inventar número, e alertas precisam nascer sozinhos todo dia sem duplicar nem ficar órfãos. A exportação precisa abrir no Excel com acento e sem fórmula injetada.",
+      "alternativas": [
+        "Agregar em SQL com funções por relatório",
+        "Biblioteca xlsx (SheetJS) ou exceljs",
+        "Rota HTTP agendada por serviço externo para gerar alertas",
+        "Alertas criados por trigger em cada tabela"
+      ],
+      "decisao": "Views finas em SQL e agregação em TypeScript puro (decimal.js) para reaproveitar entre tela e exportação; CSV com BOM, ponto e vírgula e apóstrofo em célula que parece fórmula; XLSX mínimo escrito à mão (zip sem compressão, inline strings), com leitor de teste; gerar_alertas() security definer com tabela temporária de alvos, insert do que falta, update do título e resolve do que sumiu; pg_cron em migração separada (falha isolada) mais botão Verificar agora; política de update em alertas para resolver e silenciar; auditoria só para o dono com campos alterados calculados na aplicação.",
+      "consequencias": "Nenhuma dependência nova. Alerta por condição contínua volta sozinho quando o silêncio acaba. Relatório vazio mostra Sem dados em vez de zero. O painel inicial compara com o período anterior de mesma duração."
+    },
+    "conteudo": "## Onde está\n\n- Domínio: `src/dominio/relatorios/{agregacoes,csv,xlsx,planilhas}.ts` com testes.\n- Views: `rel_vendas_itens`, `rel_pedidos_pagos`, `rel_ordens_concluidas`, `rel_consumo_mensal` (0017); função `gerar_alertas()`; job `alertas-diarios` (0018).\n- Telas: Relatórios (por produto, canal, pedido, custo real x estimado, impressoras, consumo), rota `/relatorios/exportar`, Alertas (abertos, silenciados, resolvidos, Verificar agora), Configurações > Auditoria."
+  }
+]

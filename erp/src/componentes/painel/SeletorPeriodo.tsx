@@ -22,7 +22,7 @@ export function SeletorPeriodo({ atual, base }: { atual: Periodo; base: string }
       {PERIODOS.map((p) => (
         <Link
           key={p.chave}
-          href={`${base}?periodo=${p.chave}`}
+          href={`${base}${base.includes("?") ? "&" : "?"}periodo=${p.chave}`}
           aria-current={p.chave === atual ? "page" : undefined}
           className={cn(
             "rounded-full px-3.5 py-1.5 text-sm whitespace-nowrap transition-colors duration-150",

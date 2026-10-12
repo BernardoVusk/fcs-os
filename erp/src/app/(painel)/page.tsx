@@ -67,6 +67,7 @@ export default async function PaginaInicio({
         />
         <CartaoIndicador
           rotulo={`Consumo de filamento (${rotuloPeriodo})`}
+          variacao={{ percentual: resumo.comparacao.consumo, rotulo: resumo.comparacao.rotulo }}
           valor={
             resumo.consumoFilamentoG === null
               ? null
@@ -79,11 +80,16 @@ export default async function PaginaInicio({
           <>
             <CartaoIndicador
               rotulo={`Receita recebida (${rotuloPeriodo})`}
+              variacao={{
+                percentual: resumo.comparacao.recebido,
+                rotulo: resumo.comparacao.rotulo,
+              }}
               valor={formatarMoeda(resumo.financeiro.recebido)}
               link={{ href: "/financeiro", rotulo: "Abrir o financeiro" }}
             />
             <CartaoIndicador
               rotulo={`Despesas pagas (${rotuloPeriodo})`}
+              variacao={{ percentual: resumo.comparacao.pago, rotulo: resumo.comparacao.rotulo }}
               valor={formatarMoeda(resumo.financeiro.pago)}
               link={{ href: "/financeiro/lancamentos?estado=realizado", rotulo: "Ver lançamentos" }}
             />
@@ -106,6 +112,7 @@ export default async function PaginaInicio({
         )}
         <CartaoIndicador
           rotulo={`Faturamento (${rotuloPeriodo})`}
+          variacao={{ percentual: resumo.comparacao.faturamento, rotulo: resumo.comparacao.rotulo }}
           valor={resumo.faturamento === null ? null : formatarMoeda(resumo.faturamento.total)}
           dica="Nenhum pedido registrado"
           rodape={

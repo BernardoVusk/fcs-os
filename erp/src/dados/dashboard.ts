@@ -1,7 +1,8 @@
 import "server-only";
 import { clienteServidor } from "@/lib/supabase/servidor";
 import type { Periodo } from "@/componentes/painel/SeletorPeriodo";
-import { intervaloDoPeriodo } from "@/lib/formatos/periodo";
+import { intervaloDoPeriodo, periodoAnterior } from "@/lib/formatos/periodo";
+import { variacao } from "@/dominio/relatorios/agregacoes";
 import { contarAlertasAbertos } from "./alertas";
 import { contarConhecimentosAtivos } from "./conhecimento";
 import { consumoFilamentoNoPeriodo, contarAbaixoMinimo } from "./estoque/insumos";
@@ -33,6 +34,14 @@ export type ResumoInicial = {
   financeiro: { recebido: number; pago: number; abertos: TotaisAbertos } | null;
   /** Próximos 7 dias e atrasados do planejamento; null quando o papel não lê. */
   planejamento: (ProximosItens & { hoje: string }) | null;
+  /** Variação contra o período anterior de mesma duração; null sem base de comparação. */
+  comparacao: {
+    rotulo: string;
+    faturamento: number | null;
+    consumo: number | null;
+    recebido: number | null;
+    pago: number | null;
+  };
 };
 
 export async function resumoInicial(
@@ -45,6 +54,7 @@ export async function resumoInicial(
   const lePlanejamento = papelLido !== null && podeLer(papelLido, "planejamento");
   const hojeSp = hojeSaoPaulo();
   const { inicio, fim } = intervaloDoPeriodo(periodo);
+  const anterior = periodoAnterior(periodo);
   const [
     { data: canais },
     alertasAbertos,
@@ -59,6 +69,9 @@ export async function resumoInicial(
     realizado,
     abertos,
     planejamento,
+    faturamentoAnterior,
+    consumoAnterior,
+    realizadoAnterior,
   ] = await Promise.all([
     supabase.from("canais_venda_vigentes").select("id, comissao_pct").eq("ativo", true),
     contarAlertasAbertos(),
@@ -73,6 +86,9 @@ export async function resumoInicial(
     dono ? realizadoNoPeriodo(inicio, fim) : Promise.resolve(null),
     dono ? listarLancamentos({ estado: "abertos", limite: 2000 }) : Promise.resolve([]),
     lePlanejamento ? proximosItens(hojeSp, 7) : Promise.resolve(null),
+    faturamentoNoPeriodo(anterior.inicio, anterior.fim),
+    consumoFilamentoNoPeriodo(anterior.inicio, anterior.fim),
+    dono ? realizadoNoPeriodo(anterior.inicio, anterior.fim) : Promise.resolve(null),
   ]);
   const hoje = new Date().toISOString().slice(0, 10);
   const lista = canais ?? [];
@@ -91,6 +107,13 @@ export async function resumoInicial(
         ? { ...realizado, abertos: totaisAbertos(paraProjecao(abertos), hoje) }
         : null,
     planejamento: planejamento ? { ...planejamento, hoje: hojeSp } : null,
+    comparacao: {
+      rotulo: "vs período anterior",
+      faturamento: variacao(faturamento?.total ?? null, faturamentoAnterior?.total ?? null),
+      consumo: variacao(consumoFilamentoG, consumoAnterior),
+      recebido: variacao(realizado?.recebido ?? null, realizadoAnterior?.recebido ?? null),
+      pago: variacao(realizado?.pago ?? null, realizadoAnterior?.pago ?? null),
+    },
     canaisTotal: lista.length,
     canaisComTaxas: lista.filter((c) => c.comissao_pct !== null).length,
   };

@@ -33,11 +33,12 @@ Aplicação Next.js 16 do sistema de gestão da FCS 3D STUDIO. Spec aprovada: `d
 - Erros de validação são chaves traduzidas por `erroPt()` (`src/lib/erros-pt.ts`).
 - Percentual digitado em por cento, guardado como fração.
 - Dinheiro e custo em decimal (`decimal.js` no domínio, `numeric` no banco), nunca float em cálculo.
-- Comandos de shell com mais de 8 KB falham no Windows: escrever arquivos grandes em partes.
+- Comandos de shell com mais de 8 KB falham no Windows: escrever arquivos grandes em partes. Python lendo stdin no Windows usa cp1252: rodar com `python -X utf8` quando o script tem acento.
+- Função passada de componente de servidor para componente de cliente precisa ser server action ou `acao.bind(null, id)`; arrow inline derruba a página com "server error".
 
 ## Áreas críticas
 
-Permissões (`lib/auth/papeis.ts` e policies), auditoria (`app.auditar`), servidor MCP (`src/mcp/`, escopos e filtro de segredos), motor de custos (`src/dominio/custos`, `src/dominio/precos`, `docs/formulas-de-custo.md`), estoque (funções SQL de 0007 a 0009), produção (`concluir_ordem_producao` e `reabrir_ordem_producao` em 0013), pedidos (`mudar_status_pedido` em 0014), financeiro (`realizar_lancamento`, `cancelar_lancamento`, `estornar_lancamento`, `garantir_recebivel` e os gatilhos de 0015), planejamento (`validar_item_plano` e `historico_item_plano` em 0016). Mudança nessas áreas exige teste de integração novo.
+Permissões (`lib/auth/papeis.ts` e policies), auditoria (`app.auditar`), servidor MCP (`src/mcp/`, escopos e filtro de segredos), motor de custos (`src/dominio/custos`, `src/dominio/precos`, `docs/formulas-de-custo.md`), estoque (funções SQL de 0007 a 0009), produção (`concluir_ordem_producao` e `reabrir_ordem_producao` em 0013), pedidos (`mudar_status_pedido` em 0014), financeiro (`realizar_lancamento`, `cancelar_lancamento`, `estornar_lancamento`, `garantir_recebivel` e os gatilhos de 0015), planejamento (`validar_item_plano` e `historico_item_plano` em 0016), alertas (`gerar_alertas` em 0017, job do pg_cron em 0018), exportação (`dominio/relatorios/{csv,xlsx}.ts`). Mudança nessas áreas exige teste de integração novo.
 
 ## Antes de dizer que terminou
 
