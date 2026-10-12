@@ -1,8 +1,10 @@
 "use client";
 
-import { useActionState, useContext, useState, useTransition } from "react";
+import { startTransition, useActionState, useContext, useState, useTransition } from "react";
 import { toast } from "sonner";
 import { removerArquivo, salvarArquivo, urlDoArquivo } from "@/acoes/produtos/arquivos";
+import { assinarEnvioProduto } from "@/acoes/upload";
+import { enviarParaUrlAssinada, sha256DoArquivo } from "@/lib/upload-cliente";
 import type { Arquivo, Variacao } from "@/dados/produtos/produtos";
 import { FORM_INICIAL } from "@/lib/forms";
 import { erroPt } from "@/lib/erros-pt";
@@ -44,10 +46,55 @@ export function FormArquivo({
 }) {
   const [estado, acao, pendente] = useActionState(salvarArquivo, FORM_INICIAL);
   const [origem, setOrigem] = useState<"upload" | "externo">("upload");
+  const [enviando, setEnviando] = useState<string | null>(null);
+  const [erroEnvio, setErroEnvio] = useState<string | undefined>();
   const fechar = useContext(ContextoDialogo);
   useAoSalvar(estado, fechar);
+  /** Upload: o arquivo vai direto do navegador para o Storage por URL assinada; a action só registra. */
+  async function aoEnviar(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setErroEnvio(undefined);
+    const form = e.currentTarget;
+    const fd = new FormData(form);
+    const arquivo = fd.get("arquivo");
+    fd.delete("arquivo");
+    if (origem === "upload") {
+      if (!(arquivo instanceof File) || arquivo.size === 0) {
+        setErroEnvio("arquivo_obrigatorio");
+        return;
+      }
+      setEnviando("Preparando");
+      const assinado = await assinarEnvioProduto({
+        produtoId,
+        tipo: String(fd.get("tipo") ?? ""),
+        nomeArquivo: arquivo.name,
+        tamanho: arquivo.size,
+        mime: arquivo.type,
+      });
+      if (!assinado.ok) {
+        setEnviando(null);
+        setErroEnvio(assinado.erro);
+        return;
+      }
+      setEnviando(`Enviando ${formatarNumero(arquivo.size / 1024 / 1024, 1)} MB`);
+      const envio = await enviarParaUrlAssinada(assinado.url, arquivo);
+      if (!envio.ok) {
+        setEnviando(null);
+        setErroEnvio(envio.erro);
+        return;
+      }
+      setEnviando("Conferindo");
+      fd.set("storage_path", assinado.caminho);
+      fd.set("bucket", assinado.bucket);
+      fd.set("tamanho", String(arquivo.size));
+      fd.set("hash_sha256", (await sha256DoArquivo(arquivo)) ?? "");
+      if (!String(fd.get("nome") ?? "").trim()) fd.set("nome", arquivo.name);
+    }
+    setEnviando(null);
+    startTransition(() => acao(fd));
+  }
   return (
-    <form action={acao} className="space-y-4" noValidate>
+    <form onSubmit={aoEnviar} className="space-y-4" noValidate>
       <input type="hidden" name="produto_id" value={produtoId} />
       <div className="grid gap-4 sm:grid-cols-2">
         <Campo rotulo="Tipo" nome="tipo" erro={estado.erros.tipo}>
@@ -135,9 +182,9 @@ export function FormArquivo({
           <Input id="notas" name="notas" maxLength={1000} placeholder="Perfil, versão do modelo" />
         </Campo>
       </div>
-      <CampoErro chave={estado.erros._form ?? estado.erros.arquivo} />
-      <Button type="submit" disabled={pendente}>
-        {pendente ? "Enviando" : "Salvar"}
+      <CampoErro chave={erroEnvio ?? estado.erros._form ?? estado.erros.arquivo} />
+      <Button type="submit" disabled={pendente || enviando !== null}>
+        {enviando ?? (pendente ? "Salvando" : "Salvar")}
       </Button>
     </form>
   );

@@ -15,6 +15,9 @@ import {
   TableRow,
 } from "@/componentes/ui/table";
 
+// Vercel: importações, geração e MCP podem passar dos 10 s padrão.
+export const maxDuration = 60;
+
 export const metadata = { title: "Importar pedidos" };
 
 export default async function PaginaImportarPedidos() {

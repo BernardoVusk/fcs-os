@@ -13,6 +13,9 @@ import { ListaAlertas } from "@/componentes/alertas/ListaAlertas";
 import { BotaoAcao } from "@/componentes/painel/BotaoAcao";
 import { cn } from "@/lib/utils";
 
+// Vercel: importações, geração e MCP podem passar dos 10 s padrão.
+export const maxDuration = 60;
+
 export const metadata = { title: "Alertas" };
 
 const FILTROS: { chave: FiltroAlertas; rotulo: string }[] = [

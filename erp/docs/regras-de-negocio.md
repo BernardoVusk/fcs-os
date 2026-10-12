@@ -108,3 +108,4 @@ Casos de referência: Anexo A da spec (B1, B2), reproduzidos em `src/dominio/est
 - Função `security definer` chamável por rpc checa o papel por dentro (`gerar_alertas`, `garantir_recebivel`); gatilhos e pg_cron (sem `auth.uid()`) passam.
 - Toda resposta leva `X-Frame-Options: DENY`, `nosniff`, `Referrer-Policy`, `Permissions-Policy` e HSTS. Parâmetro de data vindo da URL só entra no filtro se for `AAAA-MM-DD`.
 - Backup semanal cifrado por GitHub Actions; restauração só no projeto de teste e com confirmação explícita.
+- Upload de arquivo (produto e anexo do conhecimento) vai direto do navegador ao Storage por URL assinada, que só é emitida para quem escreve na área, com limite de tamanho e extensão por tipo; a action registra o metadado depois de confirmar que o objeto existe no bucket e que o caminho pertence ao registro.

@@ -26,7 +26,7 @@ marketing e produção.
 - `scripts/` — automações (geração de imagem, publicação em Instagram e Facebook)
 - `templates/` — moldes de skills, perfis e identidade
 - `mini-projetos/` — ferramentas internas pequenas, uma pasta por projeto, cada uma com `docs/` (estudo, spec, plano, checagem). Primeira: `fcs-spy/`, extensão de Chrome de estudo de mercado na Shopee
-- `erp/` — FCS ERP, o sistema de gestão (Next.js + Supabase). Regras próprias em `erp/CLAUDE.md`; plano aprovado em `erp/docs/superpowers/specs/2026-10-11-erp-fcs-design.md`; migrações do banco ficam em `supabase/migrations/` na raiz. Fases 1 a 10 concluídas em 12/10/2026 (`erp/docs/validacao.md`); falta publicar: hospedagem a escolher (`erp/docs/implantacao.md`) e primeiro backup com restauração (`erp/docs/backups-e-recuperacao.md`)
+- `erp/` — FCS ERP, o sistema de gestão (Next.js + Supabase). Regras próprias em `erp/CLAUDE.md`; plano aprovado em `erp/docs/superpowers/specs/2026-10-11-erp-fcs-design.md`; migrações do banco ficam em `supabase/migrations/` na raiz. Fases 1 a 10 concluídas em 12/10/2026 (`erp/docs/validacao.md`); hospedagem decidida: Vercel, plano Pro (passo a passo em `erp/docs/implantacao.md`); falta o `/salvar`, criar o projeto na Vercel e o primeiro backup com restauração (`erp/docs/backups-e-recuperacao.md`)
 - `saidas/seguranca/` — relatórios da skill `/auditoria-seguranca`
 
 A ficha de produto vive no ERP (Fase 5), não em pasta.

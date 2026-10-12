@@ -4,6 +4,8 @@ import { useRef, useState, useTransition } from "react";
 import Link from "next/link";
 import { ArrowDownToLine, Link2, Paperclip, Trash2 } from "lucide-react";
 import { toast } from "sonner";
+import { assinarEnvioAnexo } from "@/acoes/upload";
+import { enviarParaUrlAssinada } from "@/lib/upload-cliente";
 import {
   enviarAnexo,
   relacionar,
@@ -169,9 +171,30 @@ export function Anexos({
           onSubmit={(e) => {
             e.preventDefault();
             const form = e.currentTarget;
-            const fd = new FormData(form);
+            const arquivo = new FormData(form).get("arquivo");
+            if (!(arquivo instanceof File) || arquivo.size === 0) return;
             setEnviando(true);
             iniciar(async () => {
+              // O arquivo vai direto do navegador para o Storage; a action só registra o metadado.
+              const assinado = await assinarEnvioAnexo({
+                conhecimentoId: id,
+                nomeArquivo: arquivo.name,
+                tamanho: arquivo.size,
+                mime: arquivo.type,
+              });
+              const envio = assinado.ok
+                ? await enviarParaUrlAssinada(assinado.url, arquivo)
+                : assinado;
+              if (!assinado.ok || !envio.ok) {
+                setEnviando(false);
+                toast.error(erroPt(assinado.ok ? (envio as { erro: string }).erro : assinado.erro));
+                return;
+              }
+              const fd = new FormData();
+              fd.set("caminho", assinado.caminho);
+              fd.set("nome", arquivo.name);
+              fd.set("tamanho", String(arquivo.size));
+              fd.set("tipo", arquivo.type);
               const r = await enviarAnexo(id, fd);
               setEnviando(false);
               if (r.ok) {

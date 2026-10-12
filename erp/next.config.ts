@@ -20,8 +20,9 @@ const nextConfig: NextConfig = {
   async headers() {
     return [{ source: "/(.*)", headers: CABECALHOS_SEGURANCA }];
   },
-  // Upload de STL, 3MF e G-code pela server action de arquivos do produto.
-  experimental: { serverActions: { bodySizeLimit: "100mb" } },
+  // Arquivos grandes (STL, 3MF, G-code, anexos) vão direto do navegador para o Storage por URL assinada;
+  // a server action só recebe metadados e CSVs. A Vercel limita o corpo da requisição a 4,5 MB.
+  experimental: { serverActions: { bodySizeLimit: "4mb" } },
   turbopack: {
     rules: {
       "*.css": {

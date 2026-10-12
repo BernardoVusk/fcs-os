@@ -10,6 +10,9 @@ import {
 } from "@/componentes/planejamento/Cadastros";
 import { DialogoNovo } from "@/componentes/painel/DialogoNovo";
 
+// Vercel: importações, geração e MCP podem passar dos 10 s padrão.
+export const maxDuration = 60;
+
 export const metadata = { title: "Modelos" };
 
 export default async function PaginaModelos() {

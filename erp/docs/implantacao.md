@@ -1,35 +1,54 @@
-# Implantação
+# Implantação na Vercel
 
-## Hospedagem (decisão D4)
+Decisão D4 tomada em 12/10/2026: Vercel. O plano precisa ser o **Pro** (US$ 20 por assento/mês): o Hobby proíbe uso comercial nos termos de serviço, e o ERP é a operação de uma loja. O repositório já está pronto para a Vercel; o que falta é o que só o dono da conta faz.
 
-O Next.js do ERP roda igual na Vercel e na Netlify; nenhum arquivo do repositório assume um host. O que muda é preço e licença:
+## O que já está no repositório
 
-| Opção | Custo | Uso comercial | Observação |
-|---|---|---|---|
-| Vercel Hobby | grátis | proibido pelos termos | não serve para o ERP |
-| Vercel Pro | US$ 20/mês por membro | permitido | mesmo painel do site da FX, que o usuário já conhece |
-| Netlify Starter | grátis (300 min de build, 100 GB) | permitido | runtime Next.js oficial da Netlify; um só membro |
+- `erp/vercel.json`: framework Next.js e região `gru1` (São Paulo), a mesma do Supabase `fcs-os` (sa-east-1).
+- `erp/package.json`: `engines.node >= 22` (a Vercel usa o Node 22 ou 24 que tiver disponível).
+- `erp/next.config.ts`: cabeçalhos de segurança e corpo de server action limitado a 4 MB. A Vercel corta qualquer requisição acima de 4,5 MB, por isso os uploads de arquivos de produto (até 100 MB) e de anexos do conhecimento vão **direto do navegador para o Supabase Storage** por URL assinada; a action só recebe os metadados.
+- `maxDuration = 60` nas rotas que podem demorar (importação de pedidos, conciliação de repasses, geração de recorrências, verificação de alertas, histórico de precificação e o servidor MCP).
+- CI (`.github/workflows/ci.yml`) e backup (`.github/workflows/backup.yml`) independem da Vercel.
 
-Recomendação: começar na **Netlify Starter** (custo zero, licença ok) e migrar para Vercel Pro só se aparecer limitação. A decisão e a criação da conta são do usuário.
+## Passo a passo
 
-## Passos (qualquer host)
+1. **Publicar o código:** `/salvar` na raiz do workspace (envia a branch `erp-fase-1`; depois, se quiser, abrir PR para `main`).
+2. **Criar o projeto na Vercel:** Add New > Project > importar `BernardoVusk/fcs-os`.
+   - Root Directory: `erp` (clicar em Edit ao lado do diretório raiz).
+   - Framework Preset: Next.js (detectado). Build `npm run build`, install `npm ci`, output padrão.
+   - Production Branch: `erp-fase-1` até o merge em `main` (Settings > Git).
+3. **Variáveis de ambiente** (Settings > Environment Variables, marcar Production e Preview):
+   - `SUPABASE_URL` = `https://jdjbyxysxtnyhztypeai.supabase.co`
+   - `SUPABASE_ANON_KEY` = chave anon do projeto `fcs-os` (Supabase > Project Settings > API)
+   - `SUPABASE_SERVICE_ROLE_KEY` = chave service role do mesmo projeto (só servidor; nunca `NEXT_PUBLIC_`)
+   - Nada de `E2E_*` em produção.
+4. **Deploy.** O primeiro build leva uns 2 minutos. A URL `*.vercel.app` já funciona.
+5. **Supabase, depois do primeiro deploy:** Authentication > URL Configuration: `Site URL` = a URL de produção; adicionar a mesma em `Redirect URLs` (e a de preview `https://*-<time>.vercel.app` se for usar previews com login).
+6. **Domínio:** Settings > Domains, por exemplo `erp.fcs3dstudio.com.br` (CNAME para `cname.vercel-dns.com`). HTTPS automático. Repetir o passo 5 com o domínio final.
+7. **Primeiro acesso:** entrar com o usuário dono já existente no `fcs-os`. Em Perfil, ativar a verificação em duas etapas. Em Configurações > Integrações, criar um token do MCP e, no computador, definir `FCS_ERP_URL=https://<domínio>` e `FCS_ERP_MCP_TOKEN` como variáveis de usuário do Windows (o `.mcp.json` já lê as duas); testar com `node ferramentas/mcp-smoke.mjs`.
+8. **Backup:** no GitHub, criar os segredos `SUPABASE_DB_URL`, `BACKUP_PASSPHRASE` e `SUPABASE_TESTE_DB_URL` e rodar o workflow `backup` uma vez com `RESTAURAR` (detalhes em `docs/backups-e-recuperacao.md`).
 
-1. Conectar o repositório `BernardoVusk/fcs-os`, diretório raiz `erp`, comando de build `npm run build`, Node 24.
-2. Variáveis de ambiente de produção (nomes em `docs/variaveis-de-ambiente.md`): `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`. Nenhuma `NEXT_PUBLIC_*`.
-3. Domínio: subdomínio da marca (por exemplo `erp.fcs3dstudio.com.br`) apontando para o host; HTTPS automático.
-4. No Supabase: Authentication > URL Configuration, `Site URL` = a URL de produção e ela também em `Redirect URLs`.
-5. Migrações: o banco de produção é o projeto `fcs-os` (dev). Antes do primeiro deploy, `npm run migrar -- --alvo dev` já aplicou tudo até a 0018; a cada migração nova, aplicar em dev e teste antes de publicar o código.
-6. pg_cron: o job `alertas-diarios` (0018) roda no banco, independente do host.
-7. MCP em produção: em Configurações > Integrações criar um token, e no computador do usuário definir `FCS_ERP_URL=https://<dominio>` e `FCS_ERP_MCP_TOKEN` (variáveis de usuário, nunca em arquivo versionado). O `.mcp.json` já usa essas variáveis.
-8. Depois do primeiro deploy: criar o usuário dono com `node ferramentas/criar-usuario.mjs` apontando para produção, ativar a verificação em duas etapas em Perfil, e rodar o backup com restauração de teste (`docs/backups-e-recuperacao.md`).
+## Migrações em produção
 
-## Supabase Free x Pro
+O banco de produção é o projeto `fcs-os` (o mesmo de desenvolvimento) e já está na migração 0019. A cada migração nova: `npm run migrar -- --alvo dev` e `--alvo teste` antes de publicar o código que depende dela. A Vercel não roda migração.
 
-Subir para Pro quando o financeiro real entrar (backup diário, sem pausa de 7 dias) ou quando o Storage passar de 700 MB. Até lá, o backup semanal do workflow cobre o banco.
+## Limites da Vercel que importam aqui
 
-## Checagem de saúde depois de publicar
+| Limite | Valor (Pro) | Como o ERP lida |
+|---|---|---|
+| Corpo da requisição | 4,5 MB | upload direto ao Storage por URL assinada; CSV de pedidos e repasses fica bem abaixo |
+| Duração da função | 15 s padrão, até 300 s | `maxDuration = 60` nas rotas pesadas |
+| Região | uma por projeto | `gru1`, ao lado do banco |
+| Cron | existe, mas não é usado | alertas diários rodam no pg_cron do banco |
 
-- `/login` abre e autentica; `/` mostra o painel com "Sem dados" onde ainda não há registro, nunca número inventado.
-- Configurações > Integrações: criar token e rodar `node ferramentas/mcp-smoke.mjs` do computador do usuário.
-- Alertas > Verificar agora responde; `select * from cron.job` mostra o job.
-- CI verde no GitHub (lint, tipos, unitários, build e checagem de segredo no bundle).
+## Checagem depois de publicar
+
+- `/login` autentica; `/` mostra o painel com "Sem dados" onde ainda não há registro.
+- Alertas > Verificar agora responde; `node ferramentas/sql.mjs "select jobname from cron.job"` mostra `alertas-diarios`.
+- Catálogo > produto > Arquivos: enviar um STL de verdade (acima de 5 MB) e abrir pela URL assinada.
+- Relatórios > XLSX abre no Excel com acento.
+- CI verde no GitHub; backup rodado uma vez com restauração no projeto de teste.
+
+## Previews
+
+Cada push abre um deploy de preview na Vercel apontando para o **mesmo** banco de produção (as variáveis são as mesmas). Para testar sem mexer em dado real, use o ambiente local com `npm run dev`, ou crie um conjunto de variáveis só para Preview apontando para o projeto `fcs-os-teste`.

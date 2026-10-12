@@ -6,6 +6,9 @@ import { custoDeReposicao, type OrigemCusto } from "@/dominio/estoque/custo-medi
 import { TabelaCalculos, type CalculoLinha } from "@/componentes/custos/TabelaCalculos";
 import { Button } from "@/componentes/ui/button";
 
+// Vercel: importações, geração e MCP podem passar dos 10 s padrão.
+export const maxDuration = 60;
+
 export const metadata = { title: "Histórico de cálculos" };
 
 export default async function PaginaHistorico({

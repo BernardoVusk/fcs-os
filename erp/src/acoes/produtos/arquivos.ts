@@ -12,6 +12,7 @@ import {
   type ResultadoAcao,
 } from "@/lib/forms";
 import { chaveDoErro } from "@/lib/erros-pt";
+import { objetoExiste } from "@/dados/storage";
 
 const TIPOS = ["stl", "3mf", "gcode", "imagem", "documento"] as const;
 const LIMITE_BYTES = 100 * 1024 * 1024;
@@ -33,21 +34,7 @@ const schema = z.object({
   notas: textoOpcional(1000),
 });
 
-function normalizarNome(nome: string): string {
-  return nome
-    .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "")
-    .replace(/[^A-Za-z0-9._-]+/g, "-")
-    .replace(/^-+|-+$/g, "")
-    .slice(0, 80);
-}
-
-async function sha256(buffer: ArrayBuffer): Promise<string> {
-  const digest = await crypto.subtle.digest("SHA-256", buffer);
-  return [...new Uint8Array(digest)].map((b) => b.toString(16).padStart(2, "0")).join("");
-}
-
-/** Envia o arquivo para o bucket (imagem: fotos-produto público; demais: arquivos-produto privado) ou registra um caminho externo com hash. */
+/** Registra um arquivo já enviado ao bucket (imagem: fotos-produto público; demais: arquivos-produto privado) ou um caminho externo com hash. */
 export async function salvarArquivo(_: EstadoForm, fd: FormData): Promise<EstadoForm> {
   await exigirEscrita("catalogo");
   const c = lerCampos(fd, [
@@ -59,32 +46,37 @@ export async function salvarArquivo(_: EstadoForm, fd: FormData): Promise<Estado
     "hash_sha256",
     "licenca",
     "notas",
+    "storage_path",
+    "bucket",
+    "tamanho",
   ] as const);
   const r = schema.safeParse(c);
   if (!r.success) return errosDoZod(r.error);
-  const arquivo = fd.get("arquivo");
-  const temArquivo = arquivo instanceof File && arquivo.size > 0;
+  // O arquivo já subiu direto do navegador para o Storage (acoes/upload.ts); aqui chegam só os metadados.
+  const caminho = c.storage_path.trim();
+  const bucketInformado = c.bucket.trim();
+  const temArquivo = caminho.length > 0;
   if (!temArquivo && !r.data.caminho_externo) return { erros: { arquivo: "arquivo_sem_origem" } };
   const supabase = await clienteServidor();
   let bucket: "arquivos-produto" | "fotos-produto" | null = null;
   let storagePath: string | null = null;
-  let hash = r.data.hash_sha256;
+  const hash = r.data.hash_sha256;
   let tamanho: number | null = null;
   let nome = r.data.nome.trim();
   if (temArquivo) {
-    if (arquivo.size > LIMITE_BYTES) return { erros: { arquivo: "arquivo_grande" } };
     bucket = r.data.tipo === "imagem" ? "fotos-produto" : "arquivos-produto";
-    const buffer = await arquivo.arrayBuffer();
-    hash = await sha256(buffer);
-    tamanho = arquivo.size;
-    if (!nome) nome = arquivo.name;
-    storagePath = `${r.data.produto_id}/${Date.now()}-${normalizarNome(arquivo.name) || "arquivo"}`;
-    const { error: e1 } = await supabase.storage.from(bucket).upload(storagePath, buffer, {
-      contentType: arquivo.type || "application/octet-stream",
-      upsert: false,
-    });
-    if (e1)
-      return { erros: { _form: e1.message.includes("mime") ? "arquivo_tipo" : "erro_inesperado" } };
+    if (
+      bucketInformado !== bucket ||
+      !caminho.startsWith(`${r.data.produto_id}/`) ||
+      caminho.includes("..")
+    )
+      return { erros: { arquivo: "arquivo_sem_origem" } };
+    if (!(await objetoExiste(bucket, caminho))) return { erros: { arquivo: "arquivo_sem_origem" } };
+    storagePath = caminho;
+    tamanho = Number(c.tamanho) > 0 ? Math.round(Number(c.tamanho)) : null;
+    if (tamanho && tamanho > LIMITE_BYTES) return { erros: { arquivo: "arquivo_grande" } };
+    if (!nome)
+      nome = caminho.slice(caminho.indexOf("-", caminho.lastIndexOf("/")) + 1) || "arquivo";
   }
   if (!nome) return { erros: { nome: "nome_obrigatorio" } };
   const { data: anterior } = await supabase

@@ -1,6 +1,6 @@
 # Validação (Fase 10): critérios da seção 14 da spec
 
-Conferido em 12/10/2026, na branch `erp-fase-1`, com `npm run lint`, `npm run typecheck`, `npm test` (123 unitários), `npm run test:integracao` (49, projeto `fcs-os-teste`), `npm run e2e` (20 fluxos, servidor local) e `npm run build` verdes.
+Conferido em 12/10/2026, na branch `erp-fase-1`, com `npm run lint`, `npm run typecheck`, `npm test` (123 unitários), `npm run test:integracao` (49, projeto `fcs-os-teste`), `npm run e2e` (22 fluxos, servidor local, inclusive upload direto de 6 MB) e `npm run build` verdes.
 
 | # | Critério | Situação | Evidência |
 |---|---|---|---|
@@ -22,7 +22,7 @@ Conferido em 12/10/2026, na branch `erp-fase-1`, com `npm run lint`, `npm run ty
 ## O que ficou de fora da spec e por quê
 
 - Importação de perfil de fatiador (3MF/G-code), item opcional da Fase 9: não feita.
-- Hospedagem e domínio (D4): decisão do usuário; repositório pronto para Vercel e Netlify (`docs/implantacao.md`).
+- Hospedagem e domínio (D4): Vercel, decidido em 12/10/2026; repositório pronto (`vercel.json`, upload direto ao Storage por causa do limite de 4,5 MB, `maxDuration`); criar o projeto e o domínio é do usuário (`docs/implantacao.md`).
 - Checagem de extensão no upload de arquivos do produto (achado baixo da auditoria): pendente de decisão.
 - CSP com nonce: próximo ciclo.
 

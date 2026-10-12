@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import { exigirEscrita } from "@/lib/auth/sessao";
 import { clienteServidor } from "@/lib/supabase/servidor";
+import { objetoExiste } from "@/dados/storage";
 import {
   errosDoZod,
   lerCampos,
@@ -225,28 +226,27 @@ export async function enviarAnexo(id: string, fd: FormData): Promise<ResultadoAc
   const bloqueio = await permitido();
   if (bloqueio) return bloqueio;
   if (!z.uuid().safeParse(id).success) return { ok: false, erro: "nao_encontrado" };
-  const arquivo = fd.get("arquivo");
-  if (!(arquivo instanceof File) || arquivo.size === 0)
+  // O arquivo já subiu direto do navegador (acoes/upload.ts); aqui chegam os metadados.
+  const caminho = String(fd.get("caminho") ?? "").trim();
+  const nome = String(fd.get("nome") ?? "")
+    .trim()
+    .slice(0, 200);
+  const tamanho = Math.round(Number(fd.get("tamanho") ?? 0));
+  const tipo = String(fd.get("tipo") ?? "").trim();
+  if (!caminho || !nome) return { ok: false, erro: "arquivo_obrigatorio" };
+  if (!caminho.startsWith(`${id}/`) || caminho.includes(".."))
     return { ok: false, erro: "arquivo_obrigatorio" };
-  if (arquivo.size > 10 * 1024 * 1024) return { ok: false, erro: "arquivo_grande" };
-  if (!TIPOS_ANEXO.includes(arquivo.type)) return { ok: false, erro: "arquivo_tipo" };
-  const nomeSeguro = arquivo.name
-    .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "")
-    .replace(/[^A-Za-z0-9._-]+/g, "-")
-    .slice(0, 120);
-  const caminho = `${id}/${Date.now()}-${nomeSeguro}`;
+  if (!tamanho || tamanho > 10 * 1024 * 1024) return { ok: false, erro: "arquivo_grande" };
+  if (!TIPOS_ANEXO.includes(tipo)) return { ok: false, erro: "arquivo_tipo" };
+  if (!(await objetoExiste("anexos-conhecimento", caminho)))
+    return { ok: false, erro: "arquivo_obrigatorio" };
   const supabase = await clienteServidor();
-  const { error: erroUpload } = await supabase.storage
-    .from("anexos-conhecimento")
-    .upload(caminho, arquivo, { contentType: arquivo.type });
-  if (erroUpload) return { ok: false, erro: "erro_inesperado" };
   const { error } = await supabase.from("conhecimentos_anexos").insert({
     conhecimento_id: id,
     storage_path: caminho,
-    nome: arquivo.name.slice(0, 200),
-    tamanho: arquivo.size,
-    tipo: arquivo.type,
+    nome,
+    tamanho,
+    tipo,
   });
   if (error) {
     await supabase.storage.from("anexos-conhecimento").remove([caminho]);

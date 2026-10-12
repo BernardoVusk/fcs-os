@@ -43,6 +43,7 @@ Permissões (`lib/auth/papeis.ts` e policies), auditoria (`app.auditar`), servid
 ## Segurança e sessão
 
 - Verificação em duas etapas (TOTP do Supabase): quem tem fator verificado precisa de AAL2; o proxy lê o claim `aal` do JWT, `exigirLeitura` redireciona para `/login/verificar` e `exigirEscrita` lança `mfa_pendente`. Nunca remover fator sem o código atual.
+- Hospedagem: Vercel (Pro). Corpo de requisição limitado a 4,5 MB: arquivo nunca passa por server action; sobe direto do navegador ao Storage por URL assinada (`acoes/upload.ts` assina, `lib/upload-cliente.ts` envia, `dados/storage.ts` confere) e a action registra só metadados. Rota que pode passar de 10 s declara `export const maxDuration = 60`. Passos em `docs/implantacao.md`.
 - Cabeçalhos de segurança ficam em `next.config.ts` (sem CSP por enquanto). Função `security definer` exposta por rpc precisa checar papel dentro dela (`0019_seguranca.sql`).
 - Auditoria de segurança: `/auditoria-seguranca` com relatório em `saidas/seguranca/`; achados e pendências em `docs/validacao.md`.
 - Revisão visual: `node ferramentas/capturas.mjs` gera capturas nos dois temas e três larguras em `testes/relatorios/capturas/` (ignorado pelo git).
