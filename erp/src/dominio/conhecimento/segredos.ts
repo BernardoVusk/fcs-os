@@ -1,5 +1,8 @@
 const PADROES: { nome: string; regex: RegExp }[] = [
-  { nome: "variavel_sensivel", regex: /\b([A-Z_]*(?:KEY|SECRET|TOKEN|PASSWORD|SENHA)[A-Z_]*)\s*[=:]\s*\S{8,}/ },
+  {
+    nome: "variavel_sensivel",
+    regex: /\b([A-Z_]*(?:KEY|SECRET|TOKEN|PASSWORD|SENHA)[A-Z_]*)\s*[=:]\s*\S{8,}/,
+  },
   { nome: "chave_privada", regex: /-----BEGIN [A-Z ]*PRIVATE KEY-----/ },
   { nome: "jwt", regex: /\beyJ[A-Za-z0-9_-]{15,}\.[A-Za-z0-9_-]{10,}/ },
   { nome: "chave_openai", regex: /\bsk-[A-Za-z0-9_-]{16,}/ },

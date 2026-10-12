@@ -8,7 +8,8 @@ import { clienteServidor } from "@/lib/supabase/servidor";
 import { errosDoZod, type ResultadoAcao } from "@/lib/forms";
 import { ESCOPOS, lerEscopos } from "@/dominio/conhecimento/escopos";
 
-export type ResultadoToken = { ok: true; token: string; prefixo: string } | { ok: false; erros: Record<string, string> };
+export type ResultadoToken =
+  { ok: true; token: string; prefixo: string } | { ok: false; erros: Record<string, string> };
 
 const schema = z.object({
   nome: z.string().min(1, { error: "nome_obrigatorio" }).max(80, { error: "nome_longo" }),
@@ -64,5 +65,8 @@ export async function revogarToken(id: string): Promise<ResultadoAcao> {
     .is("revogado_em", null);
   if (error) return { ok: false, erro: "erro_inesperado" };
   revalidatePath("/configuracoes/integracoes");
-  return { ok: true, mensagem: "Token revogado. O Claude Code deixa de acessar na próxima chamada." };
+  return {
+    ok: true,
+    mensagem: "Token revogado. O Claude Code deixa de acessar na próxima chamada.",
+  };
 }

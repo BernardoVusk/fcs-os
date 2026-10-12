@@ -12,7 +12,14 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/componentes/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/componentes/ui/table";
 import { Input } from "@/componentes/ui/input";
 import { Button } from "@/componentes/ui/button";
 import { EstadoVazio } from "./EstadoVazio";
@@ -63,7 +70,10 @@ export function TabelaDados<T>({
   return (
     <div className="space-y-3">
       <div className="relative max-w-xs">
-        <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-texto-3" aria-hidden="true" />
+        <Search
+          className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-texto-3"
+          aria-hidden="true"
+        />
         <Input
           value={filtro}
           onChange={(e) => setFiltro(e.target.value)}
@@ -76,7 +86,10 @@ export function TabelaDados<T>({
         <Table>
           <TableHeader>
             {tabela.getHeaderGroups().map((grupo) => (
-              <TableRow key={grupo.id} className="border-borda bg-superficie-2/60 hover:bg-superficie-2/60">
+              <TableRow
+                key={grupo.id}
+                className="border-borda bg-superficie-2/60 hover:bg-superficie-2/60"
+              >
                 {grupo.headers.map((cabecalho) => {
                   const ordenavel = cabecalho.column.getCanSort();
                   const direcao = cabecalho.column.getIsSorted();
@@ -84,7 +97,15 @@ export function TabelaDados<T>({
                     <TableHead
                       key={cabecalho.id}
                       className="h-11 px-4 text-[13px] font-medium whitespace-nowrap text-texto-2 first:pl-5"
-                      aria-sort={!ordenavel ? undefined : direcao === "asc" ? "ascending" : direcao === "desc" ? "descending" : "none"}
+                      aria-sort={
+                        !ordenavel
+                          ? undefined
+                          : direcao === "asc"
+                            ? "ascending"
+                            : direcao === "desc"
+                              ? "descending"
+                              : "none"
+                      }
                     >
                       {cabecalho.isPlaceholder ? null : ordenavel ? (
                         <button
@@ -123,7 +144,10 @@ export function TabelaDados<T>({
                   key={linha.id}
                   className={cn(
                     "h-11 border-borda transition-colors duration-150 hover:bg-superficie-2/50",
-                    idLinha && destaque && idLinha(linha.original) === destaque && "bg-acao-suave hover:bg-acao-suave",
+                    idLinha &&
+                      destaque &&
+                      idLinha(linha.original) === destaque &&
+                      "bg-acao-suave hover:bg-acao-suave",
                   )}
                 >
                   {linha.getVisibleCells().map((celula) => (
@@ -143,10 +167,20 @@ export function TabelaDados<T>({
             {de} a {ate} de {total}
           </span>
           <div className="flex gap-1">
-            <Button variant="outline" size="sm" onClick={() => tabela.previousPage()} disabled={!tabela.getCanPreviousPage()}>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => tabela.previousPage()}
+              disabled={!tabela.getCanPreviousPage()}
+            >
               Anterior
             </Button>
-            <Button variant="outline" size="sm" onClick={() => tabela.nextPage()} disabled={!tabela.getCanNextPage()}>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => tabela.nextPage()}
+              disabled={!tabela.getCanNextPage()}
+            >
               Próxima
             </Button>
           </div>

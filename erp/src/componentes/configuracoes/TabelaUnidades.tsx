@@ -12,15 +12,28 @@ import { FormUnidade } from "./FormUnidade";
 
 const fator = (v: number) => formatarNumero(v, 6).replace(/,?0+$/, "");
 
-export function TabelaUnidades({ unidades, editar, destaque }: { unidades: Unidade[]; editar: boolean; destaque?: string }) {
+export function TabelaUnidades({
+  unidades,
+  editar,
+  destaque,
+}: {
+  unidades: Unidade[];
+  editar: boolean;
+  destaque?: string;
+}) {
   const [editando, setEditando] = useState<Unidade | null>(null);
   const colunas: ColumnDef<Unidade, unknown>[] = [
-    { accessorKey: "codigo", header: "Código", cell: ({ getValue }) => <span className="font-mono">{String(getValue())}</span> },
+    {
+      accessorKey: "codigo",
+      header: "Código",
+      cell: ({ getValue }) => <span className="font-mono">{String(getValue())}</span>,
+    },
     { accessorKey: "nome", header: "Nome" },
     {
       accessorKey: "base",
       header: "Base",
-      cell: ({ getValue }) => (getValue() ? <span className="font-mono">{String(getValue())}</span> : "É base"),
+      cell: ({ getValue }) =>
+        getValue() ? <span className="font-mono">{String(getValue())}</span> : "É base",
     },
     {
       accessorKey: "fator_para_base",

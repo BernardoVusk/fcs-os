@@ -22,8 +22,13 @@ export function Banner({
 }) {
   const IconeTipo = ICONES[tipo];
   return (
-    <div role="status" className="flex flex-wrap items-center gap-x-4 gap-y-3 rounded-2xl bg-card p-4 shadow-painel">
-      <span className={cn("flex size-10 shrink-0 items-center justify-center rounded-full", TOM[tipo])}>
+    <div
+      role="status"
+      className="flex flex-wrap items-center gap-x-4 gap-y-3 rounded-2xl bg-card p-4 shadow-painel"
+    >
+      <span
+        className={cn("flex size-10 shrink-0 items-center justify-center rounded-full", TOM[tipo])}
+      >
         <IconeTipo className="size-5" aria-hidden="true" />
       </span>
       <div className="min-w-0 flex-1 basis-56 text-sm">

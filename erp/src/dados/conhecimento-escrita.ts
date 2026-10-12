@@ -26,7 +26,9 @@ export type DadosConhecimento = {
   status: "rascunho" | "ativo";
 };
 
-export type DadosAtualizacao = Partial<Omit<DadosConhecimento, "status">> & { status?: "rascunho" | "ativo" | "arquivado" };
+export type DadosAtualizacao = Partial<Omit<DadosConhecimento, "status">> & {
+  status?: "rascunho" | "ativo" | "arquivado";
+};
 
 export type ResultadoEscrita = { ok: true; id: string; slug: string } | { ok: false; erro: string };
 
@@ -62,7 +64,12 @@ export async function atualizarConhecimento(
   dados: DadosAtualizacao,
   motivo: string | null,
 ): Promise<ResultadoEscrita> {
-  const consulta = cliente.from("conhecimentos").update(dados).eq("id", id).select("id, slug").single();
+  const consulta = cliente
+    .from("conhecimentos")
+    .update(dados)
+    .eq("id", id)
+    .select("id, slug")
+    .single();
   if (motivo) consulta.setHeader("x-motivo", motivo.slice(0, 300));
   const { data, error } = await consulta;
   if (error) return { ok: false, erro: traduzirErro(error.code) };

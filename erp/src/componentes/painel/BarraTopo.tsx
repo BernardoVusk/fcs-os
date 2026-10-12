@@ -39,7 +39,10 @@ export function BarraTopo({ papel, tema }: { papel: Papel; tema: Tema }) {
   const atalhos = ATALHOS_NOVO.filter((a) => podeEscrever(papel, a.area));
   return (
     <header className="sticky top-0 z-20 flex h-14 items-center gap-2 border-b border-borda bg-superficie/95 px-3 backdrop-blur md:px-5">
-      <SidebarTrigger aria-label="Abrir ou recolher o menu" className="rounded-full text-texto-2 hover:text-texto" />
+      <SidebarTrigger
+        aria-label="Abrir ou recolher o menu"
+        className="rounded-full text-texto-2 hover:text-texto"
+      />
       <Breadcrumb className="min-w-0 flex-1 pl-1">
         <BreadcrumbList className="text-[13px]">
           <BreadcrumbItem>
@@ -74,9 +77,17 @@ export function BarraTopo({ papel, tema }: { papel: Papel; tema: Tema }) {
       >
         <Search className="size-4" />
         <span className="flex-1 text-left">Buscar</span>
-        <kbd className="rounded-full bg-superficie px-2 py-0.5 font-mono text-[11px] text-texto-3 ring-1 ring-borda">Ctrl K</kbd>
+        <kbd className="rounded-full bg-superficie px-2 py-0.5 font-mono text-[11px] text-texto-3 ring-1 ring-borda">
+          Ctrl K
+        </kbd>
       </button>
-      <Button variant="ghost" size="icon" className="rounded-full md:hidden" aria-label="Buscar" onClick={abrirBusca}>
+      <Button
+        variant="ghost"
+        size="icon"
+        className="rounded-full md:hidden"
+        aria-label="Buscar"
+        onClick={abrirBusca}
+      >
         <Search className="size-4" />
       </Button>
       {atalhos.length > 0 && (

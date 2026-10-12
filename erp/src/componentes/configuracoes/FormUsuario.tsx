@@ -24,8 +24,20 @@ export function FormUsuario() {
       <Campo rotulo="E-mail" nome="email" erro={estado.erros.email}>
         <Input id="email" name="email" type="email" required />
       </Campo>
-      <Campo rotulo="Senha inicial" nome="senha" erro={estado.erros.senha} dica="Pelo menos 10 caracteres. Combine a troca na primeira entrada.">
-        <Input id="senha" name="senha" type="password" autoComplete="new-password" required minLength={10} />
+      <Campo
+        rotulo="Senha inicial"
+        nome="senha"
+        erro={estado.erros.senha}
+        dica="Pelo menos 10 caracteres. Combine a troca na primeira entrada."
+      >
+        <Input
+          id="senha"
+          name="senha"
+          type="password"
+          autoComplete="new-password"
+          required
+          minLength={10}
+        />
       </Campo>
       <Campo rotulo="Papel" nome="papel" erro={estado.erros.papel}>
         <SelectNativo id="papel" name="papel" defaultValue="leitura">

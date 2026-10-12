@@ -1,6 +1,14 @@
 import { Inbox } from "lucide-react";
 
-export function EstadoVazio({ titulo, descricao, acao }: { titulo: string; descricao?: string; acao?: React.ReactNode }) {
+export function EstadoVazio({
+  titulo,
+  descricao,
+  acao,
+}: {
+  titulo: string;
+  descricao?: string;
+  acao?: React.ReactNode;
+}) {
   return (
     <div className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-borda px-6 py-14 text-center">
       <span className="flex size-12 items-center justify-center rounded-full bg-superficie-2 text-texto-2">

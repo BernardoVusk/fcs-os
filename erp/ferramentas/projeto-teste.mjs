@@ -42,7 +42,9 @@ async function gravarChaves(ref) {
 
 if (comando === "status") {
   const p = await encontrar();
-  console.log(p ? `${p.name} | ${p.region} | ${p.status} | ${p.id}` : "projeto de teste nao existe");
+  console.log(
+    p ? `${p.name} | ${p.region} | ${p.status} | ${p.id}` : "projeto de teste nao existe",
+  );
 } else if (comando === "criar") {
   if (await encontrar()) throw new Error("ja existe; use status, chaves ou restaurar");
   const orgs = await api.get("/organizations");

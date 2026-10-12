@@ -5,7 +5,11 @@ import { Button } from "@/componentes/ui/button";
 
 export const metadata = { title: "Sem acesso" };
 
-export default async function PaginaSemAcesso({ searchParams }: { searchParams: Promise<{ area?: string }> }) {
+export default async function PaginaSemAcesso({
+  searchParams,
+}: {
+  searchParams: Promise<{ area?: string }>;
+}) {
   const { area } = await searchParams;
   return (
     <div className="rounded-3xl bg-card p-8 text-center shadow-flutuante">

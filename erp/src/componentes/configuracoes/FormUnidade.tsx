@@ -20,8 +20,20 @@ export function FormUnidade({ unidade, bases }: { unidade?: Unidade; bases: stri
   return (
     <form action={acao} className="space-y-4" noValidate>
       {unidade && <input type="hidden" name="editando" value="sim" />}
-      <Campo rotulo="Código" nome="codigo" erro={estado.erros.codigo} dica="Minúsculas, até 6 letras (g, kg, un)">
-        <Input id="codigo" name="codigo" defaultValue={unidade?.codigo} readOnly={!!unidade} maxLength={6} required />
+      <Campo
+        rotulo="Código"
+        nome="codigo"
+        erro={estado.erros.codigo}
+        dica="Minúsculas, até 6 letras (g, kg, un)"
+      >
+        <Input
+          id="codigo"
+          name="codigo"
+          defaultValue={unidade?.codigo}
+          readOnly={!!unidade}
+          maxLength={6}
+          required
+        />
       </Campo>
       <Campo rotulo="Nome" nome="nome" erro={estado.erros.nome}>
         <Input id="nome" name="nome" defaultValue={unidade?.nome} maxLength={40} required />
@@ -39,8 +51,18 @@ export function FormUnidade({ unidade, bases }: { unidade?: Unidade; bases: stri
               ))}
           </SelectNativo>
         </Campo>
-        <Campo rotulo="Fator para a base" nome="fator_para_base" erro={estado.erros.fator_para_base} dica="1 kg = 1000 g, então fator 1000">
-          <Input id="fator_para_base" name="fator_para_base" inputMode="decimal" defaultValue={unidade?.fator_para_base ?? 1} />
+        <Campo
+          rotulo="Fator para a base"
+          nome="fator_para_base"
+          erro={estado.erros.fator_para_base}
+          dica="1 kg = 1000 g, então fator 1000"
+        >
+          <Input
+            id="fator_para_base"
+            name="fator_para_base"
+            inputMode="decimal"
+            defaultValue={unidade?.fator_para_base ?? 1}
+          />
         </Campo>
       </div>
       <CampoErro chave={estado.erros._form} />

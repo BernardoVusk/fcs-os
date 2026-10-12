@@ -3,7 +3,13 @@
 import { createContext, useState } from "react";
 import { Plus } from "lucide-react";
 import { Button } from "@/componentes/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/componentes/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/componentes/ui/dialog";
 
 /** Formulários dentro do diálogo chamam fechar() ao salvar. */
 export const ContextoDialogo = createContext<() => void>(() => {});
@@ -31,7 +37,9 @@ export function DialogoNovo({
         <DialogHeader>
           <DialogTitle>{titulo}</DialogTitle>
         </DialogHeader>
-        <ContextoDialogo.Provider value={() => setAberto(false)}>{children}</ContextoDialogo.Provider>
+        <ContextoDialogo.Provider value={() => setAberto(false)}>
+          {children}
+        </ContextoDialogo.Provider>
       </DialogContent>
     </Dialog>
   );

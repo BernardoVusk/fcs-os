@@ -10,7 +10,11 @@ describe("forms", () => {
     });
     const r = schema.safeParse({ nome: "", email: "x" });
     expect(r.success).toBe(false);
-    if (!r.success) expect(errosDoZod(r.error).erros).toEqual({ nome: "nome_obrigatorio", email: "email_invalido" });
+    if (!r.success)
+      expect(errosDoZod(r.error).erros).toEqual({
+        nome: "nome_obrigatorio",
+        email: "email_invalido",
+      });
   });
   it("lerCampos devolve string aparada e vazio para ausente", () => {
     const fd = new FormData();

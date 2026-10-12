@@ -23,7 +23,10 @@ export function CartaoIndicador({
   const semDados = valor === null;
   const sobe = (variacao?.percentual ?? 0) >= 0;
   return (
-    <section className={cn("flex flex-col rounded-2xl bg-card p-5 shadow-painel", className)} aria-label={rotulo}>
+    <section
+      className={cn("flex flex-col rounded-2xl bg-card p-5 shadow-painel", className)}
+      aria-label={rotulo}
+    >
       <h3 className="text-[13px] font-medium text-texto-2">{rotulo}</h3>
       <p
         className={cn(

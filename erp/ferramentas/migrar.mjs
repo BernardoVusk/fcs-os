@@ -16,9 +16,9 @@ await consultar(
   `create table if not exists public.migracoes_aplicadas (nome text primary key, aplicada_em timestamptz not null default now());
    alter table public.migracoes_aplicadas enable row level security;`,
 );
-const aplicadas = (await consultar(ref, "select nome from public.migracoes_aplicadas order by nome")).map(
-  (l) => l.nome,
-);
+const aplicadas = (
+  await consultar(ref, "select nome from public.migracoes_aplicadas order by nome")
+).map((l) => l.nome);
 const fila = pendentes(aplicadas, readdirSync(pasta));
 
 if (fila.length === 0) {

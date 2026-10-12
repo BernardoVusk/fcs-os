@@ -24,7 +24,10 @@ export function hashDoToken(token: string): string {
  * Valida o Bearer: hash em tokens_integracao, não revogado, não expirado, usuário ativo.
  * Resultado fica 60 s em cache por processo para não bater no banco a cada ferramenta.
  */
-export async function verificarToken(bearer: string, agora = Date.now()): Promise<SessaoMcp | null> {
+export async function verificarToken(
+  bearer: string,
+  agora = Date.now(),
+): Promise<SessaoMcp | null> {
   if (!bearer.startsWith("fcs_") || bearer.length < 30 || bearer.length > 200) return null;
   const emCache = cache.get(bearer);
   if (emCache && emCache.ate > agora) return emCache.sessao;
@@ -32,7 +35,9 @@ export async function verificarToken(bearer: string, agora = Date.now()): Promis
   const admin = clienteAdmin("mcp");
   const { data } = await admin
     .from("tokens_integracao")
-    .select("id, usuario_id, escopos, expira_em, revogado_em, ultimo_uso_em, usuario:usuarios_app!tokens_integracao_usuario_id_fkey(nome, papel, ativo)")
+    .select(
+      "id, usuario_id, escopos, expira_em, revogado_em, ultimo_uso_em, usuario:usuarios_app!tokens_integracao_usuario_id_fkey(nome, papel, ativo)",
+    )
     .eq("hash_token", hashDoToken(bearer))
     .maybeSingle();
 

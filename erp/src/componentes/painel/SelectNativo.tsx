@@ -1,6 +1,9 @@
 import { cn } from "@/lib/utils";
 
-export function SelectNativo({ className, ...props }: React.SelectHTMLAttributes<HTMLSelectElement>) {
+export function SelectNativo({
+  className,
+  ...props
+}: React.SelectHTMLAttributes<HTMLSelectElement>) {
   return (
     <select
       className={cn(

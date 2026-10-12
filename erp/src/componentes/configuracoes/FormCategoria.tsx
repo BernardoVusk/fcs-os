@@ -11,7 +11,13 @@ import { SelectNativo } from "@/componentes/painel/SelectNativo";
 import { ContextoDialogo } from "@/componentes/painel/DialogoNovo";
 import { useAoSalvar } from "@/componentes/painel/useAoSalvar";
 
-export type CategoriaForm = { id: string; nome: string; pai_id: string | null; cor: string | null; ordem: number };
+export type CategoriaForm = {
+  id: string;
+  nome: string;
+  pai_id: string | null;
+  cor: string | null;
+  ordem: number;
+};
 
 export function FormCategoria({
   escopo,
@@ -46,7 +52,13 @@ export function FormCategoria({
       </Campo>
       <div className="grid grid-cols-2 gap-3">
         <Campo rotulo="Cor" nome="cor" erro={estado.erros.cor} dica="Opcional, hexadecimal">
-          <Input id="cor" name="cor" defaultValue={categoria?.cor ?? ""} placeholder="#00D8FF" maxLength={7} />
+          <Input
+            id="cor"
+            name="cor"
+            defaultValue={categoria?.cor ?? ""}
+            placeholder="#00D8FF"
+            maxLength={7}
+          />
         </Campo>
         <Campo rotulo="Ordem" nome="ordem" erro={estado.erros.ordem}>
           <Input id="ordem" name="ordem" inputMode="numeric" defaultValue={categoria?.ordem ?? 0} />

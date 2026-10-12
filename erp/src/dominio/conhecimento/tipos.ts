@@ -1,4 +1,11 @@
-export const TIPOS_CONHECIMENTO = ["procedimento", "solucao", "decisao", "referencia", "perfil_impressao", "nota"] as const;
+export const TIPOS_CONHECIMENTO = [
+  "procedimento",
+  "solucao",
+  "decisao",
+  "referencia",
+  "perfil_impressao",
+  "nota",
+] as const;
 export type TipoConhecimento = (typeof TIPOS_CONHECIMENTO)[number];
 export const TIPO_CONHECIMENTO_ROTULO: Record<TipoConhecimento, string> = {
   procedimento: "Procedimento",
@@ -33,7 +40,12 @@ export const TIPO_RELACAO_ROTULO: Record<TipoRelacao, string> = {
 };
 
 /** Campos estruturados de uma decisão (guardados em `estrutura`). */
-export type EstruturaDecisao = { contexto: string; alternativas: string[]; decisao: string; consequencias: string };
+export type EstruturaDecisao = {
+  contexto: string;
+  alternativas: string[];
+  decisao: string;
+  consequencias: string;
+};
 
 /** Lê e separa tags digitadas: "petg, ender 3 , PETG" vira ["petg", "ender 3"]. */
 export function lerTags(texto: string | null | undefined): string[] {

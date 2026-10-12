@@ -15,7 +15,11 @@ export async function listarCanais(): Promise<CanalVigente[]> {
 
 export async function obterCanal(id: string): Promise<Canal | null> {
   const supabase = await clienteServidor();
-  const { data, error } = await supabase.from("canais_venda").select("*").eq("id", id).maybeSingle();
+  const { data, error } = await supabase
+    .from("canais_venda")
+    .select("*")
+    .eq("id", id)
+    .maybeSingle();
   if (error) throw error;
   return data;
 }

@@ -23,10 +23,13 @@ try {
 }
 if (dados.stop_hook_active) process.exit(0);
 const texto = String(dados.last_assistant_message ?? "");
-const MARCADORES = /\b(decidimos|decis[aã]o tomada|a causa era|causa raiz|procedimento|passo a passo|resolvido|solu[cç][aã]o foi|configura[cç][aã]o que funcionou)\b/i;
+const MARCADORES =
+  /\b(decidimos|decis[aã]o tomada|a causa era|causa raiz|procedimento|passo a passo|resolvido|solu[cç][aã]o foi|configura[cç][aã]o que funcionou)\b/i;
 if (texto.length > 200 && MARCADORES.test(texto)) {
   process.stdout.write(
-    JSON.stringify({ systemMessage: "Parece conhecimento reaproveitável. Salvar na base com /kb-salvar?" }),
+    JSON.stringify({
+      systemMessage: "Parece conhecimento reaproveitável. Salvar na base com /kb-salvar?",
+    }),
   );
 }
 process.exit(0);

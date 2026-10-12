@@ -195,20 +195,75 @@
   margin-top: 1.6em;
   margin-bottom: 0.5em;
 }
-.prosa :where(h1) { font-size: 1.5rem; }
-.prosa :where(h2) { font-size: 1.25rem; }
-.prosa :where(h3) { font-size: 1.05rem; }
-.prosa :where(p, ul, ol, pre, blockquote, table) { margin-bottom: 1em; }
-.prosa :where(ul) { list-style: disc; padding-left: 1.4em; }
-.prosa :where(ol) { list-style: decimal; padding-left: 1.4em; }
-.prosa :where(li + li) { margin-top: 0.25em; }
-.prosa :where(a) { color: var(--acao); text-decoration: underline; text-underline-offset: 3px; }
-.prosa :where(code) { font-family: var(--font-mono); font-size: 0.875em; background: var(--superficie-2); padding: 0.1em 0.4em; border-radius: 6px; }
-.prosa :where(pre) { background: var(--superficie-2); padding: 1rem; border-radius: 12px; overflow-x: auto; }
-.prosa :where(pre code) { background: transparent; padding: 0; }
-.prosa :where(blockquote) { border-left: 2px solid var(--borda); padding-left: 1rem; color: var(--texto-2); }
-.prosa :where(table) { width: 100%; border-collapse: collapse; font-size: 0.9em; }
-.prosa :where(th, td) { border: 1px solid var(--borda); padding: 0.4em 0.6em; text-align: left; }
-.prosa :where(th) { background: var(--superficie-2); font-weight: 500; }
-.prosa :where(hr) { border-color: var(--borda); margin: 2em 0; }
-.prosa :where(img) { max-width: 100%; border-radius: 12px; }
+.prosa :where(h1) {
+  font-size: 1.5rem;
+}
+.prosa :where(h2) {
+  font-size: 1.25rem;
+}
+.prosa :where(h3) {
+  font-size: 1.05rem;
+}
+.prosa :where(p, ul, ol, pre, blockquote, table) {
+  margin-bottom: 1em;
+}
+.prosa :where(ul) {
+  list-style: disc;
+  padding-left: 1.4em;
+}
+.prosa :where(ol) {
+  list-style: decimal;
+  padding-left: 1.4em;
+}
+.prosa :where(li + li) {
+  margin-top: 0.25em;
+}
+.prosa :where(a) {
+  color: var(--acao);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.prosa :where(code) {
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+  background: var(--superficie-2);
+  padding: 0.1em 0.4em;
+  border-radius: 6px;
+}
+.prosa :where(pre) {
+  background: var(--superficie-2);
+  padding: 1rem;
+  border-radius: 12px;
+  overflow-x: auto;
+}
+.prosa :where(pre code) {
+  background: transparent;
+  padding: 0;
+}
+.prosa :where(blockquote) {
+  border-left: 2px solid var(--borda);
+  padding-left: 1rem;
+  color: var(--texto-2);
+}
+.prosa :where(table) {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9em;
+}
+.prosa :where(th, td) {
+  border: 1px solid var(--borda);
+  padding: 0.4em 0.6em;
+  text-align: left;
+}
+.prosa :where(th) {
+  background: var(--superficie-2);
+  font-weight: 500;
+}
+.prosa :where(hr) {
+  border-color: var(--borda);
+  margin: 2em 0;
+}
+.prosa :where(img) {
+  max-width: 100%;
+  border-radius: 12px;
+}

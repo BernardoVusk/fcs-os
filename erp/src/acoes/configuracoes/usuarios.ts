@@ -26,7 +26,11 @@ export async function criarUsuario(_: EstadoForm, fd: FormData): Promise<EstadoF
     email_confirm: true,
   });
   if (error) {
-    return { erros: { _form: error.message.toLowerCase().includes("already") ? "duplicado" : "erro_inesperado" } };
+    return {
+      erros: {
+        _form: error.message.toLowerCase().includes("already") ? "duplicado" : "erro_inesperado",
+      },
+    };
   }
   const supabase = await clienteServidor();
   const { error: erroLinha } = await supabase
@@ -42,7 +46,10 @@ export async function criarUsuario(_: EstadoForm, fd: FormData): Promise<EstadoF
 
 const alterarSchema = z.object({ papel: z.enum(PAPEIS).optional(), ativo: z.boolean().optional() });
 
-export async function alterarUsuario(id: string, mudanca: { papel?: string; ativo?: boolean }): Promise<ResultadoAcao> {
+export async function alterarUsuario(
+  id: string,
+  mudanca: { papel?: string; ativo?: boolean },
+): Promise<ResultadoAcao> {
   let eu;
   try {
     eu = await exigirEscrita("usuarios");

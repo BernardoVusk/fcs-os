@@ -12,7 +12,11 @@ import {
   obterConhecimento,
 } from "@/dados/conhecimento";
 import { alterarStatusConhecimento, alternarValidado } from "@/acoes/conhecimento";
-import { TIPO_CONHECIMENTO_ROTULO, type EstruturaDecisao, type TipoConhecimento } from "@/dominio/conhecimento/tipos";
+import {
+  TIPO_CONHECIMENTO_ROTULO,
+  type EstruturaDecisao,
+  type TipoConhecimento,
+} from "@/dominio/conhecimento/tipos";
 import { formatarDataHora } from "@/lib/formatos/data";
 import { Markdown } from "@/componentes/conhecimento/Markdown";
 import { Tags } from "@/componentes/conhecimento/Tags";
@@ -21,7 +25,11 @@ import { Badge } from "@/componentes/ui/badge";
 import { Button } from "@/componentes/ui/button";
 import { BotaoAcao } from "@/componentes/painel/BotaoAcao";
 
-export default async function PaginaConhecimentoDetalhe({ params }: { params: Promise<{ id: string }> }) {
+export default async function PaginaConhecimentoDetalhe({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const usuario = await exigirLeitura("conhecimento");
   const { id } = await params;
   const registro = await obterConhecimento(id);
@@ -35,7 +43,8 @@ export default async function PaginaConhecimentoDetalhe({ params }: { params: Pr
   ]);
   const editar = podeEscrever(usuario.papel, "conhecimento");
   const categoria = categorias.find((c) => c.id === registro.categoria_id)?.nome;
-  const decisao = registro.tipo === "decisao" ? ((registro.estrutura ?? null) as EstruturaDecisao | null) : null;
+  const decisao =
+    registro.tipo === "decisao" ? ((registro.estrutura ?? null) as EstruturaDecisao | null) : null;
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap items-start justify-between gap-3">
@@ -46,31 +55,44 @@ export default async function PaginaConhecimentoDetalhe({ params }: { params: Pr
             </Badge>
             {categoria && <span>{categoria}</span>}
             {registro.modulo && <span>módulo {registro.modulo}</span>}
-            {registro.status !== "ativo" && <Badge variant="secondary">{registro.status === "rascunho" ? "Rascunho" : "Arquivado"}</Badge>}
+            {registro.status !== "ativo" && (
+              <Badge variant="secondary">
+                {registro.status === "rascunho" ? "Rascunho" : "Arquivado"}
+              </Badge>
+            )}
             {registro.confidencialidade === "restrito" && (
               <span className="inline-flex items-center gap-1">
                 <Lock className="size-3.5" aria-hidden="true" /> restrito
               </span>
             )}
           </div>
-          <h1 className="text-[28px] leading-tight font-semibold tracking-tight">{registro.titulo}</h1>
+          <h1 className="text-[28px] leading-tight font-semibold tracking-tight">
+            {registro.titulo}
+          </h1>
           {registro.resumo && <p className="max-w-2xl text-sm text-texto-2">{registro.resumo}</p>}
           <Tags tags={registro.tags} />
         </div>
         {editar && (
           <div className="flex flex-wrap items-center gap-2">
             <BotaoAcao acao={alternarValidado.bind(null, registro.id)} variant="secondary">
-              <CheckCircle2 className="size-4" /> {registro.validado ? "Remover validação" : "Marcar validado"}
+              <CheckCircle2 className="size-4" />{" "}
+              {registro.validado ? "Remover validação" : "Marcar validado"}
             </BotaoAcao>
             {registro.status === "arquivado" ? (
-              <BotaoAcao acao={alterarStatusConhecimento.bind(null, registro.id, "ativo")} variant="secondary">
+              <BotaoAcao
+                acao={alterarStatusConhecimento.bind(null, registro.id, "ativo")}
+                variant="secondary"
+              >
                 Reativar
               </BotaoAcao>
             ) : (
               <BotaoAcao
                 acao={alterarStatusConhecimento.bind(null, registro.id, "arquivado")}
                 variant="ghost"
-                confirmar={{ titulo: "Arquivar este conhecimento?", descricao: "Sai das listas e da busca; o histórico continua acessível." }}
+                confirmar={{
+                  titulo: "Arquivar este conhecimento?",
+                  descricao: "Sai das listas e da busca; o histórico continua acessível.",
+                }}
               >
                 Arquivar
               </BotaoAcao>
@@ -85,7 +107,8 @@ export default async function PaginaConhecimentoDetalhe({ params }: { params: Pr
       </div>
       {registro.validado && (
         <p className="inline-flex items-center gap-1.5 rounded-full bg-sucesso/15 px-3 py-1 text-xs font-medium text-sucesso">
-          <CheckCircle2 className="size-3.5" aria-hidden="true" /> Validado em {formatarDataHora(registro.validado_em)}
+          <CheckCircle2 className="size-3.5" aria-hidden="true" /> Validado em{" "}
+          {formatarDataHora(registro.validado_em)}
         </p>
       )}
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
@@ -126,7 +149,13 @@ export default async function PaginaConhecimentoDetalhe({ params }: { params: Pr
           <section className="rounded-2xl bg-card p-4 shadow-painel text-sm">
             <dl className="grid grid-cols-[6rem_1fr] gap-y-1.5">
               <dt className="text-texto-3">Origem</dt>
-              <dd>{registro.origem === "claude_code" ? "Claude Code" : registro.origem === "importacao" ? "Importação" : "Manual"}</dd>
+              <dd>
+                {registro.origem === "claude_code"
+                  ? "Claude Code"
+                  : registro.origem === "importacao"
+                    ? "Importação"
+                    : "Manual"}
+              </dd>
               {registro.referencia && (
                 <>
                   <dt className="text-texto-3">Referência</dt>
@@ -147,7 +176,12 @@ export default async function PaginaConhecimentoDetalhe({ params }: { params: Pr
               <dd className="font-mono text-xs break-all">{registro.slug}</dd>
             </dl>
           </section>
-          <Relacoes id={registro.id} relacoes={relacoes} candidatos={candidatos.filter((c) => c.id !== registro.id)} editar={editar} />
+          <Relacoes
+            id={registro.id}
+            relacoes={relacoes}
+            candidatos={candidatos.filter((c) => c.id !== registro.id)}
+            editar={editar}
+          />
           <Anexos id={registro.id} anexos={anexos} editar={editar} />
           <Versoes versoes={versoes} atual={registro.versao} />
         </aside>

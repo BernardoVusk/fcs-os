@@ -26,8 +26,16 @@ export function TabelaCategorias({
   const [editando, setEditando] = useState<Categoria | null>(null);
   const nomes = new Map(categorias.map((c) => [c.id, c.nome]));
   const colunas: ColumnDef<Categoria, unknown>[] = [
-    { accessorKey: "nome", header: "Nome", cell: ({ row }) => <span className="font-medium">{row.original.nome}</span> },
-    { accessorKey: "pai_id", header: "Pai", cell: ({ getValue }) => nomes.get(getValue() as string) ?? "" },
+    {
+      accessorKey: "nome",
+      header: "Nome",
+      cell: ({ row }) => <span className="font-medium">{row.original.nome}</span>,
+    },
+    {
+      accessorKey: "pai_id",
+      header: "Pai",
+      cell: ({ getValue }) => nomes.get(getValue() as string) ?? "",
+    },
     {
       accessorKey: "cor",
       header: "Cor",
@@ -35,18 +43,29 @@ export function TabelaCategorias({
       cell: ({ getValue }) =>
         getValue() ? (
           <span className="inline-flex items-center gap-2">
-            <span className="size-3 rounded-sm border border-borda" style={{ background: String(getValue()) }} />
+            <span
+              className="size-3 rounded-sm border border-borda"
+              style={{ background: String(getValue()) }}
+            />
             <span className="font-mono text-xs">{String(getValue())}</span>
           </span>
         ) : (
           ""
         ),
     },
-    { accessorKey: "ordem", header: "Ordem", cell: ({ getValue }) => <span className="numeros">{String(getValue())}</span> },
+    {
+      accessorKey: "ordem",
+      header: "Ordem",
+      cell: ({ getValue }) => <span className="numeros">{String(getValue())}</span>,
+    },
     {
       accessorKey: "ativo",
       header: "Situação",
-      cell: ({ getValue }) => <Badge variant={getValue() ? "default" : "secondary"}>{getValue() ? "Ativa" : "Inativa"}</Badge>,
+      cell: ({ getValue }) => (
+        <Badge variant={getValue() ? "default" : "secondary"}>
+          {getValue() ? "Ativa" : "Inativa"}
+        </Badge>
+      ),
     },
   ];
   if (editar) {
@@ -72,7 +91,10 @@ export function TabelaCategorias({
         colunas={colunas}
         dados={categorias}
         placeholderFiltro="Filtrar categorias"
-        vazio={{ titulo: "Nenhuma categoria neste escopo", descricao: "Crie a primeira com o botão Nova categoria." }}
+        vazio={{
+          titulo: "Nenhuma categoria neste escopo",
+          descricao: "Crie a primeira com o botão Nova categoria.",
+        }}
         idLinha={(c) => c.id}
         destaque={destaque}
       />

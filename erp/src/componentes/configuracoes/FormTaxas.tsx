@@ -36,26 +36,76 @@ export function FormTaxas({ canalId, base }: { canalId: string; base: Base }) {
         Deixe em branco o que não souber. Percentuais sobre o preço de venda, em por cento (14,5).
       </p>
       <Campo rotulo="Vigente desde" nome="vigente_desde" erro={estado.erros.vigente_desde}>
-        <Input id="vigente_desde" name="vigente_desde" type="date" defaultValue={hojeSaoPaulo()} required />
+        <Input
+          id="vigente_desde"
+          name="vigente_desde"
+          type="date"
+          defaultValue={hojeSaoPaulo()}
+          required
+        />
       </Campo>
       <div className="grid grid-cols-2 gap-3">
         <Campo rotulo="Comissão (%)" nome="comissao_pct" erro={estado.erros.comissao_pct}>
-          <Input id="comissao_pct" name="comissao_pct" inputMode="decimal" defaultValue={pct(base?.comissao_pct)} placeholder="14,00" />
+          <Input
+            id="comissao_pct"
+            name="comissao_pct"
+            inputMode="decimal"
+            defaultValue={pct(base?.comissao_pct)}
+            placeholder="14,00"
+          />
         </Campo>
-        <Campo rotulo="Taxa fixa por item (R$)" nome="taxa_fixa_item" erro={estado.erros.taxa_fixa_item}>
-          <Input id="taxa_fixa_item" name="taxa_fixa_item" inputMode="decimal" defaultValue={val(base?.taxa_fixa_item)} placeholder="4,00" />
+        <Campo
+          rotulo="Taxa fixa por item (R$)"
+          nome="taxa_fixa_item"
+          erro={estado.erros.taxa_fixa_item}
+        >
+          <Input
+            id="taxa_fixa_item"
+            name="taxa_fixa_item"
+            inputMode="decimal"
+            defaultValue={val(base?.taxa_fixa_item)}
+            placeholder="4,00"
+          />
         </Campo>
-        <Campo rotulo="Processamento (%)" nome="taxa_pagamento_pct" erro={estado.erros.taxa_pagamento_pct}>
-          <Input id="taxa_pagamento_pct" name="taxa_pagamento_pct" inputMode="decimal" defaultValue={pct(base?.taxa_pagamento_pct)} />
+        <Campo
+          rotulo="Processamento (%)"
+          nome="taxa_pagamento_pct"
+          erro={estado.erros.taxa_pagamento_pct}
+        >
+          <Input
+            id="taxa_pagamento_pct"
+            name="taxa_pagamento_pct"
+            inputMode="decimal"
+            defaultValue={pct(base?.taxa_pagamento_pct)}
+          />
         </Campo>
         <Campo rotulo="Ads padrão (%)" nome="ads_pct_padrao" erro={estado.erros.ads_pct_padrao}>
-          <Input id="ads_pct_padrao" name="ads_pct_padrao" inputMode="decimal" defaultValue={pct(base?.ads_pct_padrao)} />
+          <Input
+            id="ads_pct_padrao"
+            name="ads_pct_padrao"
+            inputMode="decimal"
+            defaultValue={pct(base?.ads_pct_padrao)}
+          />
         </Campo>
-        <Campo rotulo="Frete subsidiado (R$)" nome="frete_subsidio_padrao" erro={estado.erros.frete_subsidio_padrao}>
-          <Input id="frete_subsidio_padrao" name="frete_subsidio_padrao" inputMode="decimal" defaultValue={val(base?.frete_subsidio_padrao)} />
+        <Campo
+          rotulo="Frete subsidiado (R$)"
+          nome="frete_subsidio_padrao"
+          erro={estado.erros.frete_subsidio_padrao}
+        >
+          <Input
+            id="frete_subsidio_padrao"
+            name="frete_subsidio_padrao"
+            inputMode="decimal"
+            defaultValue={val(base?.frete_subsidio_padrao)}
+          />
         </Campo>
         <Campo rotulo="Dias até o repasse" nome="dias_repasse" erro={estado.erros.dias_repasse}>
-          <Input id="dias_repasse" name="dias_repasse" inputMode="numeric" defaultValue={base?.dias_repasse ?? ""} />
+          <Input
+            id="dias_repasse"
+            name="dias_repasse"
+            inputMode="numeric"
+            defaultValue={base?.dias_repasse ?? ""}
+          />
         </Campo>
       </div>
       <Campo rotulo="Observações" nome="observacoes" erro={estado.erros.observacoes}>

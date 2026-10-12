@@ -1,6 +1,9 @@
 import { expect, type Page } from "@playwright/test";
 
-export const CREDENCIAIS = { email: process.env.E2E_EMAIL ?? "", senha: process.env.E2E_SENHA ?? "" };
+export const CREDENCIAIS = {
+  email: process.env.E2E_EMAIL ?? "",
+  senha: process.env.E2E_SENHA ?? "",
+};
 
 export async function entrar(page: Page) {
   await page.goto("/login");

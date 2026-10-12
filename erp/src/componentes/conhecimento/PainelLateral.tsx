@@ -4,7 +4,13 @@ import { useRef, useState, useTransition } from "react";
 import Link from "next/link";
 import { ArrowDownToLine, Link2, Paperclip, Trash2 } from "lucide-react";
 import { toast } from "sonner";
-import { enviarAnexo, relacionar, removerAnexo, removerRelacao, urlAnexo } from "@/acoes/conhecimento";
+import {
+  enviarAnexo,
+  relacionar,
+  removerAnexo,
+  removerRelacao,
+  urlAnexo,
+} from "@/acoes/conhecimento";
 import type { AnexoConhecimento, Relacao, VersaoConhecimento } from "@/dados/conhecimento";
 import { TIPO_RELACAO_ROTULO, TIPOS_RELACAO } from "@/dominio/conhecimento/tipos";
 import { formatarDataHora } from "@/lib/formatos/data";
@@ -22,7 +28,17 @@ function Bloco({ titulo, children }: { titulo: string; children: React.ReactNode
   );
 }
 
-export function Relacoes({ id, relacoes, candidatos, editar }: { id: string; relacoes: Relacao[]; candidatos: { id: string; titulo: string }[]; editar: boolean }) {
+export function Relacoes({
+  id,
+  relacoes,
+  candidatos,
+  editar,
+}: {
+  id: string;
+  relacoes: Relacao[];
+  candidatos: { id: string; titulo: string }[];
+  editar: boolean;
+}) {
   const [pendente, iniciar] = useTransition();
   const formRef = useRef<HTMLFormElement>(null);
   return (
@@ -33,13 +49,21 @@ export function Relacoes({ id, relacoes, candidatos, editar }: { id: string; rel
           <li key={`${r.de_id}-${r.para_id}`} className="flex items-center gap-2 text-sm">
             <Link2 className="size-3.5 shrink-0 text-texto-3" aria-hidden="true" />
             <span className="min-w-0 flex-1">
-              <span className="text-texto-3">{r.direcao === "saida" ? TIPO_RELACAO_ROTULO[r.tipo as keyof typeof TIPO_RELACAO_ROTULO] : "Referenciado por"} </span>
+              <span className="text-texto-3">
+                {r.direcao === "saida"
+                  ? TIPO_RELACAO_ROTULO[r.tipo as keyof typeof TIPO_RELACAO_ROTULO]
+                  : "Referenciado por"}{" "}
+              </span>
               <Link href={`/conhecimento/${r.outro.id}`} className="font-medium hover:text-acao">
                 {r.outro.titulo}
               </Link>
             </span>
             {editar && (
-              <BotaoAcao acao={() => removerRelacao(r.de_id, r.para_id)} size="icon" variant="ghost">
+              <BotaoAcao
+                acao={() => removerRelacao(r.de_id, r.para_id)}
+                size="icon"
+                variant="ghost"
+              >
                 <Trash2 className="size-3.5" aria-label="Remover relação" />
               </BotaoAcao>
             )}
@@ -88,7 +112,15 @@ export function Relacoes({ id, relacoes, candidatos, editar }: { id: string; rel
   );
 }
 
-export function Anexos({ id, anexos, editar }: { id: string; anexos: AnexoConhecimento[]; editar: boolean }) {
+export function Anexos({
+  id,
+  anexos,
+  editar,
+}: {
+  id: string;
+  anexos: AnexoConhecimento[];
+  editar: boolean;
+}) {
   const [pendente, iniciar] = useTransition();
   const [enviando, setEnviando] = useState(false);
   async function abrir(anexoId: string) {
@@ -103,14 +135,28 @@ export function Anexos({ id, anexos, editar }: { id: string; anexos: AnexoConhec
         {anexos.map((a) => (
           <li key={a.id} className="flex items-center gap-2 text-sm">
             <Paperclip className="size-3.5 shrink-0 text-texto-3" aria-hidden="true" />
-            <button type="button" onClick={() => abrir(a.id)} className="min-w-0 flex-1 truncate text-left font-medium hover:text-acao">
+            <button
+              type="button"
+              onClick={() => abrir(a.id)}
+              className="min-w-0 flex-1 truncate text-left font-medium hover:text-acao"
+            >
               {a.nome}
             </button>
-            <button type="button" onClick={() => abrir(a.id)} className="text-texto-3 hover:text-texto" aria-label={`Baixar ${a.nome}`}>
+            <button
+              type="button"
+              onClick={() => abrir(a.id)}
+              className="text-texto-3 hover:text-texto"
+              aria-label={`Baixar ${a.nome}`}
+            >
               <ArrowDownToLine className="size-3.5" />
             </button>
             {editar && (
-              <BotaoAcao acao={() => removerAnexo(a.id)} size="icon" variant="ghost" confirmar={{ titulo: `Remover ${a.nome}?` }}>
+              <BotaoAcao
+                acao={() => removerAnexo(a.id)}
+                size="icon"
+                variant="ghost"
+                confirmar={{ titulo: `Remover ${a.nome}?` }}
+              >
                 <Trash2 className="size-3.5" aria-label="Remover anexo" />
               </BotaoAcao>
             )}

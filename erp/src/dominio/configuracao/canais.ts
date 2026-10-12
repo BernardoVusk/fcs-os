@@ -1,4 +1,11 @@
-export const TIPOS_CANAL = ["shopee", "mercado_livre", "tiktok_shop", "site", "direto", "outro"] as const;
+export const TIPOS_CANAL = [
+  "shopee",
+  "mercado_livre",
+  "tiktok_shop",
+  "site",
+  "direto",
+  "outro",
+] as const;
 export type TipoCanal = (typeof TIPOS_CANAL)[number];
 export const TIPO_CANAL_ROTULO: Record<TipoCanal, string> = {
   shopee: "Shopee",

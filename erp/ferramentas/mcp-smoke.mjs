@@ -15,20 +15,31 @@ async function chamar(method, params) {
   const corpo = { jsonrpc: "2.0", id: ++id, method, params };
   const resposta = await fetch(url, {
     method: "POST",
-    headers: { "Content-Type": "application/json", Accept: "application/json, text/event-stream", Authorization: `Bearer ${token}` },
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json, text/event-stream",
+      Authorization: `Bearer ${token}`,
+    },
     body: JSON.stringify(corpo),
   });
   const texto = await resposta.text();
   if (!resposta.ok) throw new Error(`${method}: HTTP ${resposta.status} ${texto.slice(0, 300)}`);
   const tipo = resposta.headers.get("content-type") ?? "";
   if (tipo.includes("text/event-stream")) {
-    const dados = texto.split("\n").filter((l) => l.startsWith("data:")).map((l) => JSON.parse(l.slice(5).trim()));
+    const dados = texto
+      .split("\n")
+      .filter((l) => l.startsWith("data:"))
+      .map((l) => JSON.parse(l.slice(5).trim()));
     return dados.find((d) => d.id === corpo.id) ?? dados.at(-1);
   }
   return JSON.parse(texto);
 }
 
-const init = await chamar("initialize", { protocolVersion: "2025-06-18", capabilities: {}, clientInfo: { name: "fcs-smoke", version: "1" } });
+const init = await chamar("initialize", {
+  protocolVersion: "2025-06-18",
+  capabilities: {},
+  clientInfo: { name: "fcs-smoke", version: "1" },
+});
 console.log("servidor:", init.result?.serverInfo, "| protocolo:", init.result?.protocolVersion);
 const lista = await chamar("tools/list", {});
 console.log("ferramentas:", lista.result?.tools?.map((t) => t.name).join(", "));

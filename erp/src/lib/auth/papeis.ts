@@ -1,6 +1,10 @@
 export const PAPEIS = ["dono", "operador", "leitura"] as const;
 export type Papel = (typeof PAPEIS)[number];
-export const PAPEL_ROTULO: Record<Papel, string> = { dono: "Dono", operador: "Operador", leitura: "Leitura" };
+export const PAPEL_ROTULO: Record<Papel, string> = {
+  dono: "Dono",
+  operador: "Operador",
+  leitura: "Leitura",
+};
 
 export const AREAS = [
   "inicio",
@@ -27,7 +31,15 @@ const LEITURA: Record<Papel, readonly Area[]> = {
 };
 const ESCRITA: Record<Papel, readonly Area[]> = {
   dono: AREAS,
-  operador: ["conhecimento", "estoque", "catalogo", "producao", "vendas", "planejamento", "alertas"],
+  operador: [
+    "conhecimento",
+    "estoque",
+    "catalogo",
+    "producao",
+    "vendas",
+    "planejamento",
+    "alertas",
+  ],
   leitura: [],
 };
 

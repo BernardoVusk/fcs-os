@@ -7,4 +7,8 @@ export const chakra = Chakra_Petch({
   variable: "--fonte-titulo",
   display: "swap",
 });
-export const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--fonte-mono", display: "swap" });
+export const mono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--fonte-mono",
+  display: "swap",
+});

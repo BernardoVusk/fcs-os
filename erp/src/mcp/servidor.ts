@@ -25,7 +25,9 @@ export const handler = withMcpAuth(
       token: bearer,
       clientId: sessao.tokenId,
       scopes: sessao.escopos,
-      expiresAt: sessao.expiraEm ? Math.floor(new Date(sessao.expiraEm).getTime() / 1000) : undefined,
+      expiresAt: sessao.expiraEm
+        ? Math.floor(new Date(sessao.expiraEm).getTime() / 1000)
+        : undefined,
     };
   },
   { required: true },

@@ -20,8 +20,14 @@ const admin = createClient(exigirEnv(`${prefixo}URL`), exigirEnv(`${prefixo}SERV
   auth: { persistSession: false, autoRefreshToken: false },
   global: { headers: { "x-origem": "script" } },
 });
-const { data, error } = await admin.auth.admin.createUser({ email, password: senha, email_confirm: true });
+const { data, error } = await admin.auth.admin.createUser({
+  email,
+  password: senha,
+  email_confirm: true,
+});
 if (error) throw error;
-const { error: erroLinha } = await admin.from("usuarios_app").insert({ id: data.user.id, nome, papel });
+const { error: erroLinha } = await admin
+  .from("usuarios_app")
+  .insert({ id: data.user.id, nome, papel });
 if (erroLinha) throw erroLinha;
 console.log(`usuario ${email} criado como ${papel} em ${alvo}`);

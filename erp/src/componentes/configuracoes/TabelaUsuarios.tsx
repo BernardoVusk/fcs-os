@@ -49,11 +49,19 @@ export function TabelaUsuarios({ usuarios, meuId }: { usuarios: UsuarioLista[]; 
         </SelectNativo>
       ),
     },
-    { accessorKey: "criado_em", header: "Desde", cell: ({ getValue }) => formatarData(getValue() as string) },
+    {
+      accessorKey: "criado_em",
+      header: "Desde",
+      cell: ({ getValue }) => formatarData(getValue() as string),
+    },
     {
       accessorKey: "ativo",
       header: "Situação",
-      cell: ({ getValue }) => <Badge variant={getValue() ? "default" : "secondary"}>{getValue() ? "Ativo" : "Inativo"}</Badge>,
+      cell: ({ getValue }) => (
+        <Badge variant={getValue() ? "default" : "secondary"}>
+          {getValue() ? "Ativo" : "Inativo"}
+        </Badge>
+      ),
     },
     {
       id: "acoes",
@@ -66,7 +74,10 @@ export function TabelaUsuarios({ usuarios, meuId }: { usuarios: UsuarioLista[]; 
               acao={() => alterarUsuario(row.original.id, { ativo: !row.original.ativo })}
               confirmar={
                 row.original.ativo
-                  ? { titulo: `Desativar ${row.original.nome}?`, descricao: "A pessoa perde o acesso na hora. Pode ser reativada depois." }
+                  ? {
+                      titulo: `Desativar ${row.original.nome}?`,
+                      descricao: "A pessoa perde o acesso na hora. Pode ser reativada depois.",
+                    }
                   : undefined
               }
             >
@@ -76,5 +87,12 @@ export function TabelaUsuarios({ usuarios, meuId }: { usuarios: UsuarioLista[]; 
         ),
     },
   ];
-  return <TabelaDados colunas={colunas} dados={usuarios} placeholderFiltro="Filtrar usuários" vazio={{ titulo: "Nenhum usuário" }} />;
+  return (
+    <TabelaDados
+      colunas={colunas}
+      dados={usuarios}
+      placeholderFiltro="Filtrar usuários"
+      vazio={{ titulo: "Nenhum usuário" }}
+    />
+  );
 }

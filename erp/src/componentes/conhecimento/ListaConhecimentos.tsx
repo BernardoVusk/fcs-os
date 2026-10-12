@@ -38,7 +38,11 @@ export function ListaConhecimentos({
                     <Lock className="size-3.5" aria-hidden="true" /> restrito
                   </span>
                 )}
-                {item.status !== "ativo" && <Badge variant="secondary">{item.status === "rascunho" ? "Rascunho" : "Arquivado"}</Badge>}
+                {item.status !== "ativo" && (
+                  <Badge variant="secondary">
+                    {item.status === "rascunho" ? "Rascunho" : "Arquivado"}
+                  </Badge>
+                )}
               </div>
               {item.resumo && <p className="line-clamp-2 text-sm text-texto-2">{item.resumo}</p>}
               <Tags tags={item.tags} link={false} />
@@ -47,7 +51,9 @@ export function ListaConhecimentos({
               <Badge variant="outline" className="text-texto-2">
                 {TIPO_CONHECIMENTO_ROTULO[item.tipo as TipoConhecimento] ?? item.tipo}
               </Badge>
-              {item.categoria_id && categorias.get(item.categoria_id) && <span>{categorias.get(item.categoria_id)}</span>}
+              {item.categoria_id && categorias.get(item.categoria_id) && (
+                <span>{categorias.get(item.categoria_id)}</span>
+              )}
               <span className="numeros">{formatarData(item.atualizado_em)}</span>
             </div>
           </Link>

@@ -3,14 +3,21 @@
 import { z } from "zod";
 import { clienteServidor } from "@/lib/supabase/servidor";
 import { usuarioAtual } from "@/lib/auth/sessao";
-import { TIPOS_BUSCA, type ResultadoBusca, type TipoBusca } from "@/componentes/painel/busca-agrupar";
+import {
+  TIPOS_BUSCA,
+  type ResultadoBusca,
+  type TipoBusca,
+} from "@/componentes/painel/busca-agrupar";
 
 const schema = z.object({
   termo: z.string().trim().min(1).max(80),
   tipos: z.array(z.enum(TIPOS_BUSCA)).max(20).optional(),
 });
 
-export async function buscar(entrada: { termo: string; tipos?: TipoBusca[] }): Promise<ResultadoBusca[]> {
+export async function buscar(entrada: {
+  termo: string;
+  tipos?: TipoBusca[];
+}): Promise<ResultadoBusca[]> {
   const r = schema.safeParse(entrada);
   if (!r.success) return [];
   if (!(await usuarioAtual())) return [];

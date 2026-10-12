@@ -8,7 +8,11 @@ import { cn } from "@/lib/utils";
 
 export const metadata = { title: "Decisões" };
 
-export default async function PaginaDecisoes({ searchParams }: { searchParams: Promise<{ modulo?: string }> }) {
+export default async function PaginaDecisoes({
+  searchParams,
+}: {
+  searchParams: Promise<{ modulo?: string }>;
+}) {
   await exigirLeitura("conhecimento");
   const { modulo } = await searchParams;
   const [decisoes, modulos] = await Promise.all([listarDecisoes(modulo), modulosExistentes()]);
@@ -17,8 +21,8 @@ export default async function PaginaDecisoes({ searchParams }: { searchParams: P
       <div>
         <h1 className="text-[28px] leading-tight font-semibold tracking-tight">Decisões</h1>
         <p className="mt-1 max-w-2xl text-sm text-texto-2">
-          O que foi decidido, por quê e o que ficou de consequência. O Claude Code consulta esta lista antes de propor
-          mudança.
+          O que foi decidido, por quê e o que ficou de consequência. O Claude Code consulta esta
+          lista antes de propor mudança.
         </p>
       </div>
       {modulos.length > 0 && (
@@ -26,11 +30,17 @@ export default async function PaginaDecisoes({ searchParams }: { searchParams: P
           {["", ...modulos].map((m) => (
             <Link
               key={m || "todos"}
-              href={m ? `/conhecimento/decisoes?modulo=${encodeURIComponent(m)}` : "/conhecimento/decisoes"}
+              href={
+                m
+                  ? `/conhecimento/decisoes?modulo=${encodeURIComponent(m)}`
+                  : "/conhecimento/decisoes"
+              }
               aria-current={(modulo ?? "") === m ? "page" : undefined}
               className={cn(
                 "rounded-full px-3 py-1 text-sm transition-colors",
-                (modulo ?? "") === m ? "bg-acao text-acao-texto" : "bg-superficie-2 text-texto-2 hover:text-texto",
+                (modulo ?? "") === m
+                  ? "bg-acao text-acao-texto"
+                  : "bg-superficie-2 text-texto-2 hover:text-texto",
               )}
             >
               {m || "Todos"}
@@ -50,7 +60,10 @@ export default async function PaginaDecisoes({ searchParams }: { searchParams: P
             return (
               <li key={d.id} className="rounded-2xl bg-card p-5 shadow-painel">
                 <div className="flex flex-wrap items-baseline justify-between gap-2">
-                  <Link href={`/conhecimento/${d.id}`} className="text-[15px] font-medium hover:text-acao">
+                  <Link
+                    href={`/conhecimento/${d.id}`}
+                    className="text-[15px] font-medium hover:text-acao"
+                  >
                     {d.titulo}
                   </Link>
                   <span className="text-xs text-texto-3">

@@ -18,10 +18,16 @@ export default async function LayoutPainel({ children }: { children: React.React
   const alertas = await contarAlertasAbertos();
   return (
     <SidebarProvider defaultOpen={aberta}>
-      <SidebarPainel grupos={gruposVisiveis(usuario.papel)} usuario={usuario} contadores={{ alertas }} />
+      <SidebarPainel
+        grupos={gruposVisiveis(usuario.papel)}
+        usuario={usuario}
+        contadores={{ alertas }}
+      />
       <SidebarInset className="min-w-0">
         <BarraTopo papel={usuario.papel} tema={tema} />
-        <main className="mx-auto w-full min-w-0 max-w-[1400px] flex-1 px-4 py-5 md:px-8 md:py-7">{children}</main>
+        <main className="mx-auto w-full min-w-0 max-w-[1400px] flex-1 px-4 py-5 md:px-8 md:py-7">
+          {children}
+        </main>
       </SidebarInset>
       <BuscaGlobal />
     </SidebarProvider>

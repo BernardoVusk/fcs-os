@@ -9,7 +9,9 @@ test("senha errada mostra erro e senha certa entra", async ({ page }) => {
   await page.getByLabel("E-mail").fill(CREDENCIAIS.email);
   await page.getByLabel("Senha").fill("senha-errada-123");
   await page.getByRole("button", { name: "Entrar" }).click();
-  await expect(page.getByRole("alert").filter({ hasText: "E-mail ou senha incorretos" })).toBeVisible();
+  await expect(
+    page.getByRole("alert").filter({ hasText: "E-mail ou senha incorretos" }),
+  ).toBeVisible();
   await entrar(page);
 });
 

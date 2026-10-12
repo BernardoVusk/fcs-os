@@ -17,6 +17,9 @@ test("tema claro renderiza e gera capturas", async ({ page }) => {
       await page.getByRole("heading", { level: 1 }).waitFor();
     }
     const nome = rota === "/" ? "inicio" : rota.replace(/\//g, "_").replace(/^_/, "");
-    await page.screenshot({ path: `testes/relatorios/capturas/claro-1440-${nome}.png`, fullPage: true });
+    await page.screenshot({
+      path: `testes/relatorios/capturas/claro-1440-${nome}.png`,
+      fullPage: true,
+    });
   }
 });

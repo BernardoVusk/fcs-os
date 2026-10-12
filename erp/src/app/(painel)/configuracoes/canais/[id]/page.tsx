@@ -10,7 +10,14 @@ import { FormTaxas } from "@/componentes/configuracoes/FormTaxas";
 import { DialogoNovo } from "@/componentes/painel/DialogoNovo";
 import { BotaoAcao } from "@/componentes/painel/BotaoAcao";
 import { EstadoVazio } from "@/componentes/painel/EstadoVazio";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/componentes/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/componentes/ui/table";
 
 export default async function PaginaCanal({ params }: { params: Promise<{ id: string }> }) {
   const usuario = await exigirLeitura("configuracoes");
@@ -26,7 +33,11 @@ export default async function PaginaCanal({ params }: { params: Promise<{ id: st
     <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)]">
       <section className="space-y-4 rounded-2xl bg-card p-5 shadow-painel">
         <h1 className="text-[28px] leading-tight font-semibold tracking-tight">{canal.nome}</h1>
-        {editar ? <FormCanal canal={canal} /> : <p className="text-sm text-texto-2">Somente leitura.</p>}
+        {editar ? (
+          <FormCanal canal={canal} />
+        ) : (
+          <p className="text-sm text-texto-2">Somente leitura.</p>
+        )}
       </section>
       <section className="space-y-3">
         <div className="flex items-center justify-between">
@@ -66,14 +77,17 @@ export default async function PaginaCanal({ params }: { params: Promise<{ id: st
                     <TableCell>{formatarPercentual(t.taxa_pagamento_pct)}</TableCell>
                     <TableCell>{formatarPercentual(t.ads_pct_padrao)}</TableCell>
                     <TableCell>{valorOuVazio(t.frete_subsidio_padrao)}</TableCell>
-                    <TableCell>{t.dias_repasse == null ? "Não configurado" : `${t.dias_repasse} dias`}</TableCell>
+                    <TableCell>
+                      {t.dias_repasse == null ? "Não configurado" : `${t.dias_repasse} dias`}
+                    </TableCell>
                     {editar && (
                       <TableCell className="text-right">
                         <BotaoAcao
                           acao={excluirTaxas.bind(null, t.id)}
                           confirmar={{
                             titulo: "Remover esta vigência?",
-                            descricao: "Cálculos salvos que a usaram continuam com o snapshot próprio.",
+                            descricao:
+                              "Cálculos salvos que a usaram continuam com o snapshot próprio.",
                           }}
                         >
                           Remover

@@ -10,8 +10,21 @@ import { erroPt } from "@/lib/erros-pt";
 import { Button } from "@/componentes/ui/button";
 import { Input } from "@/componentes/ui/input";
 import { Badge } from "@/componentes/ui/badge";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/componentes/ui/dialog";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/componentes/ui/table";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/componentes/ui/dialog";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/componentes/ui/table";
 import { Campo } from "@/componentes/painel/Campo";
 import { CampoErro } from "@/componentes/painel/CampoErro";
 import { SelectNativo } from "@/componentes/painel/SelectNativo";
@@ -29,15 +42,24 @@ export type TokenLista = {
   criado_em: string;
 };
 
-function situacao(t: TokenLista): { rotulo: string; variante: "default" | "secondary" | "outline" } {
+function situacao(t: TokenLista): {
+  rotulo: string;
+  variante: "default" | "secondary" | "outline";
+} {
   if (t.revogado_em) return { rotulo: "Revogado", variante: "secondary" };
-  if (t.expira_em && new Date(t.expira_em) < new Date()) return { rotulo: "Expirado", variante: "secondary" };
+  if (t.expira_em && new Date(t.expira_em) < new Date())
+    return { rotulo: "Expirado", variante: "secondary" };
   return { rotulo: "Ativo", variante: "default" };
 }
 
 export function TabelaTokens({ tokens }: { tokens: TokenLista[] }) {
   if (tokens.length === 0) {
-    return <EstadoVazio titulo="Nenhum token criado" descricao="Crie um token para ligar o Claude Code à base de conhecimento." />;
+    return (
+      <EstadoVazio
+        titulo="Nenhum token criado"
+        descricao="Crie um token para ligar o Claude Code à base de conhecimento."
+      />
+    );
   }
   return (
     <div className="overflow-x-auto rounded-2xl bg-card shadow-painel">
@@ -61,10 +83,16 @@ export function TabelaTokens({ tokens }: { tokens: TokenLista[] }) {
               <TableRow key={t.id} className="h-11">
                 <TableCell className="pl-5 font-medium">{t.nome}</TableCell>
                 <TableCell className="font-mono text-xs">{t.prefixo}…</TableCell>
-                <TableCell className="max-w-64 text-xs text-texto-2">{t.escopos.join(", ")}</TableCell>
+                <TableCell className="max-w-64 text-xs text-texto-2">
+                  {t.escopos.join(", ")}
+                </TableCell>
                 <TableCell className="numeros text-xs">{formatarDataHora(t.criado_em)}</TableCell>
-                <TableCell className="numeros text-xs">{t.ultimo_uso_em ? formatarDataHora(t.ultimo_uso_em) : "Nunca"}</TableCell>
-                <TableCell className="numeros text-xs">{t.expira_em ? formatarDataHora(t.expira_em) : "Sem validade"}</TableCell>
+                <TableCell className="numeros text-xs">
+                  {t.ultimo_uso_em ? formatarDataHora(t.ultimo_uso_em) : "Nunca"}
+                </TableCell>
+                <TableCell className="numeros text-xs">
+                  {t.expira_em ? formatarDataHora(t.expira_em) : "Sem validade"}
+                </TableCell>
                 <TableCell>
                   <Badge variant={s.variante}>{s.rotulo}</Badge>
                 </TableCell>
@@ -72,7 +100,11 @@ export function TabelaTokens({ tokens }: { tokens: TokenLista[] }) {
                   {!t.revogado_em && (
                     <BotaoAcao
                       acao={() => revogarToken(t.id)}
-                      confirmar={{ titulo: `Revogar ${t.nome}?`, descricao: "Qualquer cliente que use este token perde o acesso na próxima chamada." }}
+                      confirmar={{
+                        titulo: `Revogar ${t.nome}?`,
+                        descricao:
+                          "Qualquer cliente que use este token perde o acesso na próxima chamada.",
+                      }}
                     >
                       Revogar
                     </BotaoAcao>
@@ -124,10 +156,16 @@ export function NovoToken() {
         {token ? (
           <div className="space-y-4 text-sm">
             <p className="text-texto-2">
-              Copie agora. Por segurança o token não aparece de novo; se perder, revogue e crie outro.
+              Copie agora. Por segurança o token não aparece de novo; se perder, revogue e crie
+              outro.
             </p>
             <div className="flex gap-2">
-              <Input readOnly value={token} className="font-mono text-xs" onFocus={(e) => e.currentTarget.select()} />
+              <Input
+                readOnly
+                value={token}
+                className="font-mono text-xs"
+                onFocus={(e) => e.currentTarget.select()}
+              />
               <Button type="button" variant="secondary" onClick={copiar} aria-label="Copiar token">
                 {copiado ? <Check className="size-4" /> : <Copy className="size-4" />}
               </Button>
@@ -137,7 +175,8 @@ export function NovoToken() {
               <p>setx FCS_ERP_MCP_TOKEN &quot;{token.slice(0, 8)}…&quot;</p>
               <p>setx FCS_ERP_URL &quot;http://localhost:3000&quot;</p>
               <p className="mt-2 font-sans text-texto">
-                O arquivo <code>.mcp.json</code> da raiz já aponta para essas variáveis. Abra uma sessão nova do Claude Code e aprove o servidor fcs-erp.
+                O arquivo <code>.mcp.json</code> da raiz já aponta para essas variáveis. Abra uma
+                sessão nova do Claude Code e aprove o servidor fcs-erp.
               </p>
             </div>
             <Button type="button" onClick={() => fechar(false)} className="w-full">
@@ -163,14 +202,25 @@ export function NovoToken() {
               });
             }}
           >
-            <Campo rotulo="Nome" nome="nome" erro={erros.nome} dica="Para você saber de onde é: notebook, VS Code, servidor">
+            <Campo
+              rotulo="Nome"
+              nome="nome"
+              erro={erros.nome}
+              dica="Para você saber de onde é: notebook, VS Code, servidor"
+            >
               <Input id="nome" name="nome" required maxLength={80} />
             </Campo>
             <fieldset className="space-y-2">
               <legend className="text-sm font-medium">Escopos</legend>
               {ESCOPOS.map((e) => (
                 <label key={e} className="flex items-start gap-2 text-sm">
-                  <input type="checkbox" name="escopos" value={e} defaultChecked={e.startsWith("conhecimento")} className="mt-1 size-4 accent-acao" />
+                  <input
+                    type="checkbox"
+                    name="escopos"
+                    value={e}
+                    defaultChecked={e.startsWith("conhecimento")}
+                    className="mt-1 size-4 accent-acao"
+                  />
                   <span>
                     <span className="font-mono text-xs">{e}</span>
                     <span className="block text-texto-2">{ESCOPO_ROTULO[e]}</span>

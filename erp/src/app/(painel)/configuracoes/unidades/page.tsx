@@ -7,7 +7,11 @@ import { DialogoNovo } from "@/componentes/painel/DialogoNovo";
 
 export const metadata = { title: "Unidades" };
 
-export default async function PaginaUnidades({ searchParams }: { searchParams: Promise<{ destaque?: string }> }) {
+export default async function PaginaUnidades({
+  searchParams,
+}: {
+  searchParams: Promise<{ destaque?: string }>;
+}) {
   const usuario = await exigirLeitura("configuracoes");
   const { destaque } = await searchParams;
   const unidades = await listarUnidades();
@@ -19,7 +23,8 @@ export default async function PaginaUnidades({ searchParams }: { searchParams: P
         <div>
           <h1 className="text-[28px] leading-tight font-semibold tracking-tight">Unidades</h1>
           <p className="text-sm text-texto-2">
-            Toda quantidade no sistema carrega uma unidade; o fator converte para a base (kg para g, h para min).
+            Toda quantidade no sistema carrega uma unidade; o fator converte para a base (kg para g,
+            h para min).
           </p>
         </div>
         {editar && (

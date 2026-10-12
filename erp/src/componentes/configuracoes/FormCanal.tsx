@@ -36,12 +36,24 @@ export function FormCanal({ canal }: { canal?: Canal }) {
       </Campo>
       {canal && (
         <label className="flex items-center gap-2 text-sm">
-          <input type="checkbox" name="ativo" value="sim" defaultChecked={canal.ativo} className="size-4 accent-acao" />
+          <input
+            type="checkbox"
+            name="ativo"
+            value="sim"
+            defaultChecked={canal.ativo}
+            className="size-4 accent-acao"
+          />
           Canal ativo
         </label>
       )}
       <Campo rotulo="Observações" nome="observacoes" erro={estado.erros.observacoes}>
-        <Textarea id="observacoes" name="observacoes" defaultValue={canal?.observacoes ?? ""} rows={3} maxLength={2000} />
+        <Textarea
+          id="observacoes"
+          name="observacoes"
+          defaultValue={canal?.observacoes ?? ""}
+          rows={3}
+          maxLength={2000}
+        />
       </Campo>
       <CampoErro chave={estado.erros._form} />
       <Button type="submit" disabled={pendente}>

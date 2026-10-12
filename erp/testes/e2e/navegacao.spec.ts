@@ -7,7 +7,9 @@ test("sidebar recolhe, breadcrumb acompanha e tema persiste", async ({ page }) =
   await entrar(page);
   await page.getByRole("link", { name: "Canais de venda" }).click();
   await expect(page.getByRole("heading", { name: "Canais de venda" })).toBeVisible();
-  await expect(page.getByRole("navigation", { name: "breadcrumb" })).toContainText("Canais de venda");
+  await expect(page.getByRole("navigation", { name: "breadcrumb" })).toContainText(
+    "Canais de venda",
+  );
   await page.getByRole("button", { name: "Abrir ou recolher o menu" }).click();
   await expect(page.locator("[data-slot='sidebar'][data-state='collapsed']")).toBeVisible();
   await page.getByRole("button", { name: "Usar tema claro" }).click();

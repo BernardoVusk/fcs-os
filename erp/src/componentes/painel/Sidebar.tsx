@@ -61,7 +61,9 @@ export function SidebarPainel({
       <SidebarContent className="gap-1">
         {grupos.map((grupo) => (
           <SidebarGroup key={grupo.rotulo} className="py-1">
-            <SidebarGroupLabel className="h-7 px-2.5 text-xs font-medium text-texto-3">{grupo.rotulo}</SidebarGroupLabel>
+            <SidebarGroupLabel className="h-7 px-2.5 text-xs font-medium text-texto-3">
+              {grupo.rotulo}
+            </SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu className="gap-0.5">
                 {grupo.itens.map((item) => {
@@ -108,7 +110,9 @@ export function SidebarPainel({
                   </span>
                   <span className="flex min-w-0 flex-1 flex-col text-left leading-tight">
                     <span className="truncate text-sm font-medium">{usuario.nome}</span>
-                    <span className="truncate text-xs text-texto-3">{PAPEL_ROTULO[usuario.papel]}</span>
+                    <span className="truncate text-xs text-texto-3">
+                      {PAPEL_ROTULO[usuario.papel]}
+                    </span>
                   </span>
                   <ChevronsUpDown className="size-4 text-texto-3" />
                 </SidebarMenuButton>

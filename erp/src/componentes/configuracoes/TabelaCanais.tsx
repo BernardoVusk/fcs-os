@@ -14,7 +14,10 @@ const colunas: ColumnDef<CanalVigente, unknown>[] = [
     accessorKey: "nome",
     header: "Canal",
     cell: ({ row }) => (
-      <Link href={`/configuracoes/canais/${row.original.id}`} className="font-medium text-acao hover:underline">
+      <Link
+        href={`/configuracoes/canais/${row.original.id}`}
+        className="font-medium text-acao hover:underline"
+      >
         {row.original.nome}
       </Link>
     ),
@@ -27,13 +30,17 @@ const colunas: ColumnDef<CanalVigente, unknown>[] = [
   {
     accessorKey: "comissao_pct",
     header: "Comissão",
-    cell: ({ getValue }) => <span className="numeros">{formatarPercentual(getValue() as number | null)}</span>,
+    cell: ({ getValue }) => (
+      <span className="numeros">{formatarPercentual(getValue() as number | null)}</span>
+    ),
   },
   {
     accessorKey: "taxa_fixa_item",
     header: "Taxa fixa",
     cell: ({ getValue }) => (
-      <span className="numeros">{getValue() == null ? "Não configurado" : formatarMoeda(getValue() as number)}</span>
+      <span className="numeros">
+        {getValue() == null ? "Não configurado" : formatarMoeda(getValue() as number)}
+      </span>
     ),
   },
   {
@@ -44,7 +51,11 @@ const colunas: ColumnDef<CanalVigente, unknown>[] = [
   {
     accessorKey: "ativo",
     header: "Situação",
-    cell: ({ getValue }) => <Badge variant={getValue() ? "default" : "secondary"}>{getValue() ? "Ativo" : "Inativo"}</Badge>,
+    cell: ({ getValue }) => (
+      <Badge variant={getValue() ? "default" : "secondary"}>
+        {getValue() ? "Ativo" : "Inativo"}
+      </Badge>
+    ),
   },
 ];
 
@@ -54,7 +65,10 @@ export function TabelaCanais({ canais }: { canais: CanalVigente[] }) {
       colunas={colunas}
       dados={canais}
       placeholderFiltro="Filtrar canais"
-      vazio={{ titulo: "Nenhum canal cadastrado", descricao: "Cadastre os marketplaces e canais onde você vende." }}
+      vazio={{
+        titulo: "Nenhum canal cadastrado",
+        descricao: "Cadastre os marketplaces e canais onde você vende.",
+      }}
       idLinha={(c) => c.id ?? ""}
     />
   );

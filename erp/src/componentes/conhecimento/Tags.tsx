@@ -15,7 +15,10 @@ export function Tags({ tags, link = true }: { tags: string[]; link?: boolean }) 
             </Link>
           </li>
         ) : (
-          <li key={tag} className="inline-flex h-6 items-center rounded-full bg-superficie-2 px-2.5 text-xs text-texto-2">
+          <li
+            key={tag}
+            className="inline-flex h-6 items-center rounded-full bg-superficie-2 px-2.5 text-xs text-texto-2"
+          >
             {tag}
           </li>
         ),

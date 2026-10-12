@@ -41,7 +41,11 @@ async function ferramenta(nome, argumentos) {
   return JSON.parse(conteudo);
 }
 
-await chamar("initialize", { protocolVersion: "2025-06-18", capabilities: {}, clientInfo: { name: "kb-registrar", version: "1" } });
+await chamar("initialize", {
+  protocolVersion: "2025-06-18",
+  capabilities: {},
+  clientInfo: { name: "kb-registrar", version: "1" },
+});
 for (const registro of registros) {
   const existentes = await ferramenta("kb_buscar", { termo: registro.titulo, limite: 5 });
   if (existentes.resultados.some((r) => r.titulo === registro.titulo)) {

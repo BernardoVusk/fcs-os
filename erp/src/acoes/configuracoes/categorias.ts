@@ -4,7 +4,13 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { exigirEscrita } from "@/lib/auth/sessao";
 import { clienteServidor } from "@/lib/supabase/servidor";
-import { campoInteiro, errosDoZod, lerCampos, type EstadoForm, type ResultadoAcao } from "@/lib/forms";
+import {
+  campoInteiro,
+  errosDoZod,
+  lerCampos,
+  type EstadoForm,
+  type ResultadoAcao,
+} from "@/lib/forms";
 
 const ESCOPOS = ["produto", "insumo", "financeiro", "conhecimento", "planejamento"] as const;
 
@@ -14,7 +20,10 @@ const schema = z.object({
   pai_id: z.preprocess((v) => (v === "" ? null : v), z.uuid().nullable()),
   cor: z.preprocess(
     (v) => (v === "" ? null : v),
-    z.string().regex(/^#[0-9A-Fa-f]{6}$/, { error: "cor_invalida" }).nullable(),
+    z
+      .string()
+      .regex(/^#[0-9A-Fa-f]{6}$/, { error: "cor_invalida" })
+      .nullable(),
   ),
   ordem: campoInteiro,
 });

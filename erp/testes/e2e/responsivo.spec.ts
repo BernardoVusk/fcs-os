@@ -10,10 +10,15 @@ for (const largura of [1440, 1024, 390]) {
     for (const rota of ["/", "/configuracoes/canais", "/configuracoes/categorias"]) {
       await page.goto(rota);
       await page.getByRole("heading", { level: 1 }).waitFor();
-      const estoura = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth + 1);
+      const estoura = await page.evaluate(
+        () => document.documentElement.scrollWidth > window.innerWidth + 1,
+      );
       expect(estoura, `${rota} em ${largura}px`).toBe(false);
       const nome = rota === "/" ? "inicio" : rota.replace(/\//g, "_").replace(/^_/, "");
-      await page.screenshot({ path: `testes/relatorios/capturas/${largura}-${nome}.png`, fullPage: true });
+      await page.screenshot({
+        path: `testes/relatorios/capturas/${largura}-${nome}.png`,
+        fullPage: true,
+      });
     }
   });
 }

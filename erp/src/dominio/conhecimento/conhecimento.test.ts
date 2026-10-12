@@ -15,11 +15,19 @@ describe("slug", () => {
 describe("segredos", () => {
   it("acha chaves e variáveis sensíveis", () => {
     expect(contemSegredo("use a chave sk-abc123def456ghi789jkl").achou).toBe(true);
-    expect(contemSegredo("SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOi")).toEqual({ achou: true, padrao: "variavel_sensivel" });
-    expect(contemSegredo("token fcs_" + "x".repeat(24))).toEqual({ achou: true, padrao: "token_fcs" });
+    expect(contemSegredo("SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOi")).toEqual({
+      achou: true,
+      padrao: "variavel_sensivel",
+    });
+    expect(contemSegredo("token fcs_" + "x".repeat(24))).toEqual({
+      achou: true,
+      padrao: "token_fcs",
+    });
   });
   it("deixa texto técnico comum passar", () => {
-    expect(contemSegredo("o bico de 0,4 mm entope com PETG úmido; secar 6 h a 65 °C").achou).toBe(false);
+    expect(contemSegredo("o bico de 0,4 mm entope com PETG úmido; secar 6 h a 65 °C").achou).toBe(
+      false,
+    );
     expect(contemSegredo(null).achou).toBe(false);
   });
 });
