@@ -221,6 +221,222 @@ export type Database = {
           },
         ]
       }
+      conhecimentos: {
+        Row: {
+          atualizado_em: string
+          busca: unknown
+          categoria_id: string | null
+          confidencialidade: string
+          conteudo: string
+          criado_em: string
+          criado_por: string | null
+          estrutura: Json | null
+          id: string
+          modulo: string | null
+          origem: string
+          projeto: string | null
+          referencia: string | null
+          resumo: string | null
+          slug: string
+          status: string
+          tags: string[]
+          tipo: string
+          titulo: string
+          validado: boolean
+          validado_em: string | null
+          validado_por: string | null
+          versao: number
+        }
+        Insert: {
+          atualizado_em?: string
+          busca?: unknown
+          categoria_id?: string | null
+          confidencialidade?: string
+          conteudo: string
+          criado_em?: string
+          criado_por?: string | null
+          estrutura?: Json | null
+          id?: string
+          modulo?: string | null
+          origem?: string
+          projeto?: string | null
+          referencia?: string | null
+          resumo?: string | null
+          slug: string
+          status?: string
+          tags?: string[]
+          tipo: string
+          titulo: string
+          validado?: boolean
+          validado_em?: string | null
+          validado_por?: string | null
+          versao?: number
+        }
+        Update: {
+          atualizado_em?: string
+          busca?: unknown
+          categoria_id?: string | null
+          confidencialidade?: string
+          conteudo?: string
+          criado_em?: string
+          criado_por?: string | null
+          estrutura?: Json | null
+          id?: string
+          modulo?: string | null
+          origem?: string
+          projeto?: string | null
+          referencia?: string | null
+          resumo?: string | null
+          slug?: string
+          status?: string
+          tags?: string[]
+          tipo?: string
+          titulo?: string
+          validado?: boolean
+          validado_em?: string | null
+          validado_por?: string | null
+          versao?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "conhecimentos_categoria_id_fkey"
+            columns: ["categoria_id"]
+            isOneToOne: false
+            referencedRelation: "categorias"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      conhecimentos_anexos: {
+        Row: {
+          conhecimento_id: string
+          criado_em: string
+          criado_por: string | null
+          id: string
+          nome: string
+          storage_path: string
+          tamanho: number | null
+          tipo: string | null
+        }
+        Insert: {
+          conhecimento_id: string
+          criado_em?: string
+          criado_por?: string | null
+          id?: string
+          nome: string
+          storage_path: string
+          tamanho?: number | null
+          tipo?: string | null
+        }
+        Update: {
+          conhecimento_id?: string
+          criado_em?: string
+          criado_por?: string | null
+          id?: string
+          nome?: string
+          storage_path?: string
+          tamanho?: number | null
+          tipo?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "conhecimentos_anexos_conhecimento_id_fkey"
+            columns: ["conhecimento_id"]
+            isOneToOne: false
+            referencedRelation: "conhecimentos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      conhecimentos_relacoes: {
+        Row: {
+          criado_em: string
+          de_id: string
+          para_id: string
+          tipo: string
+        }
+        Insert: {
+          criado_em?: string
+          de_id: string
+          para_id: string
+          tipo: string
+        }
+        Update: {
+          criado_em?: string
+          de_id?: string
+          para_id?: string
+          tipo?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "conhecimentos_relacoes_de_id_fkey"
+            columns: ["de_id"]
+            isOneToOne: false
+            referencedRelation: "conhecimentos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "conhecimentos_relacoes_para_id_fkey"
+            columns: ["para_id"]
+            isOneToOne: false
+            referencedRelation: "conhecimentos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      conhecimentos_versoes: {
+        Row: {
+          alterado_por: string | null
+          conhecimento_id: string
+          conteudo: string
+          em: string
+          estrutura: Json | null
+          id: number
+          motivo: string | null
+          origem: string | null
+          resumo: string | null
+          tags: string[]
+          titulo: string
+          versao: number
+        }
+        Insert: {
+          alterado_por?: string | null
+          conhecimento_id: string
+          conteudo: string
+          em?: string
+          estrutura?: Json | null
+          id?: never
+          motivo?: string | null
+          origem?: string | null
+          resumo?: string | null
+          tags?: string[]
+          titulo: string
+          versao: number
+        }
+        Update: {
+          alterado_por?: string | null
+          conhecimento_id?: string
+          conteudo?: string
+          em?: string
+          estrutura?: Json | null
+          id?: never
+          motivo?: string | null
+          origem?: string | null
+          resumo?: string | null
+          tags?: string[]
+          titulo?: string
+          versao?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "conhecimentos_versoes_conhecimento_id_fkey"
+            columns: ["conhecimento_id"]
+            isOneToOne: false
+            referencedRelation: "conhecimentos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       migracoes_aplicadas: {
         Row: {
           aplicada_em: string
@@ -373,6 +589,48 @@ export type Database = {
           tipo: string
           titulo: string
         }[]
+      }
+      listar_conhecimentos: {
+        Args: {
+          p_categoria?: string
+          p_limite?: number
+          p_modulo?: string
+          p_status?: string
+          p_tag?: string
+          p_termo?: string
+          p_tipo?: string
+        }
+        Returns: {
+          atualizado_em: string
+          busca: unknown
+          categoria_id: string | null
+          confidencialidade: string
+          conteudo: string
+          criado_em: string
+          criado_por: string | null
+          estrutura: Json | null
+          id: string
+          modulo: string | null
+          origem: string
+          projeto: string | null
+          referencia: string | null
+          resumo: string | null
+          slug: string
+          status: string
+          tags: string[]
+          tipo: string
+          titulo: string
+          validado: boolean
+          validado_em: string | null
+          validado_por: string | null
+          versao: number
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "conhecimentos"
+          isOneToOne: false
+          isSetofReturn: true
+        }
       }
     }
     Enums: {

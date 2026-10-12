@@ -2,7 +2,7 @@ import { podeLer, type Area, type Papel } from "@/lib/auth/papeis";
 import type { NomeIcone } from "./Icone";
 
 /** Fase mais recente entregue. Itens de fases futuras ficam ocultos. */
-export const FASE_ATUAL = 1;
+export const FASE_ATUAL = 2;
 
 export type ItemNav = { rota: string; rotulo: string; icone: NomeIcone; area: Area; fase: number; contador?: "alertas" };
 export type GrupoNav = { rotulo: string; itens: ItemNav[] };

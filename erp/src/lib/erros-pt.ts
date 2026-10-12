@@ -19,6 +19,15 @@ const ERROS: Record<string, string> = {
   nao_encontrado: "Registro não encontrado.",
   em_uso: "Registro em uso, não pode ser removido.",
   erro_inesperado: "Algo deu errado. Tente de novo.",
+  contem_segredo: "O texto parece conter uma chave, token ou senha. Remova antes de salvar.",
+  titulo_curto: "Título com pelo menos 3 caracteres.",
+  conteudo_obrigatorio: "Escreva o conteúdo.",
+  conteudo_longo: "Conteúdo acima de 60 mil caracteres.",
+  arquivo_obrigatorio: "Escolha um arquivo.",
+  arquivo_grande: "Arquivo acima de 10 MB.",
+  arquivo_tipo: "Tipo de arquivo não aceito (imagem, PDF, texto ou markdown).",
+  relacao_repetida: "Essa relação já existe.",
+  mesmo_registro: "Um registro não pode se relacionar com ele mesmo.",
 };
 
 export function erroPt(chave: string | undefined): string | undefined {

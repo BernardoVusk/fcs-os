@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "fcs-erp": {
+      "type": "http",
+      "url": "${FCS_ERP_URL:-http://localhost:3000}/api/mcp",
+      "headers": {
+        "Authorization": "Bearer ${FCS_ERP_MCP_TOKEN}"
+      }
+    }
+  }
+}

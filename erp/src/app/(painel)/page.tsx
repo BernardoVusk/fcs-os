@@ -52,6 +52,7 @@ export default async function PaginaInicio({ searchParams }: { searchParams: Pro
           rodape={<span className="text-xs text-texto-3">Central de alertas chega na Fase 9</span>}
         />
         <CartaoIndicador rotulo="Canais com taxas" valor={`${resumo.canaisComTaxas} de ${resumo.canaisTotal}`} link={{ href: "/configuracoes/canais", rotulo: "Configurar canais" }} />
+        <CartaoIndicador rotulo="Conhecimentos ativos" valor={String(resumo.conhecimentosAtivos)} link={{ href: "/conhecimento", rotulo: "Abrir a base" }} />
         {FUTUROS.map((f) => (
           <CartaoIndicador key={f.rotulo} rotulo={f.rotulo} valor={null} dica={`Disponível na Fase ${f.fase}`} />
         ))}

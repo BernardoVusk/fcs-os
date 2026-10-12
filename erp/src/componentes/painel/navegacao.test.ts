@@ -5,6 +5,7 @@ describe("navegacao", () => {
   it("na fase 1 o dono vê Início e as quatro configurações", () => {
     const grupos = gruposVisiveis("dono", 1);
     expect(grupos.map((g) => g.rotulo)).toEqual(["Geral", "Configurações"]);
+    expect(gruposVisiveis("dono", 2).map((g) => g.rotulo)).toEqual(["Geral", "Conhecimento", "Configurações"]);
     expect(grupos[1].itens.map((i) => i.rotulo)).toEqual(["Canais de venda", "Categorias", "Unidades", "Usuários"]);
   });
   it("leitura não vê Usuários", () => {

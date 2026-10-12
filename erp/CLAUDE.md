@@ -1,6 +1,6 @@
 # FCS ERP: instruções permanentes
 
-Aplicação Next.js 16 do sistema de gestão da FCS 3D STUDIO. Spec aprovada: `docs/superpowers/specs/2026-10-11-erp-fcs-design.md`. Plano da fase em andamento em `docs/superpowers/plans/`. Antes de propor mudança de arquitetura, ler `docs/arquitetura.md` e, a partir da Fase 2, consultar a base de conhecimento (`kb_decisoes`, `kb_buscar`).
+Aplicação Next.js 16 do sistema de gestão da FCS 3D STUDIO. Spec aprovada: `docs/superpowers/specs/2026-10-11-erp-fcs-design.md`. Plano da fase em andamento em `docs/superpowers/plans/`. Antes de propor mudança de arquitetura, ler `docs/arquitetura.md` e consultar a base de conhecimento pelo MCP `fcs-erp` (`kb_decisoes` com o módulo e `kb_buscar` com o tema) ou pela skill `/kb-buscar`. Ao concluir tarefa que gerou decisão ou solução não trivial, perguntar se salva com `/kb-salvar` ou `/kb-decisao`. Detalhes em `docs/integracao-claude-code.md`.
 
 ## Comandos
 
@@ -29,7 +29,7 @@ Aplicação Next.js 16 do sistema de gestão da FCS 3D STUDIO. Spec aprovada: `d
 
 ## Áreas críticas
 
-Permissões (`lib/auth/papeis.ts` e policies), auditoria (`app.auditar`), motor de custos (Fase 4), estoque (Fase 3), lançamentos (Fase 7). Mudança nessas áreas exige teste de integração novo.
+Permissões (`lib/auth/papeis.ts` e policies), auditoria (`app.auditar`), servidor MCP (`src/mcp/`, escopos e filtro de segredos), motor de custos (Fase 4), estoque (Fase 3), lançamentos (Fase 7). Mudança nessas áreas exige teste de integração novo.
 
 ## Antes de dizer que terminou
 

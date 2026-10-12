@@ -1,0 +1,76 @@
+[
+  {
+    "titulo": "ERP: stack, estrutura de pastas e banco único",
+    "tipo": "decisao",
+    "categoria": "Desenvolvimento de software",
+    "modulo": "arquitetura",
+    "tags": ["erp", "next", "supabase", "arquitetura"],
+    "referencia": "erp/docs/superpowers/specs/2026-10-11-erp-fcs-design.md, seções 3 e 9",
+    "resumo": "O ERP é um app Next.js 16 em erp/ dentro do repositório Fcs OS, com Supabase (projeto fcs-os) como banco único e migrações na raiz em supabase/migrations.",
+    "estrutura": {
+      "contexto": "A operação já tinha o workspace Fcs OS (memória, skills, extensão FCS SPY) e um projeto Supabase vazio. Era preciso decidir onde o sistema de gestão mora e como fala com o banco.",
+      "alternativas": ["Repositório separado para o ERP", "Pasta erp/ dentro do Fcs OS", "Service role em toda a aplicação, como no painel FX"],
+      "decisao": "Pasta erp/ no mesmo repositório; Next.js 16 com server actions; Supabase com RLS real por papel (dono, operador, leitura); regras puras em src/dominio; migrações numeradas na raiz aplicadas pela Management API em dev e teste.",
+      "consequencias": "Um só repositório e um só banco para skills, extensão e ERP. RLS protege também o acesso do MCP. Cada migração precisa ser aplicada nos dois projetos (fcs-os e fcs-os-teste) e seguida de npm run tipos."
+    },
+    "conteudo": "## Decisão\n\nO ERP vive em `erp/` dentro do repositório Fcs OS. Stack: Next.js 16 (App Router, server actions), React 19, TypeScript, Tailwind 4, shadcn (estilo radix-nova), Supabase (Postgres 17, Auth, Storage).\n\n## Regras que decorrem\n\n- Camadas: app (composição), componentes, acoes (server actions com exigirEscrita + zod), dados (server-only), dominio (puro, testado), lib.\n- RLS em toda tabela; cadastro tem trigger app.auditar().\n- Migrações em `supabase/migrations/NNNN_nome.sql`, aplicadas com `npm run migrar -- --alvo dev` e `--alvo teste`, depois `npm run tipos`.\n- Banco de teste é um segundo projeto Supabase Free (`fcs-os-teste`), porque a máquina não tem Docker.\n\nSpec completa: `erp/docs/superpowers/specs/2026-10-11-erp-fcs-design.md`."
+  },
+  {
+    "titulo": "Claude Code fala com o ERP por MCP HTTP com token próprio",
+    "tipo": "decisao",
+    "categoria": "Desenvolvimento de software",
+    "modulo": "conhecimento",
+    "tags": ["mcp", "claude code", "integracao", "token"],
+    "referencia": "erp/docs/integracao-claude-code.md; spec seção 6",
+    "resumo": "A integração é um endpoint MCP dentro da própria aplicação (/api/mcp), autenticado por token com escopos; captura de conhecimento só por comando, nunca lendo histórico.",
+    "estrutura": {
+      "contexto": "Era preciso escolher como o Claude Code consulta e grava conhecimento no ERP: servidor MCP local, HTTP, hooks, extensão do VS Code ou leitura de transcript.",
+      "alternativas": ["Servidor MCP stdio local com credencial de banco", "Hooks capturando automaticamente", "Extensão do VS Code", "Leitura do transcript das conversas", "Endpoint MCP HTTP dentro do ERP"],
+      "decisao": "Endpoint MCP HTTP no próprio ERP (mcp-handler), token Bearer gerado em Configurações > Integrações com escopos e validade, skills kb-* no workspace, hook Stop apenas opcional e só sugere.",
+      "consequencias": "Nenhuma credencial de banco na máquina do desenvolvedor; auditoria registra origem mcp e o usuário do token; o servidor só toca conhecimentos*; a captura depende de o usuário pedir."
+    },
+    "conteudo": "## Como funciona\n\n1. O dono cria um token em Configurações > Integrações (ou `node ferramentas/criar-token.mjs`). O banco guarda só o hash SHA-256.\n2. `.mcp.json` na raiz do Fcs OS registra o servidor `fcs-erp` lendo `FCS_ERP_URL` e `FCS_ERP_MCP_TOKEN` do ambiente.\n3. O servidor (`erp/src/mcp/`) valida o token, confere escopo, limita a 60 chamadas por minuto, recusa segredos e grava com `x-origem: mcp` e `x-usuario-id`.\n4. Skills `/kb-buscar`, `/kb-salvar`, `/kb-decisao` e `/kb-procedimento` dão a experiência em linguagem natural; todas mostram prévia antes de gravar.\n\n## O que não faz\n\nNão lê transcript nem histórico, não executa SQL livre, não escreve fora da base de conhecimento."
+  },
+  {
+    "titulo": "Cache Components do Next 16 desligado no ERP",
+    "tipo": "decisao",
+    "categoria": "Desenvolvimento de software",
+    "modulo": "arquitetura",
+    "tags": ["next", "cache components", "sessao"],
+    "referencia": "erp/next.config.ts; erp/docs/arquitetura.md",
+    "resumo": "cacheComponents fica false porque toda página lê a sessão (cookies) e o banco a cada request, e o layout do painel lê a sessão no topo.",
+    "estrutura": {
+      "contexto": "O create-next-app 16 liga cacheComponents e partialPrefetching por padrão. Com isso, cada leitura de cookies() fora de Suspense vira erro de build e a sessão não pode ser lida no layout.",
+      "alternativas": ["Adotar Cache Components e envolver cada leitura de sessão em Suspense", "Desligar e usar o modelo anterior (páginas dinâmicas)"],
+      "decisao": "Desligar (cacheComponents: false). Todas as páginas são dinâmicas; o layout do painel lê a sessão e monta a sidebar por papel.",
+      "consequencias": "Menos complexidade agora; sem prerender parcial. Se um dia houver páginas públicas ou pesadas, reavaliar por rota."
+    },
+    "conteudo": "## Decisão\n\n`erp/next.config.ts` mantém `cacheComponents: false`. Motivo: o ERP é todo autenticado e dinâmico; a sessão é lida no layout `(painel)` para montar a navegação por papel. Cache Components exigiria Suspense em volta de cada leitura de cookies e mover a sessão para componentes filhos.\n\nRegistrado em `erp/docs/arquitetura.md` (ADR de 11/10/2026)."
+  },
+  {
+    "titulo": "Design do ERP segue as referências visuais salvas, sobre a paleta da marca",
+    "tipo": "decisao",
+    "categoria": "Decisões de negócio",
+    "modulo": "design",
+    "tags": ["design system", "referencias", "tema", "shadcn"],
+    "referencia": "erp/DESIGN.md; erp/docs/referencias-visuais/README.md",
+    "resumo": "O ERP usa superfícies em camadas com cantos de 16 a 24 px, controles em pílula e Inter em tudo, mantendo preto e ciano da marca; diverge de propósito do guia de marketing (raio 0 a 4 px, chanfros).",
+    "estrutura": {
+      "contexto": "O guia de marca (identidade/design-guide.md) é angular e sem sombra, feito para peças de marketing. As sete referências que o dono guardou para o ERP são arredondadas, em camadas e com controles em pílula.",
+      "alternativas": ["Aplicar o guia de marketing literalmente no ERP", "Seguir as referências com a paleta da marca", "Tema claro como padrão, igual às referências"],
+      "decisao": "Seguir as referências na forma (raio, camadas, pílulas, uma família tipográfica) e manter a paleta da marca (preto, ciano) com tema escuro padrão e claro equivalente.",
+      "consequencias": "Toda tela nova usa os componentes de src/componentes/painel e os tokens de globals.css. O guia de marketing continua valendo para carrossel e peças; o ERP tem DESIGN.md próprio."
+    },
+    "conteudo": "## Linguagem\n\n- Fundo fosco atrás, folha de conteúdo elevada (variante inset da sidebar), cartões com hairline no escuro e sombra suave no claro.\n- Sidebar com grupos, contadores em pílula e item ativo em bloco sólido ciano.\n- Busca, seletor de período, badges e botões em pílula.\n- Inter em tudo; Chakra Petch só no wordmark; JetBrains Mono em código e SKU.\n- Cores quentes só com significado (vencido, perda, inviável).\n\nTokens e componentes: `erp/docs/design-system.md`. Síntese das referências: `erp/DESIGN.md`."
+  },
+  {
+    "titulo": "Ligar o Claude Code à base de conhecimento do ERP",
+    "tipo": "procedimento",
+    "categoria": "Procedimentos operacionais",
+    "modulo": "conhecimento",
+    "tags": ["mcp", "claude code", "token", "setup"],
+    "referencia": "erp/docs/integracao-claude-code.md",
+    "resumo": "Criar o token em Configurações > Integrações, definir FCS_ERP_MCP_TOKEN e FCS_ERP_URL, abrir o Claude Code na pasta do Fcs OS e aprovar o servidor fcs-erp.",
+    "conteudo": "## Quando usar\n\nAo configurar uma máquina nova ou quando o token expirar ou for revogado.\n\n## Pré-requisitos\n\n- Conta de dono no ERP.\n- ERP rodando (`cd erp && npm run dev`) ou publicado.\n\n## Passos\n\n1. No ERP, abra Configurações > Integrações e clique em Novo token. Dê um nome (ex.: VS Code do notebook), marque os escopos de conhecimento e escolha a validade.\n2. Copie o token na hora: ele não aparece de novo.\n3. No terminal do Windows: `setx FCS_ERP_MCP_TOKEN \"fcs_...\"` e `setx FCS_ERP_URL \"http://localhost:3000\"`. Feche e abra o terminal.\n4. Abra o Claude Code na pasta do Fcs OS. Quando perguntar sobre o servidor `fcs-erp` do `.mcp.json`, aprove.\n5. Teste: `/kb-buscar petg`.\n\n## Como verificar\n\n`node erp/ferramentas/mcp-smoke.mjs petg` lista o servidor, as oito ferramentas e devolve resultados. Sem token, a rota responde 401.\n\n## Se der errado\n\n- 401: token errado, revogado ou expirado; crie outro.\n- \"Token sem o escopo\": crie um token com o escopo pedido.\n- Servidor não aparece no Claude Code: confira as variáveis com `echo %FCS_ERP_MCP_TOKEN%` e rode `claude mcp reset-project-choices` para aprovar de novo."
+  }
+]
