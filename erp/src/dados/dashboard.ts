@@ -6,6 +6,8 @@ import { contarAlertasAbertos } from "./alertas";
 import { contarConhecimentosAtivos } from "./conhecimento";
 import { consumoFilamentoNoPeriodo, contarAbaixoMinimo } from "./estoque/insumos";
 import { contarCalculos } from "./custos/calculos";
+import { contarOrdensAbertas } from "./producao/ordens";
+import { totalPecasProntas } from "./produtos/estoque-produtos";
 
 export type ResumoInicial = {
   alertasAbertos: number;
@@ -16,6 +18,8 @@ export type ResumoInicial = {
   /** Gramas consumidas no período; null quando não há filamento cadastrado. */
   consumoFilamentoG: number | null;
   calculosSalvos: number;
+  ordensAbertas: number;
+  pecasProntas: number;
 };
 
 export async function resumoInicial(periodo: Periodo): Promise<ResumoInicial> {
@@ -28,6 +32,8 @@ export async function resumoInicial(periodo: Periodo): Promise<ResumoInicial> {
     insumosAbaixoMinimo,
     consumoFilamentoG,
     calculosSalvos,
+    ordensAbertas,
+    pecasProntas,
   ] = await Promise.all([
     supabase.from("canais_venda_vigentes").select("id, comissao_pct").eq("ativo", true),
     contarAlertasAbertos(),
@@ -35,6 +41,8 @@ export async function resumoInicial(periodo: Periodo): Promise<ResumoInicial> {
     contarAbaixoMinimo(),
     consumoFilamentoNoPeriodo(inicio, fim),
     contarCalculos(),
+    contarOrdensAbertas(),
+    totalPecasProntas(),
   ]);
   const lista = canais ?? [];
   return {
@@ -43,6 +51,8 @@ export async function resumoInicial(periodo: Periodo): Promise<ResumoInicial> {
     insumosAbaixoMinimo,
     consumoFilamentoG,
     calculosSalvos,
+    ordensAbertas,
+    pecasProntas,
     canaisTotal: lista.length,
     canaisComTaxas: lista.filter((c) => c.comissao_pct !== null).length,
   };

@@ -207,6 +207,27 @@ export type Database = {
             referencedRelation: "parametros_custo_vigentes";
             referencedColumns: ["versao"];
           },
+          {
+            foreignKeyName: "calculos_custo_produto_fk";
+            columns: ["produto_id"];
+            isOneToOne: false;
+            referencedRelation: "estoque_produtos";
+            referencedColumns: ["produto_id"];
+          },
+          {
+            foreignKeyName: "calculos_custo_produto_fk";
+            columns: ["produto_id"];
+            isOneToOne: false;
+            referencedRelation: "produtos";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "calculos_custo_variacao_fk";
+            columns: ["variacao_id"];
+            isOneToOne: false;
+            referencedRelation: "produtos_variacoes";
+            referencedColumns: ["id"];
+          },
         ];
       };
       canais_venda: {
@@ -981,6 +1002,53 @@ export type Database = {
           },
         ];
       };
+      manutencoes: {
+        Row: {
+          criado_em: string;
+          custo: number;
+          data: string;
+          descricao: string;
+          horas_no_momento: number | null;
+          id: string;
+          impressora_id: string;
+          lancamento_id: string | null;
+          proxima_em_horas: number | null;
+          tipo: string;
+        };
+        Insert: {
+          criado_em?: string;
+          custo?: number;
+          data?: string;
+          descricao: string;
+          horas_no_momento?: number | null;
+          id?: string;
+          impressora_id: string;
+          lancamento_id?: string | null;
+          proxima_em_horas?: number | null;
+          tipo: string;
+        };
+        Update: {
+          criado_em?: string;
+          custo?: number;
+          data?: string;
+          descricao?: string;
+          horas_no_momento?: number | null;
+          id?: string;
+          impressora_id?: string;
+          lancamento_id?: string | null;
+          proxima_em_horas?: number | null;
+          tipo?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "manutencoes_impressora_id_fkey";
+            columns: ["impressora_id"];
+            isOneToOne: false;
+            referencedRelation: "impressoras";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       migracoes_aplicadas: {
         Row: {
           aplicada_em: string;
@@ -1066,6 +1134,283 @@ export type Database = {
           },
         ];
       };
+      movimentacoes_produto: {
+        Row: {
+          custo_unitario_momento: number | null;
+          em: string;
+          id: string;
+          motivo: string | null;
+          origem_id: string | null;
+          origem_tipo: string | null;
+          produto_id: string;
+          quantidade: number;
+          tipo: string;
+          usuario_id: string | null;
+          valor: number;
+          variacao_id: string | null;
+        };
+        Insert: {
+          custo_unitario_momento?: number | null;
+          em?: string;
+          id?: string;
+          motivo?: string | null;
+          origem_id?: string | null;
+          origem_tipo?: string | null;
+          produto_id: string;
+          quantidade: number;
+          tipo: string;
+          usuario_id?: string | null;
+          valor?: number;
+          variacao_id?: string | null;
+        };
+        Update: {
+          custo_unitario_momento?: number | null;
+          em?: string;
+          id?: string;
+          motivo?: string | null;
+          origem_id?: string | null;
+          origem_tipo?: string | null;
+          produto_id?: string;
+          quantidade?: number;
+          tipo?: string;
+          usuario_id?: string | null;
+          valor?: number;
+          variacao_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "movimentacoes_produto_produto_id_fkey";
+            columns: ["produto_id"];
+            isOneToOne: false;
+            referencedRelation: "estoque_produtos";
+            referencedColumns: ["produto_id"];
+          },
+          {
+            foreignKeyName: "movimentacoes_produto_produto_id_fkey";
+            columns: ["produto_id"];
+            isOneToOne: false;
+            referencedRelation: "produtos";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "movimentacoes_produto_variacao_id_fkey";
+            columns: ["variacao_id"];
+            isOneToOne: false;
+            referencedRelation: "produtos_variacoes";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      ordens_consumo: {
+        Row: {
+          criado_em: string;
+          custo_unitario: number | null;
+          id: string;
+          insumo_id: string;
+          lote_id: string | null;
+          movimentacoes: string[];
+          ordem_id: string;
+          quantidade_prevista: number | null;
+          quantidade_real: number | null;
+          valor: number | null;
+        };
+        Insert: {
+          criado_em?: string;
+          custo_unitario?: number | null;
+          id?: string;
+          insumo_id: string;
+          lote_id?: string | null;
+          movimentacoes?: string[];
+          ordem_id: string;
+          quantidade_prevista?: number | null;
+          quantidade_real?: number | null;
+          valor?: number | null;
+        };
+        Update: {
+          criado_em?: string;
+          custo_unitario?: number | null;
+          id?: string;
+          insumo_id?: string;
+          lote_id?: string | null;
+          movimentacoes?: string[];
+          ordem_id?: string;
+          quantidade_prevista?: number | null;
+          quantidade_real?: number | null;
+          valor?: number | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "ordens_consumo_insumo_id_fkey";
+            columns: ["insumo_id"];
+            isOneToOne: false;
+            referencedRelation: "estoque_atual";
+            referencedColumns: ["insumo_id"];
+          },
+          {
+            foreignKeyName: "ordens_consumo_insumo_id_fkey";
+            columns: ["insumo_id"];
+            isOneToOne: false;
+            referencedRelation: "insumos";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "ordens_consumo_lote_id_fkey";
+            columns: ["lote_id"];
+            isOneToOne: false;
+            referencedRelation: "lotes_insumo";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "ordens_consumo_ordem_id_fkey";
+            columns: ["ordem_id"];
+            isOneToOne: false;
+            referencedRelation: "ordens_producao";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      ordens_producao: {
+        Row: {
+          atualizado_em: string;
+          calculo_estimado_id: string | null;
+          codigo: string;
+          criado_em: string;
+          criado_por: string | null;
+          custo_estimado: number | null;
+          custo_realizado: number | null;
+          custo_realizado_detalhe: Json | null;
+          fim_previsto: string | null;
+          fim_real: string | null;
+          id: string;
+          impressora_id: string | null;
+          inicio_previsto: string | null;
+          inicio_real: string | null;
+          instrucoes: string | null;
+          lote_id: string | null;
+          minutos_mao_de_obra: number | null;
+          motivo_falha: string | null;
+          pedido_item_id: string | null;
+          prazo: string | null;
+          prioridade: number;
+          produto_id: string;
+          quantidade_aprovada: number;
+          quantidade_perdida: number;
+          quantidade_planejada: number;
+          responsavel: string | null;
+          status: string;
+          tempo_previsto_min: number | null;
+          tempo_real_min: number | null;
+          variacao_id: string | null;
+        };
+        Insert: {
+          atualizado_em?: string;
+          calculo_estimado_id?: string | null;
+          codigo?: string;
+          criado_em?: string;
+          criado_por?: string | null;
+          custo_estimado?: number | null;
+          custo_realizado?: number | null;
+          custo_realizado_detalhe?: Json | null;
+          fim_previsto?: string | null;
+          fim_real?: string | null;
+          id?: string;
+          impressora_id?: string | null;
+          inicio_previsto?: string | null;
+          inicio_real?: string | null;
+          instrucoes?: string | null;
+          lote_id?: string | null;
+          minutos_mao_de_obra?: number | null;
+          motivo_falha?: string | null;
+          pedido_item_id?: string | null;
+          prazo?: string | null;
+          prioridade?: number;
+          produto_id: string;
+          quantidade_aprovada?: number;
+          quantidade_perdida?: number;
+          quantidade_planejada: number;
+          responsavel?: string | null;
+          status?: string;
+          tempo_previsto_min?: number | null;
+          tempo_real_min?: number | null;
+          variacao_id?: string | null;
+        };
+        Update: {
+          atualizado_em?: string;
+          calculo_estimado_id?: string | null;
+          codigo?: string;
+          criado_em?: string;
+          criado_por?: string | null;
+          custo_estimado?: number | null;
+          custo_realizado?: number | null;
+          custo_realizado_detalhe?: Json | null;
+          fim_previsto?: string | null;
+          fim_real?: string | null;
+          id?: string;
+          impressora_id?: string | null;
+          inicio_previsto?: string | null;
+          inicio_real?: string | null;
+          instrucoes?: string | null;
+          lote_id?: string | null;
+          minutos_mao_de_obra?: number | null;
+          motivo_falha?: string | null;
+          pedido_item_id?: string | null;
+          prazo?: string | null;
+          prioridade?: number;
+          produto_id?: string;
+          quantidade_aprovada?: number;
+          quantidade_perdida?: number;
+          quantidade_planejada?: number;
+          responsavel?: string | null;
+          status?: string;
+          tempo_previsto_min?: number | null;
+          tempo_real_min?: number | null;
+          variacao_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "ordens_producao_calculo_estimado_id_fkey";
+            columns: ["calculo_estimado_id"];
+            isOneToOne: false;
+            referencedRelation: "calculos_custo";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "ordens_producao_impressora_id_fkey";
+            columns: ["impressora_id"];
+            isOneToOne: false;
+            referencedRelation: "impressoras";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "ordens_producao_lote_id_fkey";
+            columns: ["lote_id"];
+            isOneToOne: false;
+            referencedRelation: "lotes_insumo";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "ordens_producao_produto_id_fkey";
+            columns: ["produto_id"];
+            isOneToOne: false;
+            referencedRelation: "estoque_produtos";
+            referencedColumns: ["produto_id"];
+          },
+          {
+            foreignKeyName: "ordens_producao_produto_id_fkey";
+            columns: ["produto_id"];
+            isOneToOne: false;
+            referencedRelation: "produtos";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "ordens_producao_variacao_id_fkey";
+            columns: ["variacao_id"];
+            isOneToOne: false;
+            referencedRelation: "produtos_variacoes";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       parametros_custo: {
         Row: {
           criado_em: string;
@@ -1095,6 +1440,598 @@ export type Database = {
           vigente_desde?: string;
         };
         Relationships: [];
+      };
+      produtos: {
+        Row: {
+          atributos: Json;
+          atualizado_em: string;
+          calculo_atual_id: string | null;
+          categoria_id: string | null;
+          criado_em: string;
+          custo_atual: number | null;
+          custo_atualizado_em: string | null;
+          custo_variavel_atual: number | null;
+          descricao: string | null;
+          dimensoes: Json;
+          id: string;
+          impressora_padrao_id: string | null;
+          insumo_impressao_id: string | null;
+          licenca: string | null;
+          licenca_comercial: boolean;
+          margem_alvo: number | null;
+          nome: string;
+          observacoes_fabricacao: string | null;
+          origem: string;
+          pecas_por_ciclo: number;
+          peso_g: number | null;
+          sku: string | null;
+          status: string;
+          taxa_falha_pct: number | null;
+          tempo_acabamento_min: number | null;
+          tempo_embalagem_min: number | null;
+          tempo_impressao_min: number | null;
+          tempo_preparo_min: number | null;
+        };
+        Insert: {
+          atributos?: Json;
+          atualizado_em?: string;
+          calculo_atual_id?: string | null;
+          categoria_id?: string | null;
+          criado_em?: string;
+          custo_atual?: number | null;
+          custo_atualizado_em?: string | null;
+          custo_variavel_atual?: number | null;
+          descricao?: string | null;
+          dimensoes?: Json;
+          id?: string;
+          impressora_padrao_id?: string | null;
+          insumo_impressao_id?: string | null;
+          licenca?: string | null;
+          licenca_comercial?: boolean;
+          margem_alvo?: number | null;
+          nome: string;
+          observacoes_fabricacao?: string | null;
+          origem?: string;
+          pecas_por_ciclo?: number;
+          peso_g?: number | null;
+          sku?: string | null;
+          status?: string;
+          taxa_falha_pct?: number | null;
+          tempo_acabamento_min?: number | null;
+          tempo_embalagem_min?: number | null;
+          tempo_impressao_min?: number | null;
+          tempo_preparo_min?: number | null;
+        };
+        Update: {
+          atributos?: Json;
+          atualizado_em?: string;
+          calculo_atual_id?: string | null;
+          categoria_id?: string | null;
+          criado_em?: string;
+          custo_atual?: number | null;
+          custo_atualizado_em?: string | null;
+          custo_variavel_atual?: number | null;
+          descricao?: string | null;
+          dimensoes?: Json;
+          id?: string;
+          impressora_padrao_id?: string | null;
+          insumo_impressao_id?: string | null;
+          licenca?: string | null;
+          licenca_comercial?: boolean;
+          margem_alvo?: number | null;
+          nome?: string;
+          observacoes_fabricacao?: string | null;
+          origem?: string;
+          pecas_por_ciclo?: number;
+          peso_g?: number | null;
+          sku?: string | null;
+          status?: string;
+          taxa_falha_pct?: number | null;
+          tempo_acabamento_min?: number | null;
+          tempo_embalagem_min?: number | null;
+          tempo_impressao_min?: number | null;
+          tempo_preparo_min?: number | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "produtos_calculo_atual_id_fkey";
+            columns: ["calculo_atual_id"];
+            isOneToOne: false;
+            referencedRelation: "calculos_custo";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "produtos_categoria_id_fkey";
+            columns: ["categoria_id"];
+            isOneToOne: false;
+            referencedRelation: "categorias";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "produtos_impressora_padrao_id_fkey";
+            columns: ["impressora_padrao_id"];
+            isOneToOne: false;
+            referencedRelation: "impressoras";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "produtos_insumo_impressao_id_fkey";
+            columns: ["insumo_impressao_id"];
+            isOneToOne: false;
+            referencedRelation: "estoque_atual";
+            referencedColumns: ["insumo_id"];
+          },
+          {
+            foreignKeyName: "produtos_insumo_impressao_id_fkey";
+            columns: ["insumo_impressao_id"];
+            isOneToOne: false;
+            referencedRelation: "insumos";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      produtos_anuncios: {
+        Row: {
+          atualizado_em: string;
+          avaliacoes: number | null;
+          canal_id: string;
+          categoria_externa: string | null;
+          codigo_externo: string;
+          coletado_em: string | null;
+          conversao: number | null;
+          criado_em: string;
+          estoque: number | null;
+          fotos: number | null;
+          id: string;
+          nota: number | null;
+          preco: number | null;
+          produto_id: string;
+          titulo: string | null;
+          url: string | null;
+          variacao_id: string | null;
+          vendas_periodo: number | null;
+          vendas_total: number | null;
+          visitas_periodo: number | null;
+        };
+        Insert: {
+          atualizado_em?: string;
+          avaliacoes?: number | null;
+          canal_id: string;
+          categoria_externa?: string | null;
+          codigo_externo: string;
+          coletado_em?: string | null;
+          conversao?: number | null;
+          criado_em?: string;
+          estoque?: number | null;
+          fotos?: number | null;
+          id?: string;
+          nota?: number | null;
+          preco?: number | null;
+          produto_id: string;
+          titulo?: string | null;
+          url?: string | null;
+          variacao_id?: string | null;
+          vendas_periodo?: number | null;
+          vendas_total?: number | null;
+          visitas_periodo?: number | null;
+        };
+        Update: {
+          atualizado_em?: string;
+          avaliacoes?: number | null;
+          canal_id?: string;
+          categoria_externa?: string | null;
+          codigo_externo?: string;
+          coletado_em?: string | null;
+          conversao?: number | null;
+          criado_em?: string;
+          estoque?: number | null;
+          fotos?: number | null;
+          id?: string;
+          nota?: number | null;
+          preco?: number | null;
+          produto_id?: string;
+          titulo?: string | null;
+          url?: string | null;
+          variacao_id?: string | null;
+          vendas_periodo?: number | null;
+          vendas_total?: number | null;
+          visitas_periodo?: number | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "produtos_anuncios_canal_id_fkey";
+            columns: ["canal_id"];
+            isOneToOne: false;
+            referencedRelation: "canais_venda";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "produtos_anuncios_canal_id_fkey";
+            columns: ["canal_id"];
+            isOneToOne: false;
+            referencedRelation: "canais_venda_vigentes";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "produtos_anuncios_produto_id_fkey";
+            columns: ["produto_id"];
+            isOneToOne: false;
+            referencedRelation: "estoque_produtos";
+            referencedColumns: ["produto_id"];
+          },
+          {
+            foreignKeyName: "produtos_anuncios_produto_id_fkey";
+            columns: ["produto_id"];
+            isOneToOne: false;
+            referencedRelation: "produtos";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "produtos_anuncios_variacao_id_fkey";
+            columns: ["variacao_id"];
+            isOneToOne: false;
+            referencedRelation: "produtos_variacoes";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      produtos_arquivos: {
+        Row: {
+          bucket: string | null;
+          caminho_externo: string | null;
+          criado_em: string;
+          criado_por: string | null;
+          hash_sha256: string | null;
+          id: string;
+          licenca: string | null;
+          nome: string;
+          notas: string | null;
+          produto_id: string;
+          storage_path: string | null;
+          tamanho: number | null;
+          tipo: string;
+          variacao_id: string | null;
+          versao: number;
+        };
+        Insert: {
+          bucket?: string | null;
+          caminho_externo?: string | null;
+          criado_em?: string;
+          criado_por?: string | null;
+          hash_sha256?: string | null;
+          id?: string;
+          licenca?: string | null;
+          nome: string;
+          notas?: string | null;
+          produto_id: string;
+          storage_path?: string | null;
+          tamanho?: number | null;
+          tipo: string;
+          variacao_id?: string | null;
+          versao?: number;
+        };
+        Update: {
+          bucket?: string | null;
+          caminho_externo?: string | null;
+          criado_em?: string;
+          criado_por?: string | null;
+          hash_sha256?: string | null;
+          id?: string;
+          licenca?: string | null;
+          nome?: string;
+          notas?: string | null;
+          produto_id?: string;
+          storage_path?: string | null;
+          tamanho?: number | null;
+          tipo?: string;
+          variacao_id?: string | null;
+          versao?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "produtos_arquivos_produto_id_fkey";
+            columns: ["produto_id"];
+            isOneToOne: false;
+            referencedRelation: "estoque_produtos";
+            referencedColumns: ["produto_id"];
+          },
+          {
+            foreignKeyName: "produtos_arquivos_produto_id_fkey";
+            columns: ["produto_id"];
+            isOneToOne: false;
+            referencedRelation: "produtos";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "produtos_arquivos_variacao_id_fkey";
+            columns: ["variacao_id"];
+            isOneToOne: false;
+            referencedRelation: "produtos_variacoes";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      produtos_materiais: {
+        Row: {
+          criado_em: string;
+          id: string;
+          insumo_id: string;
+          observacoes: string | null;
+          papel: string;
+          por: string;
+          produto_id: string;
+          quantidade: number;
+          unidade: string;
+          variacao_id: string | null;
+        };
+        Insert: {
+          criado_em?: string;
+          id?: string;
+          insumo_id: string;
+          observacoes?: string | null;
+          papel?: string;
+          por?: string;
+          produto_id: string;
+          quantidade: number;
+          unidade: string;
+          variacao_id?: string | null;
+        };
+        Update: {
+          criado_em?: string;
+          id?: string;
+          insumo_id?: string;
+          observacoes?: string | null;
+          papel?: string;
+          por?: string;
+          produto_id?: string;
+          quantidade?: number;
+          unidade?: string;
+          variacao_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "produtos_materiais_insumo_id_fkey";
+            columns: ["insumo_id"];
+            isOneToOne: false;
+            referencedRelation: "estoque_atual";
+            referencedColumns: ["insumo_id"];
+          },
+          {
+            foreignKeyName: "produtos_materiais_insumo_id_fkey";
+            columns: ["insumo_id"];
+            isOneToOne: false;
+            referencedRelation: "insumos";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "produtos_materiais_produto_id_fkey";
+            columns: ["produto_id"];
+            isOneToOne: false;
+            referencedRelation: "estoque_produtos";
+            referencedColumns: ["produto_id"];
+          },
+          {
+            foreignKeyName: "produtos_materiais_produto_id_fkey";
+            columns: ["produto_id"];
+            isOneToOne: false;
+            referencedRelation: "produtos";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "produtos_materiais_unidade_fkey";
+            columns: ["unidade"];
+            isOneToOne: false;
+            referencedRelation: "unidades";
+            referencedColumns: ["codigo"];
+          },
+          {
+            foreignKeyName: "produtos_materiais_variacao_id_fkey";
+            columns: ["variacao_id"];
+            isOneToOne: false;
+            referencedRelation: "produtos_variacoes";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      produtos_precos_canal: {
+        Row: {
+          calculo_custo_id: string | null;
+          canal_id: string;
+          criado_em: string;
+          id: string;
+          margem_estimada_cache: number | null;
+          observacoes: string | null;
+          origem: string;
+          preco_venda: number;
+          produto_id: string;
+          variacao_id: string | null;
+          vigente_ate: string | null;
+          vigente_desde: string;
+        };
+        Insert: {
+          calculo_custo_id?: string | null;
+          canal_id: string;
+          criado_em?: string;
+          id?: string;
+          margem_estimada_cache?: number | null;
+          observacoes?: string | null;
+          origem?: string;
+          preco_venda: number;
+          produto_id: string;
+          variacao_id?: string | null;
+          vigente_ate?: string | null;
+          vigente_desde?: string;
+        };
+        Update: {
+          calculo_custo_id?: string | null;
+          canal_id?: string;
+          criado_em?: string;
+          id?: string;
+          margem_estimada_cache?: number | null;
+          observacoes?: string | null;
+          origem?: string;
+          preco_venda?: number;
+          produto_id?: string;
+          variacao_id?: string | null;
+          vigente_ate?: string | null;
+          vigente_desde?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "produtos_precos_canal_calculo_custo_id_fkey";
+            columns: ["calculo_custo_id"];
+            isOneToOne: false;
+            referencedRelation: "calculos_custo";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "produtos_precos_canal_canal_id_fkey";
+            columns: ["canal_id"];
+            isOneToOne: false;
+            referencedRelation: "canais_venda";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "produtos_precos_canal_canal_id_fkey";
+            columns: ["canal_id"];
+            isOneToOne: false;
+            referencedRelation: "canais_venda_vigentes";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "produtos_precos_canal_produto_id_fkey";
+            columns: ["produto_id"];
+            isOneToOne: false;
+            referencedRelation: "estoque_produtos";
+            referencedColumns: ["produto_id"];
+          },
+          {
+            foreignKeyName: "produtos_precos_canal_produto_id_fkey";
+            columns: ["produto_id"];
+            isOneToOne: false;
+            referencedRelation: "produtos";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "produtos_precos_canal_variacao_id_fkey";
+            columns: ["variacao_id"];
+            isOneToOne: false;
+            referencedRelation: "produtos_variacoes";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      produtos_variacoes: {
+        Row: {
+          ativo: boolean;
+          atributos: Json;
+          atualizado_em: string;
+          calculo_atual_id: string | null;
+          criado_em: string;
+          custo_atual: number | null;
+          custo_variavel_atual: number | null;
+          id: string;
+          impressora_padrao_id: string | null;
+          insumo_impressao_id: string | null;
+          nome: string;
+          pecas_por_ciclo: number | null;
+          peso_g: number | null;
+          produto_id: string;
+          sku: string | null;
+          taxa_falha_pct: number | null;
+          tempo_acabamento_min: number | null;
+          tempo_embalagem_min: number | null;
+          tempo_impressao_min: number | null;
+          tempo_preparo_min: number | null;
+        };
+        Insert: {
+          ativo?: boolean;
+          atributos?: Json;
+          atualizado_em?: string;
+          calculo_atual_id?: string | null;
+          criado_em?: string;
+          custo_atual?: number | null;
+          custo_variavel_atual?: number | null;
+          id?: string;
+          impressora_padrao_id?: string | null;
+          insumo_impressao_id?: string | null;
+          nome: string;
+          pecas_por_ciclo?: number | null;
+          peso_g?: number | null;
+          produto_id: string;
+          sku?: string | null;
+          taxa_falha_pct?: number | null;
+          tempo_acabamento_min?: number | null;
+          tempo_embalagem_min?: number | null;
+          tempo_impressao_min?: number | null;
+          tempo_preparo_min?: number | null;
+        };
+        Update: {
+          ativo?: boolean;
+          atributos?: Json;
+          atualizado_em?: string;
+          calculo_atual_id?: string | null;
+          criado_em?: string;
+          custo_atual?: number | null;
+          custo_variavel_atual?: number | null;
+          id?: string;
+          impressora_padrao_id?: string | null;
+          insumo_impressao_id?: string | null;
+          nome?: string;
+          pecas_por_ciclo?: number | null;
+          peso_g?: number | null;
+          produto_id?: string;
+          sku?: string | null;
+          taxa_falha_pct?: number | null;
+          tempo_acabamento_min?: number | null;
+          tempo_embalagem_min?: number | null;
+          tempo_impressao_min?: number | null;
+          tempo_preparo_min?: number | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "produtos_variacoes_calculo_atual_id_fkey";
+            columns: ["calculo_atual_id"];
+            isOneToOne: false;
+            referencedRelation: "calculos_custo";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "produtos_variacoes_impressora_padrao_id_fkey";
+            columns: ["impressora_padrao_id"];
+            isOneToOne: false;
+            referencedRelation: "impressoras";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "produtos_variacoes_insumo_impressao_id_fkey";
+            columns: ["insumo_impressao_id"];
+            isOneToOne: false;
+            referencedRelation: "estoque_atual";
+            referencedColumns: ["insumo_id"];
+          },
+          {
+            foreignKeyName: "produtos_variacoes_insumo_impressao_id_fkey";
+            columns: ["insumo_impressao_id"];
+            isOneToOne: false;
+            referencedRelation: "insumos";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "produtos_variacoes_produto_id_fkey";
+            columns: ["produto_id"];
+            isOneToOne: false;
+            referencedRelation: "estoque_produtos";
+            referencedColumns: ["produto_id"];
+          },
+          {
+            foreignKeyName: "produtos_variacoes_produto_id_fkey";
+            columns: ["produto_id"];
+            isOneToOne: false;
+            referencedRelation: "produtos";
+            referencedColumns: ["id"];
+          },
+        ];
       };
       tokens_integracao: {
         Row: {
@@ -1249,6 +2186,25 @@ export type Database = {
           },
         ];
       };
+      estoque_produtos: {
+        Row: {
+          custo_medio: number | null;
+          nome: string | null;
+          produto_id: string | null;
+          saldo: number | null;
+          valor: number | null;
+          variacao_id: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "movimentacoes_produto_variacao_id_fkey";
+            columns: ["variacao_id"];
+            isOneToOne: false;
+            referencedRelation: "produtos_variacoes";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       parametros_custo_vigentes: {
         Row: {
           criado_em: string | null;
@@ -1260,6 +2216,66 @@ export type Database = {
           vigente_desde: string | null;
         };
         Relationships: [];
+      };
+      produtos_precos_vigentes: {
+        Row: {
+          calculo_custo_id: string | null;
+          canal_id: string | null;
+          criado_em: string | null;
+          id: string | null;
+          margem_estimada_cache: number | null;
+          observacoes: string | null;
+          origem: string | null;
+          preco_venda: number | null;
+          produto_id: string | null;
+          variacao_id: string | null;
+          vigente_ate: string | null;
+          vigente_desde: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "produtos_precos_canal_calculo_custo_id_fkey";
+            columns: ["calculo_custo_id"];
+            isOneToOne: false;
+            referencedRelation: "calculos_custo";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "produtos_precos_canal_canal_id_fkey";
+            columns: ["canal_id"];
+            isOneToOne: false;
+            referencedRelation: "canais_venda";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "produtos_precos_canal_canal_id_fkey";
+            columns: ["canal_id"];
+            isOneToOne: false;
+            referencedRelation: "canais_venda_vigentes";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "produtos_precos_canal_produto_id_fkey";
+            columns: ["produto_id"];
+            isOneToOne: false;
+            referencedRelation: "estoque_produtos";
+            referencedColumns: ["produto_id"];
+          },
+          {
+            foreignKeyName: "produtos_precos_canal_produto_id_fkey";
+            columns: ["produto_id"];
+            isOneToOne: false;
+            referencedRelation: "produtos";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "produtos_precos_canal_variacao_id_fkey";
+            columns: ["variacao_id"];
+            isOneToOne: false;
+            referencedRelation: "produtos_variacoes";
+            referencedColumns: ["id"];
+          },
+        ];
       };
     };
     Functions: {
@@ -1273,6 +2289,22 @@ export type Database = {
           tipo: string;
           titulo: string;
         }[];
+      };
+      concluir_ordem_producao: {
+        Args: {
+          p_aprovadas: number;
+          p_complementares_por_peca?: number;
+          p_consumos: Json;
+          p_custo_hora_mao_obra: number;
+          p_justificativa?: string;
+          p_minutos_mao_de_obra: number;
+          p_motivo_falha?: string;
+          p_ordem: string;
+          p_perdidas: number;
+          p_permitir_negativo?: boolean;
+          p_tempo_real_min: number;
+        };
+        Returns: Json;
       };
       confirmar_compra: { Args: { p_compra: string }; Returns: Json };
       estornar_movimentacao: {
@@ -1334,6 +2366,10 @@ export type Database = {
           p_tipo: string;
         };
         Returns: Json;
+      };
+      reabrir_ordem_producao: {
+        Args: { p_motivo: string; p_ordem: string };
+        Returns: undefined;
       };
     };
     Enums: {

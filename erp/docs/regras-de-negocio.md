@@ -45,4 +45,21 @@ Casos de referência: Anexo A da spec (B1, B2), reproduzidos em `src/dominio/est
 - O custo do filamento vem de `custoDeReposicao` do insumo (média, última compra ou manual) ou de um valor por quilo digitado na hora; o snapshot guarda o custo por grama e a origem fica implícita no insumo escolhido.
 - Salvar cálculo: o servidor recalcula a partir das entradas e grava entradas, resultado, versão do motor e dos parâmetros. Nada é alterado depois; o histórico compara o custo do filamento do snapshot com o atual e marca o que vale revisar. Recálculo em lote e alerta `margem_reduzida` por produto chegam na Fase 5, com BOM e preço por canal.
 
-As regras de produtos, pedidos e financeiro estão na spec (seções 5.5 a 5.7) e entram aqui quando forem implementadas.
+## Produtos (Fase 5)
+
+- Variação herda da ficha tudo que deixar em branco; atributos se somam. BOM por peça entra no custo da peça (C); por pedido entra nos fixos por venda (F). O material de impressão vem da ficha (peso e filamento), não da BOM.
+- Custo do produto = motor da Fase 4 com entradas montadas pela ficha (`montarEntradasProduto`): nada é assumido; cada dado ausente entra em "faltam" e bloqueia. Taxa de falha da ficha vence a padrão.
+- Calcular grava snapshot em `calculos_custo` com `produto_id` e atualiza os caches da ficha. Mudança na ficha, na BOM ou compra confirmada de um insumo usado zera `custo_atualizado_em` (custo desatualizado, nunca apagado). Recalcular em lote grava snapshot só onde o custo mudou.
+- Margem por canal = `avaliarPreco` no preço vigente com o custo exato atual; abaixo da margem alvo (do produto ou do parâmetro) abre alerta `margem_reduzida` por produto, resolvido sozinho quando volta.
+- Preço por canal tem vigência; o vigente é o mais recente até hoje sem fim. Importação do catálogo cria produto em rascunho (nome sugerido do título) e anúncio por (canal, código externo); repetir o arquivo só atualiza métricas e registra preço novo se mudou. Peso, tempo e material nunca vêm da importação.
+- Arquivos de fabricação ficam no bucket privado e abrem por URL assinada de 10 minutos; fotos no bucket público; arquivo grande pode ficar fora com caminho e hash.
+
+## Produção (Fase 5)
+
+- Ordem nasce de produto (ou variação) com quantidade, impressora e rolo em uso; tempo previsto = tempo do ciclo x ciclos; custo estimado = custo variável atual x quantidade (snapshot referenciado).
+- Estados: fila, imprimindo, acabamento, concluida, cancelada. Concluir e reabrir são funções SQL atômicas; as demais transições são simples (`podeTransitar`).
+- Concluir: cada linha de consumo sai do lote informado por `movimentar_estoque` (PEPS completa, override só com justificativa); custo realizado = material ao custo do lote + horas reais x (depreciação + manutenção + consumíveis) + energia + minutos x mão de obra + complementares por peça boa; só variável, fixo nunca entra. Peças perdidas são absorvidas pelas boas; sem peça boa, tudo é perda de produção e não há entrada de acabado. Horas de uso da impressora somam o tempo real.
+- Peças prontas entram em `movimentacoes_produto` ao custo por peça boa; o estoque de peças é média móvel por produto e variação.
+- Reabrir estorna cada movimentação de estoque e a entrada de peças (movimentações opostas), devolve as horas e volta para acabamento. Nada é apagado.
+
+As regras de pedidos e financeiro estão na spec (seções 5.6 e 5.7) e entram aqui quando forem implementadas.

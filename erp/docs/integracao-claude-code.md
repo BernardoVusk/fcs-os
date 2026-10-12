@@ -27,7 +27,7 @@ Claude Code ── skills kb-* ── token ──▶ /api/mcp (mcp-handler, Str
 | `kb_atualizar` | conhecimento:escrever | atualiza e guarda a versão anterior com motivo |
 | `kb_decisoes` | conhecimento:ler | decisões ativas por módulo |
 | `custos_regras` | custos:ler | fórmulas, parâmetros vigentes (e o que falta) e componentes ligados |
-| `produto_custo` | custos:ler | custo atual, quebra, preço por canal e margem (Fase 5, com produtos) |
+| `produto_custo` | custos:ler | custo atual do produto por SKU ou nome, quebra do último cálculo, preços vigentes e margem por canal |
 | `alertas_abertos` | operacao:ler | alertas em aberto |
 | `estoque_insumo` | operacao:ler | saldo, valor, custo médio e lotes dos insumos (Fase 3) |
 

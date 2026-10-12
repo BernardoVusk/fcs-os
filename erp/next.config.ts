@@ -8,6 +8,8 @@ import type { NextConfig } from "next";
  */
 const nextConfig: NextConfig = {
   cacheComponents: false,
+  // Upload de STL, 3MF e G-code pela server action de arquivos do produto.
+  experimental: { serverActions: { bodySizeLimit: "100mb" } },
   turbopack: {
     rules: {
       "*.css": {

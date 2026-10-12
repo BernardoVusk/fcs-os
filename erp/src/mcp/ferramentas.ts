@@ -378,15 +378,82 @@ export function registrarFerramentas(server: McpServer) {
   server.registerTool(
     "produto_custo",
     {
-      description: "Custo atual, quebra por componente e preço por canal de um produto.",
-      inputSchema: z.object({ sku: z.string().min(1).max(60) }),
+      description:
+        "Custo atual de um produto (quebra por componente do último cálculo), preços vigentes por canal com a margem estimada e situação do custo. Busque por SKU ou parte do nome.",
+      inputSchema: z.object({
+        sku: z.string().min(1).max(120).describe("SKU exato ou parte do nome do produto"),
+      }),
     },
-    async (_args, ctx) => {
+    async (args, ctx) => {
       const p = await preparar(ctx, "produto_custo");
       if ("falha" in p) return p.falha;
-      return texto(
-        "Disponível na Fase 5 do ERP, quando existirem produtos com ficha e BOM. Até lá, use custos_regras e a calculadora em /catalogo/precificacao.",
-      );
+      if (!podeLer(p.sessao.papel, "catalogo")) return erro("Seu papel não lê o catálogo.");
+      const cliente = clienteDe(p.sessao);
+      const termo = args.sku.trim();
+      let { data: produto } = await cliente
+        .from("produtos")
+        .select("*")
+        .eq("sku", termo)
+        .maybeSingle();
+      if (!produto) {
+        const { data: lista } = await cliente
+          .from("produtos")
+          .select("*")
+          .ilike("nome", `%${termo}%`)
+          .order("nome")
+          .limit(5);
+        if (!lista || lista.length === 0) return erro("Produto não encontrado.");
+        if (lista.length > 1)
+          return texto({
+            varios: lista.map((x) => ({ id: x.id, nome: x.nome, sku: x.sku })),
+            mensagem: "Mais de um produto; repita com o SKU ou o nome completo.",
+          });
+        produto = lista[0];
+      }
+      const [calc, precos, canais] = await Promise.all([
+        produto.calculo_atual_id
+          ? cliente
+              .from("calculos_custo")
+              .select("resultado, criado_em, versao_motor, parametros_versao")
+              .eq("id", produto.calculo_atual_id)
+              .maybeSingle()
+          : Promise.resolve({ data: null }),
+        cliente
+          .from("produtos_precos_vigentes")
+          .select("canal_id, preco_venda, margem_estimada_cache, variacao_id")
+          .eq("produto_id", produto.id),
+        cliente.from("canais_venda").select("id, nome"),
+      ]);
+      const nomeCanal = new Map((canais.data ?? []).map((c) => [c.id, c.nome]));
+      const resultado = (calc.data?.resultado ?? null) as {
+        custo?: { componentes?: Record<string, number> };
+      } | null;
+      return texto({
+        id: produto.id,
+        nome: produto.nome,
+        sku: produto.sku,
+        status: produto.status,
+        custo_por_peca: produto.custo_atual,
+        custo_variavel: produto.custo_variavel_atual,
+        custo_atualizado_em: produto.custo_atualizado_em,
+        custo_desatualizado: produto.custo_atual != null && produto.custo_atualizado_em == null,
+        quebra: resultado?.custo?.componentes ?? null,
+        calculo: calc.data
+          ? {
+              em: calc.data.criado_em,
+              motor: calc.data.versao_motor,
+              parametros: calc.data.parametros_versao,
+            }
+          : null,
+        margem_alvo: produto.margem_alvo,
+        precos_vigentes: (precos.data ?? []).map((pr) => ({
+          canal: nomeCanal.get(pr.canal_id!) ?? pr.canal_id,
+          variacao_id: pr.variacao_id,
+          preco: pr.preco_venda,
+          margem_estimada: pr.margem_estimada_cache,
+        })),
+        rota: `/catalogo/produtos/${produto.id}`,
+      });
     },
   );
 

@@ -113,6 +113,31 @@ export async function confirmarCompra(id: string): Promise<ResultadoAcao> {
   const { data, error } = await supabase.rpc("confirmar_compra", { p_compra: id });
   if (error) return { ok: false, erro: chaveDoErro(error) };
   const r = data as { itens: number; lotes: number };
+  // Custo de reposição mudou: produtos que usam esses insumos ficam marcados para recálculo (Fase 5).
+  const { data: itens } = await supabase
+    .from("compras_itens")
+    .select("insumo_id")
+    .eq("compra_id", id);
+  const insumos = [...new Set((itens ?? []).map((i) => i.insumo_id))];
+  if (insumos.length > 0) {
+    const { data: usados } = await supabase
+      .from("produtos_materiais")
+      .select("produto_id")
+      .in("insumo_id", insumos);
+    const produtoIds = [...new Set((usados ?? []).map((m) => m.produto_id))];
+    await supabase
+      .from("produtos")
+      .update({ custo_atualizado_em: null })
+      .in("insumo_impressao_id", insumos)
+      .not("custo_atual", "is", null);
+    if (produtoIds.length > 0)
+      await supabase
+        .from("produtos")
+        .update({ custo_atualizado_em: null })
+        .in("id", produtoIds)
+        .not("custo_atual", "is", null);
+  }
+  revalidatePath("/catalogo", "layout");
   revalidatePath("/estoque", "layout");
   revalidatePath("/");
   return { ok: true, mensagem: `Compra confirmada: ${r.lotes} lote(s) criado(s).` };

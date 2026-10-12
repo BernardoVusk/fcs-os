@@ -14,7 +14,6 @@ const FUTUROS: { rotulo: string; fase: number }[] = [
   { rotulo: "Receita recebida", fase: 7 },
   { rotulo: "Despesas pagas", fase: 7 },
   { rotulo: "A pagar e a receber", fase: 7 },
-  { rotulo: "Pedidos em produção", fase: 5 },
   { rotulo: "Próximas tarefas e publicações", fase: 8 },
 ];
 
@@ -72,6 +71,16 @@ export default async function PaginaInicio({
           }
           dica="Cadastre um filamento em Estoque"
           link={{ href: "/estoque/movimentacoes?tipo=consumo_producao", rotulo: "Ver consumo" }}
+        />
+        <CartaoIndicador
+          rotulo="Ordens em andamento"
+          valor={String(resumo.ordensAbertas)}
+          link={{ href: "/producao/fila", rotulo: "Abrir a fila" }}
+        />
+        <CartaoIndicador
+          rotulo="Peças prontas em estoque"
+          valor={String(resumo.pecasProntas)}
+          link={{ href: "/catalogo/produtos", rotulo: "Ver produtos" }}
         />
         <CartaoIndicador
           rotulo="Cálculos de custo salvos"

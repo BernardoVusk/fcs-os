@@ -2,7 +2,7 @@ import { podeLer, type Area, type Papel } from "@/lib/auth/papeis";
 import type { NomeIcone } from "./Icone";
 
 /** Fase mais recente entregue. Itens de fases futuras ficam ocultos. */
-export const FASE_ATUAL = 4;
+export const FASE_ATUAL = 5;
 
 export type ItemNav = {
   rota: string;
@@ -247,6 +247,11 @@ const ROTULOS_SEGMENTO: Record<string, string> = {
   historico: "Histórico",
   precificacao: "Precificação",
   "parametros-custo": "Parâmetros de custo",
+  produtos: "Produtos",
+  importar: "Importar",
+  fila: "Fila de produção",
+  ordens: "Ordens de produção",
+  impressoras: "Impressoras",
 };
 
 /** Trilha para o breadcrumb: rótulos conhecidos da navegação, resto vira o segmento. */

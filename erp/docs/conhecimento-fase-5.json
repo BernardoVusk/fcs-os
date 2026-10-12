@@ -1,0 +1,55 @@
+[
+  {
+    "titulo": "Produção: custo realizado só variável ao custo do lote, perdas absorvidas pelas boas, reabrir estorna",
+    "tipo": "decisao",
+    "categoria": "Decisões de negócio",
+    "modulo": "producao",
+    "tags": [
+      "producao",
+      "ordem",
+      "custo realizado",
+      "estoque",
+      "pecas prontas"
+    ],
+    "referencia": "supabase/migrations/0013_producao.sql; erp/src/dominio/producao; erp/docs/regras-de-negocio.md",
+    "resumo": "Concluir ordem é função SQL atômica: consome lotes pela movimentar_estoque, calcula custo realizado só variável (material ao custo do lote, horas reais, mão de obra, complementares) e dá entrada nas peças prontas pela média móvel. Perdas são absorvidas pelas boas; sem peça boa vira perda de produção. Reabrir estorna, nunca apaga.",
+    "estrutura": {
+      "contexto": "O custo estimado da precificação inclui fixo rateado e taxas; o custo realizado precisa comparar com ele sem contar duas vezes o que o financeiro já registra como despesa, e precisa sair do rolo que estava na impressora.",
+      "alternativas": [
+        "Custo realizado pela média do insumo",
+        "Incluir fixo rateado no realizado",
+        "Várias chamadas da aplicação para consumir, calcular e dar entrada",
+        "Apagar movimentações ao corrigir uma ordem"
+      ],
+      "decisao": "concluir_ordem_producao (security invoker) consome cada linha pelo lote informado, soma o valor das movimentações geradas como material, calcula máquina e energia pelas horas reais e pelos campos da impressora com a tarifa vigente, mão de obra pelos minutos reais, complementares por peça boa, e insere movimentacoes_produto ao custo por peça boa. Fixo rateado nunca entra. reabrir_ordem_producao estorna as movimentações de estoque e de peças e volta a ordem para acabamento.",
+      "consequencias": "O custo realizado por peça boa pode ser comparado direto com o custo variável do snapshot. Complementares entram pelo consumo de estoque (não pelo parâmetro por peça) para não contar duas vezes. Horas de uso da impressora passam a vir das ordens. Na Fase 6 o pedido baixa peças prontas por movimentacoes_produto."
+    },
+    "conteudo": "## Fluxo\n\n1. Ordem criada a partir do produto: tempo previsto = tempo do ciclo x ciclos; custo estimado = custo variável atual x quantidade.\n2. Estados simples pela tela (fila, imprimindo, acabamento, cancelada); concluir e reabrir só por função SQL.\n3. Ao concluir: consumos por lote (PEPS completa; override só com justificativa), custo realizado detalhado em jsonb, entrada de peças prontas.\n4. Reabrir estorna tudo e volta para acabamento.\n\nTestes: `src/dominio/producao/producao.test.ts` e `testes/integracao/producao.test.ts` (ordem de 2 peças do caso A1: material 10,80, máquina 3,20, energia 0,456, mão de obra 12,00, total 26,456, 13,228 por peça)."
+  },
+  {
+    "titulo": "Produtos: ficha alimenta o motor sem assumir nada; custo desatualizado nunca é apagado",
+    "tipo": "decisao",
+    "categoria": "Decisões de negócio",
+    "modulo": "catalogo",
+    "tags": [
+      "produto",
+      "bom",
+      "variacao",
+      "custo",
+      "importacao"
+    ],
+    "referencia": "erp/src/dominio/produtos; erp/src/dados/produtos/calculo.ts; supabase/migrations/0012_produtos.sql",
+    "resumo": "montarEntradasProduto traduz ficha, BOM, filamento, impressora e parâmetros para o motor e lista o que falta em vez de assumir. Compra confirmada ou mudança na ficha marca o custo como desatualizado sem apagar o cálculo. Importar o catálogo cria rascunhos idempotentes por (canal, código do anúncio).",
+    "estrutura": {
+      "contexto": "Produtos vindos do marketplace não têm peso nem tempo; o motor exige tudo. Era preciso decidir como tratar lacunas e como manter o custo coerente quando o filamento muda de preço.",
+      "alternativas": [
+        "Assumir valores padrão para calcular sempre",
+        "Recalcular automaticamente a cada compra",
+        "Importar o catálogo como produtos ativos com peso estimado"
+      ],
+      "decisao": "Lacunas bloqueiam com lista do que falta. Compra ou edição marca desatualizado; o recálculo em lote é manual (Recalcular todos) e grava snapshot só onde o custo mudou, abrindo alerta margem_reduzida por produto. Importação cria rascunhos com nome sugerido do título e preço vigente do canal, sem peso, tempo ou material.",
+      "consequencias": "Nenhum custo exibido vem de estimativa. A lista de produtos mostra Desatualizado e o dashboard conta. Variações herdam a ficha e sobrescrevem só o que preencherem; BOM por pedido vai para os fixos por venda."
+    },
+    "conteudo": "## Onde está\n\n- Herança e BOM: `src/dominio/produtos/heranca.ts`, `bom.ts`; ponte para o motor: `calculo-produto.ts`.\n- Contexto do produto (ficha + estoque + impressora + parâmetros + canais): `src/dados/produtos/calculo.ts`.\n- Ações: `src/acoes/produtos/calculo.ts` (calcularProduto, recalcularProdutos), `importacao.ts`, `arquivos.ts` (buckets e URL assinada).\n- Telas: Catálogo > Produtos (lista, ficha com abas, importar)."
+  }
+]
