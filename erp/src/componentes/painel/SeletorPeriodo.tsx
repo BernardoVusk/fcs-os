@@ -15,15 +15,15 @@ export function lerPeriodo(valor: string | undefined): Periodo {
 
 export function SeletorPeriodo({ atual, base }: { atual: Periodo; base: string }) {
   return (
-    <nav aria-label="Período" className="flex gap-1 rounded-md border border-borda bg-superficie p-1">
+    <nav aria-label="Período" className="inline-flex max-w-full gap-0.5 overflow-x-auto rounded-full bg-superficie-2 p-1">
       {PERIODOS.map((p) => (
         <Link
           key={p.chave}
           href={`${base}?periodo=${p.chave}`}
           aria-current={p.chave === atual ? "page" : undefined}
           className={cn(
-            "rounded-sm px-3 py-1 text-sm",
-            p.chave === atual ? "bg-acao-suave text-texto" : "text-texto-2 hover:text-texto",
+            "rounded-full px-3.5 py-1.5 text-sm whitespace-nowrap transition-colors duration-150",
+            p.chave === atual ? "bg-card font-medium text-texto shadow-painel" : "text-texto-2 hover:text-texto",
           )}
         >
           {p.rotulo}

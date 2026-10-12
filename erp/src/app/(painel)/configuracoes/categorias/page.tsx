@@ -21,9 +21,9 @@ export default async function PaginaCategorias({
   const editar = podeEscrever(usuario.papel, "configuracoes");
   const opcoesPai = categorias.map((c) => ({ id: c.id, nome: c.nome }));
   return (
-    <div className="space-y-4">
-      <div className="flex flex-wrap items-start justify-between gap-2">
-        <h1 className="text-2xl font-bold uppercase">Categorias</h1>
+    <div className="space-y-5">
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <h1 className="text-[28px] leading-tight font-semibold tracking-tight">Categorias</h1>
         {editar && (
           <DialogoNovo rotulo="Nova categoria" titulo={`Nova categoria em ${ESCOPO_ROTULO[escopo]}`} abrirInicial={sp.novo === "1"}>
             <FormCategoria escopo={escopo} opcoesPai={opcoesPai} />

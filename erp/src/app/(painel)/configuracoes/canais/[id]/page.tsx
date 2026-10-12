@@ -24,13 +24,13 @@ export default async function PaginaCanal({ params }: { params: Promise<{ id: st
   const valorOuVazio = (v: number | null) => (v == null ? "Não configurado" : formatarMoeda(v));
   return (
     <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)]">
-      <section className="space-y-4 rounded-md border border-borda bg-superficie p-4">
-        <h1 className="text-2xl font-bold uppercase">{canal.nome}</h1>
+      <section className="space-y-4 rounded-2xl bg-card p-5 shadow-painel">
+        <h1 className="text-[28px] leading-tight font-semibold tracking-tight">{canal.nome}</h1>
         {editar ? <FormCanal canal={canal} /> : <p className="text-sm text-texto-2">Somente leitura.</p>}
       </section>
       <section className="space-y-3">
         <div className="flex items-center justify-between">
-          <h2 className="text-lg font-bold uppercase">Taxas por vigência</h2>
+          <h2 className="text-lg font-semibold tracking-tight">Taxas por vigência</h2>
           {editar && (
             <DialogoNovo rotulo="Nova vigência" titulo="Nova vigência de taxas">
               <FormTaxas canalId={canal.id} base={vigente} />
@@ -43,10 +43,10 @@ export default async function PaginaCanal({ params }: { params: Promise<{ id: st
             descricao="Sem taxas, a calculadora de preço (Fase 4) não consegue sugerir preço para este canal."
           />
         ) : (
-          <div className="overflow-x-auto rounded-md border border-borda">
+          <div className="overflow-x-auto rounded-2xl bg-card shadow-painel">
             <Table>
               <TableHeader>
-                <TableRow className="bg-superficie-2">
+                <TableRow className="bg-superficie-2/60 hover:bg-superficie-2/60">
                   <TableHead>Desde</TableHead>
                   <TableHead>Comissão</TableHead>
                   <TableHead>Fixa</TableHead>

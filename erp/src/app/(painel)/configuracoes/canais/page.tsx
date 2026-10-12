@@ -12,10 +12,10 @@ export default async function PaginaCanais({ searchParams }: { searchParams: Pro
   const { novo } = await searchParams;
   const canais = await listarCanais();
   return (
-    <div className="space-y-4">
-      <div className="flex flex-wrap items-start justify-between gap-2">
+    <div className="space-y-5">
+      <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold uppercase">Canais de venda</h1>
+          <h1 className="text-[28px] leading-tight font-semibold tracking-tight">Canais de venda</h1>
           <p className="text-sm text-texto-2">
             Taxa em branco significa não configurado. Confira os valores na central de cada canal.
           </p>

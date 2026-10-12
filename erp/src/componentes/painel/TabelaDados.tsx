@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowDown, ArrowUp, ArrowUpDown } from "lucide-react";
+import { ArrowDown, ArrowUp, ArrowUpDown, Search } from "lucide-react";
 import {
   type ColumnDef,
   type SortingState,
@@ -62,40 +62,43 @@ export function TabelaDados<T>({
 
   return (
     <div className="space-y-3">
-      <Input
-        value={filtro}
-        onChange={(e) => setFiltro(e.target.value)}
-        placeholder={placeholderFiltro}
-        aria-label={placeholderFiltro}
-        className="max-w-xs"
-      />
-      <div className="overflow-x-auto rounded-md border border-borda">
+      <div className="relative max-w-xs">
+        <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-texto-3" aria-hidden="true" />
+        <Input
+          value={filtro}
+          onChange={(e) => setFiltro(e.target.value)}
+          placeholder={placeholderFiltro}
+          aria-label={placeholderFiltro}
+          className="rounded-full bg-superficie-2 pl-9"
+        />
+      </div>
+      <div className="overflow-x-auto rounded-2xl bg-card shadow-painel">
         <Table>
           <TableHeader>
             {tabela.getHeaderGroups().map((grupo) => (
-              <TableRow key={grupo.id} className="bg-superficie-2">
+              <TableRow key={grupo.id} className="border-borda bg-superficie-2/60 hover:bg-superficie-2/60">
                 {grupo.headers.map((cabecalho) => {
                   const ordenavel = cabecalho.column.getCanSort();
                   const direcao = cabecalho.column.getIsSorted();
                   return (
                     <TableHead
                       key={cabecalho.id}
-                      className="h-10 whitespace-nowrap"
+                      className="h-11 px-4 text-[13px] font-medium whitespace-nowrap text-texto-2 first:pl-5"
                       aria-sort={!ordenavel ? undefined : direcao === "asc" ? "ascending" : direcao === "desc" ? "descending" : "none"}
                     >
                       {cabecalho.isPlaceholder ? null : ordenavel ? (
                         <button
                           type="button"
-                          className="inline-flex items-center gap-1 font-medium"
+                          className="inline-flex items-center gap-1 rounded-full transition-colors hover:text-texto"
                           onClick={cabecalho.column.getToggleSortingHandler()}
                         >
                           {flexRender(cabecalho.column.columnDef.header, cabecalho.getContext())}
                           {direcao === "asc" ? (
-                            <ArrowUp className="size-3" />
+                            <ArrowUp className="size-3.5" />
                           ) : direcao === "desc" ? (
-                            <ArrowDown className="size-3" />
+                            <ArrowDown className="size-3.5" />
                           ) : (
-                            <ArrowUpDown className="size-3 text-texto-3" />
+                            <ArrowUpDown className="size-3.5 text-texto-3" />
                           )}
                         </button>
                       ) : (
@@ -110,7 +113,7 @@ export function TabelaDados<T>({
           <TableBody>
             {linhas.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={colunas.length} className="py-8 text-center text-texto-2">
+                <TableCell colSpan={colunas.length} className="py-10 text-center text-texto-2">
                   Nenhum resultado para o filtro.
                 </TableCell>
               </TableRow>
@@ -118,10 +121,13 @@ export function TabelaDados<T>({
               linhas.map((linha) => (
                 <TableRow
                   key={linha.id}
-                  className={cn("h-10", idLinha && destaque && idLinha(linha.original) === destaque && "bg-acao-suave")}
+                  className={cn(
+                    "h-11 border-borda transition-colors duration-150 hover:bg-superficie-2/50",
+                    idLinha && destaque && idLinha(linha.original) === destaque && "bg-acao-suave hover:bg-acao-suave",
+                  )}
                 >
                   {linha.getVisibleCells().map((celula) => (
-                    <TableCell key={celula.id} className="py-1.5">
+                    <TableCell key={celula.id} className="px-4 py-2 first:pl-5">
                       {flexRender(celula.column.columnDef.cell, celula.getContext())}
                     </TableCell>
                   ))}

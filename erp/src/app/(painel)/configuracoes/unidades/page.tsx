@@ -14,10 +14,10 @@ export default async function PaginaUnidades({ searchParams }: { searchParams: P
   const editar = podeEscrever(usuario.papel, "configuracoes");
   const bases = unidades.map((u) => u.codigo);
   return (
-    <div className="space-y-4">
-      <div className="flex flex-wrap items-start justify-between gap-2">
+    <div className="space-y-5">
+      <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold uppercase">Unidades</h1>
+          <h1 className="text-[28px] leading-tight font-semibold tracking-tight">Unidades</h1>
           <p className="text-sm text-texto-2">
             Toda quantidade no sistema carrega uma unidade; o fator converte para a base (kg para g, h para min).
           </p>

@@ -40,7 +40,7 @@ export function FormLogin({ voltar }: { voltar?: string }) {
         <CampoErro id="erro-senha" chave={estado.erros.senha} />
       </div>
       <CampoErro chave={estado.erros._form} />
-      <Button type="submit" className="w-full" disabled={pendente}>
+      <Button type="submit" className="mt-2 h-10 w-full text-[15px]" disabled={pendente}>
         {pendente ? "Entrando" : "Entrar"}
       </Button>
     </form>

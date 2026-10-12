@@ -6,27 +6,34 @@
 @custom-variant claro (&:where([data-tema="claro"], [data-tema="claro"] *));
 @custom-variant dark (&:where(:root:not([data-tema="claro"]), :root:not([data-tema="claro"]) *));
 
-/* Tokens da marca FCS (spec seção 8.2). */
+/*
+  Tokens da marca FCS aplicados à linguagem das referências (DESIGN.md):
+  fundo fosco atrás, folha de conteúdo elevada, cartões com hairline,
+  controles em pílula, ciano só em seleção, ação e foco.
+*/
 :root {
   color-scheme: dark;
   --fundo: #0a0a0a;
-  --superficie: #121314;
-  --superficie-2: #191a1c;
-  --borda: #242628;
-  --texto: #f2f3f4;
-  --texto-2: #a4a8ad;
-  --texto-3: #6e7378;
+  --superficie: #121316;
+  --superficie-2: #1a1c20;
+  --superficie-3: #22252a;
+  --borda: #24272c;
+  --texto: #f2f4f6;
+  --texto-2: #a3aab3;
+  --texto-3: #6f7781;
   --acao: #00d8ff;
-  --acao-texto: #0a0a0a;
-  --acao-suave: #0b2a31;
+  --acao-texto: #06141a;
+  --acao-suave: #0b2a33;
   --sucesso: #3ddc97;
   --alerta: #f5b841;
   --erro: #f26d6d;
   --info: #00d8ff;
-  --raio: 4px;
+  --raio: 10px;
+  --sombra-painel: 0 0 0 1px var(--borda);
+  --sombra-flutuante: 0 0 0 1px var(--borda), 0 16px 40px -12px rgb(0 0 0 / 0.7);
 
   /* Nomes que o shadcn usa, apontando para os tokens acima. */
-  --background: var(--fundo);
+  --background: var(--superficie);
   --foreground: var(--texto);
   --card: var(--superficie);
   --card-foreground: var(--texto);
@@ -38,7 +45,7 @@
   --secondary-foreground: var(--texto);
   --muted: var(--superficie-2);
   --muted-foreground: var(--texto-2);
-  --accent: var(--acao-suave);
+  --accent: var(--superficie-2);
   --accent-foreground: var(--texto);
   --destructive: var(--erro);
   --destructive-foreground: #0a0a0a;
@@ -51,11 +58,11 @@
   --chart-3: var(--alerta);
   --chart-4: var(--erro);
   --chart-5: var(--texto-2);
-  --sidebar: var(--superficie);
+  --sidebar: var(--fundo);
   --sidebar-foreground: var(--texto);
   --sidebar-primary: var(--acao);
   --sidebar-primary-foreground: var(--acao-texto);
-  --sidebar-accent: var(--acao-suave);
+  --sidebar-accent: var(--superficie-2);
   --sidebar-accent-foreground: var(--texto);
   --sidebar-border: var(--borda);
   --sidebar-ring: var(--acao);
@@ -63,27 +70,31 @@
 
 [data-tema="claro"] {
   color-scheme: light;
-  --fundo: #f6f7f8;
+  --fundo: #eceef1;
   --superficie: #ffffff;
-  --superficie-2: #f0f2f4;
-  --borda: #e3e6e9;
-  --texto: #111315;
-  --texto-2: #5b6168;
-  --texto-3: #8a9097;
-  --acao: #0098b8;
+  --superficie-2: #f3f4f6;
+  --superficie-3: #e6e8ec;
+  --borda: #e3e6ea;
+  --texto: #141719;
+  --texto-2: #5f6670;
+  --texto-3: #737a84;
+  --acao: #00789a;
   --acao-texto: #ffffff;
-  --acao-suave: #dff7fc;
-  --sucesso: #1e8e5a;
-  --alerta: #9a6b00;
+  --acao-suave: #e3f5fa;
+  --sucesso: #1b8a57;
+  --alerta: #946400;
   --erro: #b3261e;
-  --info: #0098b8;
+  --info: #00789a;
   --destructive-foreground: #ffffff;
+  --sombra-painel: 0 1px 2px rgb(16 24 40 / 0.04), 0 8px 24px -16px rgb(16 24 40 / 0.16);
+  --sombra-flutuante: 0 1px 2px rgb(16 24 40 / 0.06), 0 20px 48px -16px rgb(16 24 40 / 0.24);
 }
 
 @theme inline {
   --color-fundo: var(--fundo);
   --color-superficie: var(--superficie);
   --color-superficie-2: var(--superficie-2);
+  --color-superficie-3: var(--superficie-3);
   --color-borda: var(--borda);
   --color-texto: var(--texto);
   --color-texto-2: var(--texto-2);
@@ -129,18 +140,21 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 
+  --shadow-painel: var(--sombra-painel);
+  --shadow-flutuante: var(--sombra-flutuante);
+
   --font-sans: var(--fonte-corpo), system-ui, sans-serif;
-  --font-heading: var(--fonte-titulo), var(--fonte-corpo), sans-serif;
+  --font-heading: var(--fonte-corpo), system-ui, sans-serif;
   --font-titulo: var(--fonte-titulo), var(--fonte-corpo), sans-serif;
   --font-mono: var(--fonte-mono), ui-monospace, monospace;
 
-  --radius-sm: 2px;
-  --radius-md: var(--raio);
-  --radius-lg: 6px;
-  --radius-xl: 8px;
-  --radius-2xl: 10px;
-  --radius-3xl: 12px;
-  --radius-4xl: 16px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 20px;
+  --radius-3xl: 24px;
+  --radius-4xl: 999px;
 }
 
 @layer base {
@@ -148,11 +162,13 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground font-sans antialiased;
+    @apply bg-fundo text-texto font-sans antialiased;
   }
   h1,
-  h2 {
-    font-family: var(--font-titulo);
+  h2,
+  h3 {
+    text-wrap: balance;
+    letter-spacing: -0.01em;
   }
   .numeros {
     font-variant-numeric: tabular-nums;
@@ -160,5 +176,14 @@
   :focus-visible {
     outline: 2px solid var(--acao);
     outline-offset: 2px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
   }
 }

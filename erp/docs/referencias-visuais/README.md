@@ -1,6 +1,6 @@
 # Referências visuais do ERP
 
-Direção: ferramenta de trabalho escura, densa e silenciosa. Preto da marca como fundo, ciano só em ação e foco, cores quentes só com significado (vencido, perda, inviável). Tipografia Inter no corpo, Chakra Petch em títulos e números grandes, JetBrains Mono em códigos. Raio 4 px, sem sombra, profundidade por tom. Tokens em `docs/design-system.md`.
+Direção (aplicada em 12/10/2026): superfícies em camadas com cantos de 16 a 24 px, folha de conteúdo elevada sobre o fundo preto da marca, sidebar com grupos e contadores em pílula e item ativo em bloco sólido ciano, controles em pílula, cartão de indicador com rótulo discreto e número grande, Inter em tudo. Cores quentes só com significado. Síntese em `DESIGN.md`; tokens em `docs/design-system.md`.
 
 As imagens desta pasta foram salvas pelo dono da empresa como inspiração. Nenhuma é copiada; cada uma empresta um padrão de estrutura. Fontes conhecidas em `fontes.md`.
 

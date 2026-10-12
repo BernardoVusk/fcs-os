@@ -28,7 +28,7 @@ export default async function PaginaInicio({ searchParams }: { searchParams: Pro
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h1 className="text-2xl font-bold uppercase">Início</h1>
+        <h1 className="text-[28px] leading-tight font-semibold tracking-tight">Início</h1>
         <SeletorPeriodo atual={atual} base="/" />
       </div>
       {faltam > 0 && (
@@ -45,13 +45,13 @@ export default async function PaginaInicio({ searchParams }: { searchParams: Pro
           não calcula.
         </Banner>
       )}
-      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-3">
         <CartaoIndicador
           rotulo="Alertas abertos"
           valor={String(resumo.alertasAbertos)}
           rodape={<span className="text-xs text-texto-3">Central de alertas chega na Fase 9</span>}
         />
-        <CartaoIndicador rotulo="Canais com taxas" valor={`${resumo.canaisComTaxas} de ${resumo.canaisTotal}`} />
+        <CartaoIndicador rotulo="Canais com taxas" valor={`${resumo.canaisComTaxas} de ${resumo.canaisTotal}`} link={{ href: "/configuracoes/canais", rotulo: "Configurar canais" }} />
         {FUTUROS.map((f) => (
           <CartaoIndicador key={f.rotulo} rotulo={f.rotulo} valor={null} dica={`Disponível na Fase ${f.fase}`} />
         ))}
