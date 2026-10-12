@@ -1,26 +1,164 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
+/* Tema claro por atributo no <html>; escuro é o :root. */
+@custom-variant claro (&:where([data-tema="claro"], [data-tema="claro"] *));
+@custom-variant dark (&:where(:root:not([data-tema="claro"]), :root:not([data-tema="claro"]) *));
+
+/* Tokens da marca FCS (spec seção 8.2). */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: dark;
+  --fundo: #0a0a0a;
+  --superficie: #121314;
+  --superficie-2: #191a1c;
+  --borda: #242628;
+  --texto: #f2f3f4;
+  --texto-2: #a4a8ad;
+  --texto-3: #6e7378;
+  --acao: #00d8ff;
+  --acao-texto: #0a0a0a;
+  --acao-suave: #0b2a31;
+  --sucesso: #3ddc97;
+  --alerta: #f5b841;
+  --erro: #f26d6d;
+  --info: #00d8ff;
+  --raio: 4px;
+
+  /* Nomes que o shadcn usa, apontando para os tokens acima. */
+  --background: var(--fundo);
+  --foreground: var(--texto);
+  --card: var(--superficie);
+  --card-foreground: var(--texto);
+  --popover: var(--superficie);
+  --popover-foreground: var(--texto);
+  --primary: var(--acao);
+  --primary-foreground: var(--acao-texto);
+  --secondary: var(--superficie-2);
+  --secondary-foreground: var(--texto);
+  --muted: var(--superficie-2);
+  --muted-foreground: var(--texto-2);
+  --accent: var(--acao-suave);
+  --accent-foreground: var(--texto);
+  --destructive: var(--erro);
+  --destructive-foreground: #0a0a0a;
+  --border: var(--borda);
+  --input: var(--borda);
+  --ring: var(--acao);
+  --radius: var(--raio);
+  --chart-1: var(--acao);
+  --chart-2: var(--sucesso);
+  --chart-3: var(--alerta);
+  --chart-4: var(--erro);
+  --chart-5: var(--texto-2);
+  --sidebar: var(--superficie);
+  --sidebar-foreground: var(--texto);
+  --sidebar-primary: var(--acao);
+  --sidebar-primary-foreground: var(--acao-texto);
+  --sidebar-accent: var(--acao-suave);
+  --sidebar-accent-foreground: var(--texto);
+  --sidebar-border: var(--borda);
+  --sidebar-ring: var(--acao);
+}
+
+[data-tema="claro"] {
+  color-scheme: light;
+  --fundo: #f6f7f8;
+  --superficie: #ffffff;
+  --superficie-2: #f0f2f4;
+  --borda: #e3e6e9;
+  --texto: #111315;
+  --texto-2: #5b6168;
+  --texto-3: #8a9097;
+  --acao: #0098b8;
+  --acao-texto: #ffffff;
+  --acao-suave: #dff7fc;
+  --sucesso: #1e8e5a;
+  --alerta: #9a6b00;
+  --erro: #b3261e;
+  --info: #0098b8;
+  --destructive-foreground: #ffffff;
 }
 
 @theme inline {
+  --color-fundo: var(--fundo);
+  --color-superficie: var(--superficie);
+  --color-superficie-2: var(--superficie-2);
+  --color-borda: var(--borda);
+  --color-texto: var(--texto);
+  --color-texto-2: var(--texto-2);
+  --color-texto-3: var(--texto-3);
+  --color-acao: var(--acao);
+  --color-acao-texto: var(--acao-texto);
+  --color-acao-suave: var(--acao-suave);
+  --color-sucesso: var(--sucesso);
+  --color-alerta: var(--alerta);
+  --color-erro: var(--erro);
+  --color-info: var(--info);
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  --font-sans: var(--fonte-corpo), system-ui, sans-serif;
+  --font-heading: var(--fonte-titulo), var(--fonte-corpo), sans-serif;
+  --font-titulo: var(--fonte-titulo), var(--fonte-corpo), sans-serif;
+  --font-mono: var(--fonte-mono), ui-monospace, monospace;
+
+  --radius-sm: 2px;
+  --radius-md: var(--raio);
+  --radius-lg: 6px;
+  --radius-xl: 8px;
+  --radius-2xl: 10px;
+  --radius-3xl: 12px;
+  --radius-4xl: 16px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
   }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+  h1,
+  h2 {
+    font-family: var(--font-titulo);
+  }
+  .numeros {
+    font-variant-numeric: tabular-nums;
+  }
+  :focus-visible {
+    outline: 2px solid var(--acao);
+    outline-offset: 2px;
+  }
 }

@@ -26,9 +26,9 @@ marketing e produção.
 - `scripts/` — automações (geração de imagem, publicação em Instagram e Facebook)
 - `templates/` — moldes de skills, perfis e identidade
 - `mini-projetos/` — ferramentas internas pequenas, uma pasta por projeto, cada uma com `docs/` (estudo, spec, plano, checagem). Primeira: `fcs-spy/`, extensão de Chrome de estudo de mercado na Shopee
+- `erp/` — FCS ERP, o sistema de gestão (Next.js + Supabase). Regras próprias em `erp/CLAUDE.md`; plano aprovado em `erp/docs/superpowers/specs/2026-10-11-erp-fcs-design.md`; migrações do banco ficam em `supabase/migrations/` na raiz
 
-Pastas a criar conforme a operação pedir:
-- `produtos/` — ficha de cada produto do catálogo (modelo, material, tempo de impressão, custo, preço)
+A ficha de produto vive no ERP (Fase 5), não em pasta.
 
 ## Sobre a empresa
 
@@ -78,6 +78,7 @@ Detalhe completo em `_memoria/preferencias.md`.
 - Relatórios de marketplace vão pra `marketing/marketplace/relatorios/`
 - Toda sugestão de rotina precisa caber numa operação de uma pessoa só
 - **Nunca inventar número.** Painel que não abriu vira "não coletado" no relatório, nunca estimativa
+- Regra de negócio do ERP só em `erp/src/dominio`; migração só em `supabase/migrations/`, aplicada em dev e teste com `npm run migrar` dentro de `erp/`
 
 ## Como os dados de marketplace são coletados
 
@@ -93,7 +94,7 @@ O canal de coleta é o browser logado, via extensão Claude in Chrome. A skill `
 - [x] Claude in Chrome (conectado em 27/09/2026 com `/chrome` na sessão do terminal; na extensão do VS Code as ferramentas do Chrome não aparecem, usar o terminal)
 - [x] FCS SPY (extensão própria, `mini-projetos/fcs-spy/`, carregada sem compactação a partir de `extensao/dist`)
 - [x] GitHub (repositório privado `BernardoVusk/fcs-os`, criado em 11/10/2026; salvar com `/salvar`)
-- [x] Supabase (organização LABSFCS, plano gratuito; projeto `fcs-os`, ref `jdjbyxysxtnyhztypeai`, São Paulo sa-east-1, criado em 11/10/2026. O primeiro, em us-east-1, virou `fcs-os-antigo-eua` e está pausado, vazio). Acesso total autorizado pelo usuário: criar e alterar projetos, tabelas, funções e buckets sem pedir. Token e chaves no `.env` (`SUPABASE_ACCESS_TOKEN`, `SUPABASE_DB_PASSWORD`, `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`); nunca copiar esses valores para arquivo versionado nem para a memória. Usar a Management API (`api.supabase.com/v1/projects/<ref>/database/query`) e guardar cada mudança de estrutura como migração em `supabase/migrations/`
+- [x] Supabase (organização LABSFCS, plano gratuito; projeto `fcs-os`, ref `jdjbyxysxtnyhztypeai`, São Paulo sa-east-1, criado em 11/10/2026. O primeiro, em us-east-1, virou `fcs-os-antigo-eua` e está pausado, vazio). Acesso total autorizado pelo usuário: criar e alterar projetos, tabelas, funções e buckets sem pedir. Token e chaves no `.env` (`SUPABASE_ACCESS_TOKEN`, `SUPABASE_DB_PASSWORD`, `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`); nunca copiar esses valores para arquivo versionado nem para a memória. Usar a Management API (`api.supabase.com/v1/projects/<ref>/database/query`) e guardar cada mudança de estrutura como migração em `supabase/migrations/`. Projeto de teste `fcs-os-teste` (sa-east-1) criado em 11/10/2026 para os testes de integração do ERP
 - [ ] Google Ads
 - [ ] Meta Ads
 - [ ] Instagram / Facebook (scripts em `scripts/`, precisa de `.env`)

@@ -1,0 +1,31 @@
+name: ci
+on:
+  push:
+    paths: ["erp/**", "supabase/**", ".github/workflows/ci.yml"]
+  pull_request:
+    paths: ["erp/**", "supabase/**", ".github/workflows/ci.yml"]
+jobs:
+  erp:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: erp
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: erp/package-lock.json
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+        env:
+          SUPABASE_URL: https://exemplo.supabase.co
+          SUPABASE_ANON_KEY: chave-falsa-so-para-build
+      - name: nenhum segredo no bundle do navegador
+        run: |
+          if grep -rq "SUPABASE_SERVICE_ROLE_KEY\|service_role" .next/static; then
+            echo "segredo encontrado no bundle"; exit 1; fi
