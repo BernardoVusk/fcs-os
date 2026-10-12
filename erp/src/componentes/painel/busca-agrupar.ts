@@ -53,6 +53,7 @@ export const TIPOS_DISPONIVEIS: TipoBusca[] = [
   "ordem",
   "pedido",
   "cliente",
+  "lancamento",
 ];
 
 export type ResultadoBusca = {

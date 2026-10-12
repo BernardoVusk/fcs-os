@@ -364,6 +364,65 @@ export type Database = {
           },
         ];
       };
+      categorias_financeiras: {
+        Row: {
+          ativo: boolean;
+          embutido_no_custo: boolean;
+          id: string;
+          natureza: string;
+          nome: string;
+          ordem: number;
+          pai_id: string | null;
+          tipo: string;
+        };
+        Insert: {
+          ativo?: boolean;
+          embutido_no_custo?: boolean;
+          id?: string;
+          natureza?: string;
+          nome: string;
+          ordem?: number;
+          pai_id?: string | null;
+          tipo: string;
+        };
+        Update: {
+          ativo?: boolean;
+          embutido_no_custo?: boolean;
+          id?: string;
+          natureza?: string;
+          nome?: string;
+          ordem?: number;
+          pai_id?: string | null;
+          tipo?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "categorias_financeiras_pai_id_fkey";
+            columns: ["pai_id"];
+            isOneToOne: false;
+            referencedRelation: "categorias_financeiras";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      centros_custo: {
+        Row: {
+          ativo: boolean;
+          id: string;
+          nome: string;
+        };
+        Insert: {
+          ativo?: boolean;
+          id?: string;
+          nome: string;
+        };
+        Update: {
+          ativo?: boolean;
+          id?: string;
+          nome?: string;
+        };
+        Relationships: [];
+      };
       clientes: {
         Row: {
           anonimizado: boolean;
@@ -821,6 +880,60 @@ export type Database = {
           },
         ];
       };
+      contas_financeiras: {
+        Row: {
+          ativo: boolean;
+          atualizado_em: string;
+          canal_id: string | null;
+          criado_em: string;
+          id: string;
+          nome: string;
+          observacoes: string | null;
+          saldo_inicial: number;
+          saldo_inicial_em: string;
+          tipo: string;
+        };
+        Insert: {
+          ativo?: boolean;
+          atualizado_em?: string;
+          canal_id?: string | null;
+          criado_em?: string;
+          id?: string;
+          nome: string;
+          observacoes?: string | null;
+          saldo_inicial?: number;
+          saldo_inicial_em?: string;
+          tipo: string;
+        };
+        Update: {
+          ativo?: boolean;
+          atualizado_em?: string;
+          canal_id?: string | null;
+          criado_em?: string;
+          id?: string;
+          nome?: string;
+          observacoes?: string | null;
+          saldo_inicial?: number;
+          saldo_inicial_em?: string;
+          tipo?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "contas_financeiras_canal_id_fkey";
+            columns: ["canal_id"];
+            isOneToOne: false;
+            referencedRelation: "canais_venda";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "contas_financeiras_canal_id_fkey";
+            columns: ["canal_id"];
+            isOneToOne: false;
+            referencedRelation: "canais_venda_vigentes";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       fornecedores: {
         Row: {
           ativo: boolean;
@@ -1049,6 +1162,219 @@ export type Database = {
             isOneToOne: false;
             referencedRelation: "unidades";
             referencedColumns: ["codigo"];
+          },
+        ];
+      };
+      lancamentos: {
+        Row: {
+          anexo_path: string | null;
+          atualizado_em: string;
+          cancelado_em: string | null;
+          cancelado_motivo: string | null;
+          categoria_id: string | null;
+          centro_custo_id: string | null;
+          competencia: string;
+          conta_destino_id: string | null;
+          conta_id: string | null;
+          criado_em: string;
+          criado_por: string | null;
+          data_prevista: string;
+          descricao: string;
+          encerrado_em: string | null;
+          encerrado_motivo: string | null;
+          estorna_id: string | null;
+          estornado_em: string | null;
+          forma_pagamento: string | null;
+          id: string;
+          observacoes: string | null;
+          origem_id: string | null;
+          origem_tipo: string | null;
+          papel_origem: string;
+          recorrencia_id: string | null;
+          tipo: string;
+          valor_previsto: number;
+        };
+        Insert: {
+          anexo_path?: string | null;
+          atualizado_em?: string;
+          cancelado_em?: string | null;
+          cancelado_motivo?: string | null;
+          categoria_id?: string | null;
+          centro_custo_id?: string | null;
+          competencia: string;
+          conta_destino_id?: string | null;
+          conta_id?: string | null;
+          criado_em?: string;
+          criado_por?: string | null;
+          data_prevista: string;
+          descricao: string;
+          encerrado_em?: string | null;
+          encerrado_motivo?: string | null;
+          estorna_id?: string | null;
+          estornado_em?: string | null;
+          forma_pagamento?: string | null;
+          id?: string;
+          observacoes?: string | null;
+          origem_id?: string | null;
+          origem_tipo?: string | null;
+          papel_origem?: string;
+          recorrencia_id?: string | null;
+          tipo: string;
+          valor_previsto: number;
+        };
+        Update: {
+          anexo_path?: string | null;
+          atualizado_em?: string;
+          cancelado_em?: string | null;
+          cancelado_motivo?: string | null;
+          categoria_id?: string | null;
+          centro_custo_id?: string | null;
+          competencia?: string;
+          conta_destino_id?: string | null;
+          conta_id?: string | null;
+          criado_em?: string;
+          criado_por?: string | null;
+          data_prevista?: string;
+          descricao?: string;
+          encerrado_em?: string | null;
+          encerrado_motivo?: string | null;
+          estorna_id?: string | null;
+          estornado_em?: string | null;
+          forma_pagamento?: string | null;
+          id?: string;
+          observacoes?: string | null;
+          origem_id?: string | null;
+          origem_tipo?: string | null;
+          papel_origem?: string;
+          recorrencia_id?: string | null;
+          tipo?: string;
+          valor_previsto?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "lancamentos_categoria_id_fkey";
+            columns: ["categoria_id"];
+            isOneToOne: false;
+            referencedRelation: "categorias_financeiras";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "lancamentos_centro_custo_id_fkey";
+            columns: ["centro_custo_id"];
+            isOneToOne: false;
+            referencedRelation: "centros_custo";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "lancamentos_conta_destino_id_fkey";
+            columns: ["conta_destino_id"];
+            isOneToOne: false;
+            referencedRelation: "contas_financeiras";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "lancamentos_conta_destino_id_fkey";
+            columns: ["conta_destino_id"];
+            isOneToOne: false;
+            referencedRelation: "contas_saldos";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "lancamentos_conta_id_fkey";
+            columns: ["conta_id"];
+            isOneToOne: false;
+            referencedRelation: "contas_financeiras";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "lancamentos_conta_id_fkey";
+            columns: ["conta_id"];
+            isOneToOne: false;
+            referencedRelation: "contas_saldos";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "lancamentos_estorna_id_fkey";
+            columns: ["estorna_id"];
+            isOneToOne: false;
+            referencedRelation: "lancamentos";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "lancamentos_estorna_id_fkey";
+            columns: ["estorna_id"];
+            isOneToOne: false;
+            referencedRelation: "lancamentos_situacao";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "lancamentos_recorrencia_id_fkey";
+            columns: ["recorrencia_id"];
+            isOneToOne: false;
+            referencedRelation: "recorrencias";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      lancamentos_realizacoes: {
+        Row: {
+          conta_id: string;
+          data: string;
+          em: string;
+          id: string;
+          lancamento_id: string;
+          observacao: string | null;
+          usuario_id: string | null;
+          valor: number;
+        };
+        Insert: {
+          conta_id: string;
+          data?: string;
+          em?: string;
+          id?: string;
+          lancamento_id: string;
+          observacao?: string | null;
+          usuario_id?: string | null;
+          valor: number;
+        };
+        Update: {
+          conta_id?: string;
+          data?: string;
+          em?: string;
+          id?: string;
+          lancamento_id?: string;
+          observacao?: string | null;
+          usuario_id?: string | null;
+          valor?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "lancamentos_realizacoes_conta_id_fkey";
+            columns: ["conta_id"];
+            isOneToOne: false;
+            referencedRelation: "contas_financeiras";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "lancamentos_realizacoes_conta_id_fkey";
+            columns: ["conta_id"];
+            isOneToOne: false;
+            referencedRelation: "contas_saldos";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "lancamentos_realizacoes_lancamento_id_fkey";
+            columns: ["lancamento_id"];
+            isOneToOne: false;
+            referencedRelation: "lancamentos";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "lancamentos_realizacoes_lancamento_id_fkey";
+            columns: ["lancamento_id"];
+            isOneToOne: false;
+            referencedRelation: "lancamentos_situacao";
+            referencedColumns: ["id"];
           },
         ];
       };
@@ -1564,6 +1890,39 @@ export type Database = {
           id?: string;
           observacoes?: string | null;
           versao?: number;
+          vigente_desde?: string;
+        };
+        Relationships: [];
+      };
+      parametros_tributarios: {
+        Row: {
+          aliquota_efetiva_pct: number;
+          base: string;
+          criado_em: string;
+          dia_vencimento: number;
+          id: string;
+          observacoes: string | null;
+          regime: string;
+          vigente_desde: string;
+        };
+        Insert: {
+          aliquota_efetiva_pct: number;
+          base?: string;
+          criado_em?: string;
+          dia_vencimento?: number;
+          id?: string;
+          observacoes?: string | null;
+          regime: string;
+          vigente_desde?: string;
+        };
+        Update: {
+          aliquota_efetiva_pct?: number;
+          base?: string;
+          criado_em?: string;
+          dia_vencimento?: number;
+          id?: string;
+          observacoes?: string | null;
+          regime?: string;
           vigente_desde?: string;
         };
         Relationships: [];
@@ -2470,6 +2829,134 @@ export type Database = {
           },
         ];
       };
+      provisoes_imposto: {
+        Row: {
+          aliquota: number;
+          atualizado_em: string;
+          base_calculo: number;
+          competencia: string;
+          id: string;
+          lancamento_id: string | null;
+          valor: number;
+        };
+        Insert: {
+          aliquota: number;
+          atualizado_em?: string;
+          base_calculo?: number;
+          competencia: string;
+          id?: string;
+          lancamento_id?: string | null;
+          valor?: number;
+        };
+        Update: {
+          aliquota?: number;
+          atualizado_em?: string;
+          base_calculo?: number;
+          competencia?: string;
+          id?: string;
+          lancamento_id?: string | null;
+          valor?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "provisoes_imposto_lancamento_id_fkey";
+            columns: ["lancamento_id"];
+            isOneToOne: false;
+            referencedRelation: "lancamentos";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "provisoes_imposto_lancamento_id_fkey";
+            columns: ["lancamento_id"];
+            isOneToOne: false;
+            referencedRelation: "lancamentos_situacao";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      recorrencias: {
+        Row: {
+          ativo: boolean;
+          atualizado_em: string;
+          categoria_id: string | null;
+          centro_custo_id: string | null;
+          conta_id: string | null;
+          criado_em: string;
+          descricao: string;
+          dia: number | null;
+          fim: string | null;
+          frequencia: string;
+          id: string;
+          inicio: string;
+          observacoes: string | null;
+          tipo: string;
+          valor: number;
+        };
+        Insert: {
+          ativo?: boolean;
+          atualizado_em?: string;
+          categoria_id?: string | null;
+          centro_custo_id?: string | null;
+          conta_id?: string | null;
+          criado_em?: string;
+          descricao: string;
+          dia?: number | null;
+          fim?: string | null;
+          frequencia: string;
+          id?: string;
+          inicio: string;
+          observacoes?: string | null;
+          tipo: string;
+          valor: number;
+        };
+        Update: {
+          ativo?: boolean;
+          atualizado_em?: string;
+          categoria_id?: string | null;
+          centro_custo_id?: string | null;
+          conta_id?: string | null;
+          criado_em?: string;
+          descricao?: string;
+          dia?: number | null;
+          fim?: string | null;
+          frequencia?: string;
+          id?: string;
+          inicio?: string;
+          observacoes?: string | null;
+          tipo?: string;
+          valor?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "recorrencias_categoria_id_fkey";
+            columns: ["categoria_id"];
+            isOneToOne: false;
+            referencedRelation: "categorias_financeiras";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "recorrencias_centro_custo_id_fkey";
+            columns: ["centro_custo_id"];
+            isOneToOne: false;
+            referencedRelation: "centros_custo";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "recorrencias_conta_id_fkey";
+            columns: ["conta_id"];
+            isOneToOne: false;
+            referencedRelation: "contas_financeiras";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "recorrencias_conta_id_fkey";
+            columns: ["conta_id"];
+            isOneToOne: false;
+            referencedRelation: "contas_saldos";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       tokens_integracao: {
         Row: {
           criado_em: string;
@@ -2595,6 +3082,33 @@ export type Database = {
         };
         Relationships: [];
       };
+      contas_saldos: {
+        Row: {
+          ativo: boolean | null;
+          id: string | null;
+          nome: string | null;
+          saldo_atual: number | null;
+          saldo_inicial: number | null;
+          tipo: string | null;
+        };
+        Insert: {
+          ativo?: boolean | null;
+          id?: string | null;
+          nome?: string | null;
+          saldo_atual?: never;
+          saldo_inicial?: number | null;
+          tipo?: string | null;
+        };
+        Update: {
+          ativo?: boolean | null;
+          id?: string | null;
+          nome?: string | null;
+          saldo_atual?: never;
+          saldo_inicial?: number | null;
+          tipo?: string | null;
+        };
+        Relationships: [];
+      };
       estoque_atual: {
         Row: {
           abaixo_minimo: boolean | null;
@@ -2638,6 +3152,110 @@ export type Database = {
             columns: ["variacao_id"];
             isOneToOne: false;
             referencedRelation: "produtos_variacoes";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      lancamentos_situacao: {
+        Row: {
+          anexo_path: string | null;
+          atrasado: boolean | null;
+          atualizado_em: string | null;
+          cancelado_em: string | null;
+          cancelado_motivo: string | null;
+          categoria_id: string | null;
+          categoria_natureza: string | null;
+          categoria_nome: string | null;
+          centro_custo_id: string | null;
+          competencia: string | null;
+          conta_destino_id: string | null;
+          conta_id: string | null;
+          conta_nome: string | null;
+          criado_em: string | null;
+          criado_por: string | null;
+          data_prevista: string | null;
+          descricao: string | null;
+          embutido_no_custo: boolean | null;
+          encerrado_em: string | null;
+          encerrado_motivo: string | null;
+          estado: string | null;
+          estorna_id: string | null;
+          estornado_em: string | null;
+          forma_pagamento: string | null;
+          id: string | null;
+          observacoes: string | null;
+          origem_id: string | null;
+          origem_tipo: string | null;
+          papel_origem: string | null;
+          recorrencia_id: string | null;
+          saldo_restante: number | null;
+          tipo: string | null;
+          ultima_data: string | null;
+          valor_previsto: number | null;
+          valor_realizado: number | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "lancamentos_categoria_id_fkey";
+            columns: ["categoria_id"];
+            isOneToOne: false;
+            referencedRelation: "categorias_financeiras";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "lancamentos_centro_custo_id_fkey";
+            columns: ["centro_custo_id"];
+            isOneToOne: false;
+            referencedRelation: "centros_custo";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "lancamentos_conta_destino_id_fkey";
+            columns: ["conta_destino_id"];
+            isOneToOne: false;
+            referencedRelation: "contas_financeiras";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "lancamentos_conta_destino_id_fkey";
+            columns: ["conta_destino_id"];
+            isOneToOne: false;
+            referencedRelation: "contas_saldos";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "lancamentos_conta_id_fkey";
+            columns: ["conta_id"];
+            isOneToOne: false;
+            referencedRelation: "contas_financeiras";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "lancamentos_conta_id_fkey";
+            columns: ["conta_id"];
+            isOneToOne: false;
+            referencedRelation: "contas_saldos";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "lancamentos_estorna_id_fkey";
+            columns: ["estorna_id"];
+            isOneToOne: false;
+            referencedRelation: "lancamentos";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "lancamentos_estorna_id_fkey";
+            columns: ["estorna_id"];
+            isOneToOne: false;
+            referencedRelation: "lancamentos_situacao";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "lancamentos_recorrencia_id_fkey";
+            columns: ["recorrencia_id"];
+            isOneToOne: false;
+            referencedRelation: "recorrencias";
             referencedColumns: ["id"];
           },
         ];
@@ -2728,6 +3346,10 @@ export type Database = {
           titulo: string;
         }[];
       };
+      cancelar_lancamento: {
+        Args: { p_lancamento: string; p_motivo: string };
+        Returns: undefined;
+      };
       concluir_ordem_producao: {
         Args: {
           p_aprovadas: number;
@@ -2749,10 +3371,15 @@ export type Database = {
         Args: { p_nota?: string; p_pedido: string };
         Returns: Json;
       };
+      estornar_lancamento: {
+        Args: { p_lancamento: string; p_motivo: string };
+        Returns: string;
+      };
       estornar_movimentacao: {
         Args: { p_motivo: string; p_movimentacao: string };
         Returns: string;
       };
+      garantir_recebivel: { Args: { p_pedido: string }; Returns: string };
       listar_conhecimentos: {
         Args: {
           p_categoria?: string;
@@ -2821,6 +3448,18 @@ export type Database = {
       reabrir_ordem_producao: {
         Args: { p_motivo: string; p_ordem: string };
         Returns: undefined;
+      };
+      realizar_lancamento: {
+        Args: {
+          p_conta: string;
+          p_data?: string;
+          p_encerrar?: boolean;
+          p_lancamento: string;
+          p_motivo?: string;
+          p_observacao?: string;
+          p_valor: number;
+        };
+        Returns: Json;
       };
     };
     Enums: {

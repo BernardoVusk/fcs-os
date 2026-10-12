@@ -1,0 +1,23 @@
+[
+  {
+    "titulo": "Financeiro: realizações, estorno por contra-lançamento, recebível único por pedido e DRE sem dupla contagem",
+    "tipo": "decisao",
+    "categoria": "Decisões de negócio",
+    "modulo": "financeiro",
+    "tags": ["lancamentos", "caixa", "projecao", "dre", "recebivel", "estorno", "recorrencia", "imposto"],
+    "referencia": "supabase/migrations/0015_financeiro.sql; erp/src/dominio/financeiro; erp/docs/regras-de-negocio.md",
+    "resumo": "Estado do lançamento é derivado das realizações (planejado, parcial, realizado) e de marcas de cancelado, encerrado e estornado. Nada é apagado: corrigir é estornar com contra-lançamento. Recebível nasce uma só vez ao marcar pago, por gatilho. DRE exclui estornos, transferências e categorias embutidas no custo. Só o dono acessa.",
+    "estrutura": {
+      "contexto": "Uma pessoa opera o caixa de três marketplaces. Precisa saber o que tem, o que vai entrar e sair, sem contar duas vezes a compra de filamento (que já entra no custo realizado das ordens) e sem duplicar o recebível quando o pedido é reimportado.",
+      "alternativas": [
+        "Status gravado no lançamento, editado pela tela",
+        "Apagar ou editar lançamento realizado para corrigir",
+        "Recebível criado pela aplicação ao mudar status (duplicável por importação)",
+        "DRE somando toda despesa realizada, inclusive insumos"
+      ],
+      "decisao": "Tabela lancamentos imutável em valor realizado: as realizações ficam em lancamentos_realizacoes e a view lancamentos_situacao deriva estado, saldo restante e atraso. realizar_lancamento, cancelar_lancamento e estornar_lancamento são funções SQL security invoker; garantir_recebivel e os gatilhos de pedido, compra, manutenção e reembolso são security definer com índice único por (origem, id, papel). Categorias com embutido_no_custo saem da DRE. Recorrência gera 3 meses, única por competência. Imposto só com parâmetro configurado, um pagável por competência. Policies dono-only.",
+      "consequencias": "Caixa mais projeção é invariante ao realizar. Reimportar pedido não duplica recebível nem sobrescreve valor realizado. Operador confirma compra sem ver o pagável criado. Conciliação de repasse com diferença acima de R$ 0,05 abre alerta e nunca muda o previsto."
+    },
+    "conteudo": "## Onde está\n\n- Domínio: `src/dominio/financeiro/{estados,projecao,dre,recorrencia}.ts` com testes.\n- Funções SQL: `realizar_lancamento`, `cancelar_lancamento`, `estornar_lancamento`, `garantir_recebivel` (0015).\n- Gatilhos: `pedidos_financeiro`, `mov_produto_reembolso`, `compras_financeiro`, `manutencoes_financeiro`.\n- Telas: Financeiro (visão geral com projeção de 30 dias e DRE do mês), Lançamentos (realizar parcial, cancelar, estornar, exportar CSV), Recorrências, Impostos, Conciliar repasses, Contas, Categorias.\n- Painel inicial: cartões de receita recebida, despesas pagas e abertos em 30 dias, só para o dono."
+  }
+]

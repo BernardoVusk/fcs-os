@@ -22,6 +22,7 @@ Aplicação Next.js 16 do sistema de gestão da FCS 3D STUDIO. Spec aprovada: `d
 - Em plpgsql, `text[] || 'literal'` é lido como concatenação de arrays e falha com "malformed array literal"; usar `array_append`.
 - Parâmetro com default só depois dos obrigatórios. Para tornar opcional um parâmetro de função já aplicada, nova migração com `drop function` e `create` na nova ordem; o PostgREST chama por nome, então a ordem não afeta o código.
 - Escrita em mais de uma tabela (confirmar compra, movimentar estoque, estornar) é função SQL `security invoker` chamada por `rpc`, nunca várias chamadas da aplicação.
+- Gatilho que escreve em tabela que o usuário da sessão não enxerga (operador confirma compra, o pagável é só do dono) é `security definer` com `search_path` fixo; função chamada pela tela continua `security invoker`.
 - Sequência criada no schema `app` precisa de `grant usage, select ... to authenticated, service_role`, senão o insert falha com "permission denied for sequence" só em runtime.
 - Constante exportada de arquivo `"use client"` vira referência de cliente quando importada por componente de servidor (objeto chega como undefined): mapas de rótulos e status ficam em `src/dominio/`.
 - Valores numéricos em `defaultValue` de input usam `numeroParaCampo` (sem separador de milhar); `formatarNumero` é só para exibir.
@@ -36,7 +37,7 @@ Aplicação Next.js 16 do sistema de gestão da FCS 3D STUDIO. Spec aprovada: `d
 
 ## Áreas críticas
 
-Permissões (`lib/auth/papeis.ts` e policies), auditoria (`app.auditar`), servidor MCP (`src/mcp/`, escopos e filtro de segredos), motor de custos (`src/dominio/custos`, `src/dominio/precos`, `docs/formulas-de-custo.md`), estoque (funções SQL de 0007 a 0009), produção (`concluir_ordem_producao` e `reabrir_ordem_producao` em 0013), pedidos (`mudar_status_pedido` em 0014), lançamentos (Fase 7). Mudança nessas áreas exige teste de integração novo.
+Permissões (`lib/auth/papeis.ts` e policies), auditoria (`app.auditar`), servidor MCP (`src/mcp/`, escopos e filtro de segredos), motor de custos (`src/dominio/custos`, `src/dominio/precos`, `docs/formulas-de-custo.md`), estoque (funções SQL de 0007 a 0009), produção (`concluir_ordem_producao` e `reabrir_ordem_producao` em 0013), pedidos (`mudar_status_pedido` em 0014), financeiro (`realizar_lancamento`, `cancelar_lancamento`, `estornar_lancamento`, `garantir_recebivel` e os gatilhos de 0015). Mudança nessas áreas exige teste de integração novo.
 
 ## Antes de dizer que terminou
 

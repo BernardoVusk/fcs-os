@@ -35,17 +35,15 @@ beforeAll(async () => {
       .select("id")
       .single()
   ).data!.id;
-  await c
-    .from("canais_venda_taxas")
-    .insert({
-      canal_id: canalId,
-      vigente_desde: "2026-01-01",
-      comissao_pct: 0.14,
-      taxa_pagamento_pct: 0.02,
-      ads_pct_padrao: 0,
-      taxa_fixa_item: 4,
-      frete_subsidio_padrao: 0,
-    });
+  await c.from("canais_venda_taxas").insert({
+    canal_id: canalId,
+    vigente_desde: "2026-01-01",
+    comissao_pct: 0.14,
+    taxa_pagamento_pct: 0.02,
+    ads_pct_padrao: 0,
+    taxa_fixa_item: 4,
+    frete_subsidio_padrao: 0,
+  });
   produtoId = (
     await c
       .from("produtos")
@@ -110,14 +108,12 @@ describe("pedido manual", () => {
     expect(error).toBeNull();
     pedidoId = p!.id;
     expect(p!.codigo).toMatch(/^PED-\d{5}$/);
-    await c
-      .from("pedidos_eventos")
-      .insert({
-        pedido_id: pedidoId,
-        para_status_id: padrao!.id,
-        origem: "manual",
-        nota: "criado",
-      });
+    await c.from("pedidos_eventos").insert({
+      pedido_id: pedidoId,
+      para_status_id: padrao!.id,
+      origem: "manual",
+      nota: "criado",
+    });
     await c.from("pedidos_itens").insert([
       {
         pedido_id: pedidoId,
@@ -200,17 +196,15 @@ describe("pedido manual", () => {
       p_status_codigo: "enviado",
     });
     expect(sem.error?.message).toBe("sem_pecas_prontas");
-    await c
-      .from("movimentacoes_produto")
-      .insert({
-        produto_id: produtoId,
-        tipo: "producao",
-        quantidade: 3,
-        valor: 39,
-        custo_unitario_momento: 13,
-        motivo: "teste",
-        origem_tipo: "manual",
-      });
+    await c.from("movimentacoes_produto").insert({
+      produto_id: produtoId,
+      tipo: "producao",
+      quantidade: 3,
+      valor: 39,
+      custo_unitario_momento: 13,
+      motivo: "teste",
+      origem_tipo: "manual",
+    });
     const ok = await c.rpc("mudar_status_pedido", {
       p_pedido: pedidoId,
       p_status_codigo: "enviado",
@@ -259,23 +253,19 @@ describe("pedido manual", () => {
   it("importação é única por hash e cliente pode ser anonimizado", async () => {
     const c = dono.cliente;
     const hash = "a".repeat(64);
-    const { error: e1 } = await c
-      .from("importacoes")
-      .insert({
-        canal_id: canalId,
-        tipo: "pedidos",
-        nome_arquivo: `teste-${sufixo}.csv`,
-        hash_sha256: hash,
-      });
+    const { error: e1 } = await c.from("importacoes").insert({
+      canal_id: canalId,
+      tipo: "pedidos",
+      nome_arquivo: `teste-${sufixo}.csv`,
+      hash_sha256: hash,
+    });
     expect(e1).toBeNull();
-    const { error: e2 } = await c
-      .from("importacoes")
-      .insert({
-        canal_id: canalId,
-        tipo: "pedidos",
-        nome_arquivo: `teste-${sufixo}-2.csv`,
-        hash_sha256: hash,
-      });
+    const { error: e2 } = await c.from("importacoes").insert({
+      canal_id: canalId,
+      tipo: "pedidos",
+      nome_arquivo: `teste-${sufixo}-2.csv`,
+      hash_sha256: hash,
+    });
     expect(e2?.code).toBe("23505");
     const { error: e3 } = await c.rpc("anonimizar_cliente", { p_cliente: clienteId });
     expect(e3).toBeNull();

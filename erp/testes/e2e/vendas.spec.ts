@@ -38,17 +38,15 @@ test.beforeAll(async () => {
       .select("id")
       .single()
   ).data!.id;
-  await admin
-    .from("canais_venda_taxas")
-    .insert({
-      canal_id: canalId,
-      vigente_desde: "2026-01-01",
-      comissao_pct: 0.14,
-      taxa_pagamento_pct: 0.02,
-      ads_pct_padrao: 0,
-      taxa_fixa_item: 4,
-      frete_subsidio_padrao: 0,
-    });
+  await admin.from("canais_venda_taxas").insert({
+    canal_id: canalId,
+    vigente_desde: "2026-01-01",
+    comissao_pct: 0.14,
+    taxa_pagamento_pct: 0.02,
+    ads_pct_padrao: 0,
+    taxa_fixa_item: 4,
+    frete_subsidio_padrao: 0,
+  });
   produtoId = (
     await admin
       .from("produtos")

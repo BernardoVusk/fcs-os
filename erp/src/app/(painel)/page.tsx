@@ -11,9 +11,6 @@ import { Button } from "@/componentes/ui/button";
 export const metadata = { title: "Início" };
 
 const FUTUROS: { rotulo: string; fase: number }[] = [
-  { rotulo: "Receita recebida", fase: 7 },
-  { rotulo: "Despesas pagas", fase: 7 },
-  { rotulo: "A pagar e a receber", fase: 7 },
   { rotulo: "Próximas tarefas e publicações", fase: 8 },
 ];
 
@@ -22,10 +19,10 @@ export default async function PaginaInicio({
 }: {
   searchParams: Promise<{ periodo?: string }>;
 }) {
-  await exigirLeitura("inicio");
+  const usuario = await exigirLeitura("inicio");
   const { periodo } = await searchParams;
   const atual = lerPeriodo(periodo);
-  const resumo = await resumoInicial(atual);
+  const resumo = await resumoInicial(atual, usuario.papel);
   const faltam = resumo.canaisTotal - resumo.canaisComTaxas;
   const rotuloPeriodo = PERIODOS.find((p) => p.chave === atual)?.rotulo.toLowerCase() ?? atual;
   return (
@@ -72,6 +69,35 @@ export default async function PaginaInicio({
           dica="Cadastre um filamento em Estoque"
           link={{ href: "/estoque/movimentacoes?tipo=consumo_producao", rotulo: "Ver consumo" }}
         />
+        {resumo.financeiro && (
+          <>
+            <CartaoIndicador
+              rotulo={`Receita recebida (${rotuloPeriodo})`}
+              valor={formatarMoeda(resumo.financeiro.recebido)}
+              link={{ href: "/financeiro", rotulo: "Abrir o financeiro" }}
+            />
+            <CartaoIndicador
+              rotulo={`Despesas pagas (${rotuloPeriodo})`}
+              valor={formatarMoeda(resumo.financeiro.pago)}
+              link={{ href: "/financeiro/lancamentos?estado=realizado", rotulo: "Ver lançamentos" }}
+            />
+            <CartaoIndicador
+              rotulo="A receber e a pagar (30 dias)"
+              valor={`${formatarMoeda(resumo.financeiro.abertos.proximos30.receber)} / ${formatarMoeda(resumo.financeiro.abertos.proximos30.pagar)}`}
+              rodape={
+                resumo.financeiro.abertos.vencidos.pagar +
+                  resumo.financeiro.abertos.vencidos.receber >
+                0 ? (
+                  <span className="text-xs text-erro">
+                    vencidos: {formatarMoeda(resumo.financeiro.abertos.vencidos.receber)} a receber,{" "}
+                    {formatarMoeda(resumo.financeiro.abertos.vencidos.pagar)} a pagar
+                  </span>
+                ) : undefined
+              }
+              link={{ href: "/financeiro/lancamentos?estado=abertos", rotulo: "Ver abertos" }}
+            />
+          </>
+        )}
         <CartaoIndicador
           rotulo={`Faturamento (${rotuloPeriodo})`}
           valor={resumo.faturamento === null ? null : formatarMoeda(resumo.faturamento.total)}

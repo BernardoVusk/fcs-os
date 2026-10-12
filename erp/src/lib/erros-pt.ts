@@ -106,6 +106,19 @@ const ERROS: Record<string, string> = {
   importacao_repetida: "Este arquivo já foi importado (mesmo conteúdo).",
   csv_colunas_faltando: "Colunas obrigatórias não encontradas. Ajuste o mapeamento do canal.",
   cliente_nao_encontrado: "Cliente não encontrado.",
+  descricao_obrigatoria: "Descreva o lançamento.",
+  valor_invalido: "Valor inválido. Use um número maior que zero.",
+  valor_acima_do_restante: "Valor maior que o saldo restante do lançamento.",
+  conta_obrigatoria: "Escolha a conta.",
+  transferencia_contas: "Transferência precisa de conta de origem e destino diferentes.",
+  lancamento_nao_encontrado: "Lançamento não encontrado.",
+  lancamento_nao_aberto: "Este lançamento não está aberto (planejado ou parcial).",
+  lancamento_nao_cancelavel:
+    "Só lançamentos planejados sem realização podem ser cancelados. Com dinheiro já movido, encerre e estorne.",
+  lancamento_nao_estornavel: "Só lançamentos realizados podem ser estornados.",
+  tributo_nao_configurado:
+    "Configure o regime e a alíquota em Financeiro > Impostos antes de provisionar.",
+  dia_vencimento_invalido: "Dia de vencimento entre 1 e 28.",
 };
 
 export function erroPt(chave: string | undefined): string | undefined {
