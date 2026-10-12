@@ -39,3 +39,12 @@ referencia de extensão/
 
 # Amostras com dados reais do Seller Center: nunca versionar
 mini-projetos/fcs-spy/extensao/testes/amostras/vendedor/
+
+# ERP
+erp/.env*
+!erp/.env.example
+erp/.next/
+erp/node_modules/
+erp/testes/relatorios/
+erp/playwright-report/
+erp/test-results/
