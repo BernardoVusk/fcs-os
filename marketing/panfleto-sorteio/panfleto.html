@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Panfleto sorteio FCS 3D STUDIO</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* Panfleto 10x15 cm, frente e verso. Cada face tem 106 x 156 mm (3 mm de sangria por lado).
+     Area segura: 8 mm a partir da borda do arquivo (5 mm de seguranca + 3 mm de sangria). */
+
+  @page { size: 106mm 156mm; margin: 0; }
+
+  :root {
+    --preto: #0A0A0A;
+    --ciano: #00D8FF;
+    --card: #141414;
+    --cinza: #A3AAB3;
+    --branco: #FFFFFF;
+    --chanfro: 10px;
+    --chanfro-interno: 9.4px;   /* chanfro paralelo, 1px pra dentro */
+  }
+
+  * { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  html, body { margin: 0; padding: 0; background: var(--preto); }
+  body { font-family: "Poppins", sans-serif; color: var(--branco); -webkit-font-smoothing: antialiased; }
+
+  .face {
+    position: relative;
+    width: 106mm;
+    height: 156mm;
+    overflow: hidden;
+    background: var(--preto);
+    display: flex;
+    flex-direction: column;
+    padding: 10mm;
+    page-break-after: always;
+    break-after: page;
+  }
+  .face:last-child { page-break-after: auto; break-after: auto; }
+  @media screen {
+    body { background: #2A2A2A; padding: 6mm 0; }
+    .face { margin: 0 auto 6mm; }
+  }
+
+  /* Elementos comuns */
+  .regua { width: 16mm; height: 1mm; background: var(--ciano); flex: none; }
+  .chanfro {
+    clip-path: polygon(
+      var(--chanfro) 0, 100% 0,
+      100% calc(100% - var(--chanfro)), calc(100% - var(--chanfro)) 100%,
+      0 100%, 0 var(--chanfro)
+    );
+  }
+  .chanfro-interno {
+    clip-path: polygon(
+      var(--chanfro-interno) 0, 100% 0,
+      100% calc(100% - var(--chanfro-interno)), calc(100% - var(--chanfro-interno)) 100%,
+      0 100%, 0 var(--chanfro-interno)
+    );
+  }
+  .deco { position: absolute; pointer-events: none; }
+  .deco line { stroke: rgba(255, 255, 255, 0.08); stroke-width: 1.2; }
+
+  /* FRENTE */
+  .frente .logo { display: block; width: 40mm; height: auto; }
+  .frente .titulo {
+    margin: 9mm 0 0;
+    font-family: "Chakra Petch", sans-serif;
+    font-weight: 700;
+    font-size: 8.2mm;
+    line-height: 1.02;
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+    color: var(--ciano);
+  }
+  .frente .regua { margin-top: 4mm; }
+  .frente .agradecimento {
+    margin: 6mm 0 0;
+    font-weight: 500;
+    font-size: 4.4mm;
+    line-height: 1.4;
+    color: var(--branco);
+  }
+  .frente .card {
+    margin: 8mm 0 0;
+    padding: 1px;
+    background: rgba(0, 216, 255, 0.25);
+  }
+  .frente .card-interno {
+    background: var(--card);
+    padding: 5mm 5.5mm 5.5mm;
+  }
+  .frente .card h2 {
+    margin: 0;
+    font-family: "Chakra Petch", sans-serif;
+    font-weight: 700;
+    font-size: 3mm;
+    line-height: 1.2;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ciano);
+  }
+  .frente .card p {
+    margin: 2.2mm 0 0;
+    font-weight: 400;
+    font-size: 3.4mm;
+    line-height: 1.5;
+    color: var(--branco);
+  }
+  .frente .suporte {
+    margin: 6mm 0 0;
+    font-weight: 400;
+    font-size: 3mm;
+    line-height: 1.5;
+    color: var(--cinza);
+  }
+  .frente .rodape {
+    margin: auto 0 0;
+    padding-top: 5mm;
+    font-weight: 400;
+    font-size: 2.2mm;
+    line-height: 1.3;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: var(--cinza);
+  }
+  .frente .deco { top: 10.5mm; right: 10mm; width: 18mm; height: 9mm; }
+
+  /* VERSO */
+  .verso { padding: 9.5mm 10mm; }
+  .verso .topo { display: flex; align-items: center; justify-content: space-between; }
+  .verso .kicker {
+    margin: 0;
+    font-family: "Chakra Petch", sans-serif;
+    font-weight: 600;
+    font-size: 2.7mm;
+    line-height: 1.2;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ciano);
+  }
+  .verso .logo-mini { display: block; width: 19mm; height: auto; }
+  .verso .titulo {
+    margin: 3mm 0 0;
+    font-family: "Chakra Petch", sans-serif;
+    font-weight: 700;
+    font-size: 6.9mm;
+    line-height: 1.03;
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+    color: var(--branco);
+  }
+  .verso .regua { margin-top: 3.5mm; }
+  .verso .corpo {
+    margin: 4.5mm 0 0;
+    font-weight: 400;
+    font-size: 3.4mm;
+    line-height: 1.45;
+    color: var(--branco);
+  }
+  .verso .qr-bloco { margin-top: 5.5mm; display: flex; flex-direction: column; align-items: center; }
+  .verso .qr-moldura { padding: 1.5px; background: var(--ciano); --chanfro: 12px; --chanfro-interno: 11.1px; }
+  .verso .qr-tile { background: var(--branco); padding: 4mm; }
+  .verso .qr-crop { width: 46mm; height: 46mm; overflow: hidden; }
+  /* qr.svg vem com zona de silencio de 4 modulos (41 x 41). A margem branca do tile faz esse papel,
+     entao o corte deixa so os 33 x 33 modulos visiveis, com 46 mm de lado. */
+  .verso .qr-crop img {
+    display: block;
+    width: calc(46mm * 41 / 33);
+    height: calc(46mm * 41 / 33);
+    margin: calc(-46mm * 4 / 33) 0 0 calc(-46mm * 4 / 33);
+  }
+  .verso .legenda {
+    margin: 2.5mm 0 0;
+    font-weight: 400;
+    font-size: 2.7mm;
+    line-height: 1.3;
+    color: var(--cinza);
+    text-align: center;
+  }
+  .verso .url {
+    margin: 1.8mm 0 0;
+    font-family: "Chakra Petch", sans-serif;
+    font-weight: 600;
+    font-size: 4.2mm;
+    line-height: 1.2;
+    color: var(--ciano);
+    text-align: center;
+  }
+  .verso .aviso {
+    margin: auto 0 0;
+    padding-top: 4mm;
+    font-weight: 400;
+    font-size: 2.5mm;
+    line-height: 1.45;
+    color: var(--cinza);
+  }
+</style>
+</head>
+<body>
+
+<section class="face frente">
+  <img class="logo" src="logo.png" alt="FCS 3D Studio">
+  <svg class="deco" viewBox="0 0 68 34" aria-hidden="true">
+    <line x1="44" y1="1" x2="68" y2="1"/>
+    <line x1="34" y1="9" x2="68" y2="9"/>
+    <line x1="24" y1="17" x2="68" y2="17"/>
+    <line x1="12" y1="25" x2="68" y2="25"/>
+    <line x1="0" y1="33" x2="68" y2="33"/>
+  </svg>
+
+  <h1 class="titulo">Obrigado<br>pela compra</h1>
+  <div class="regua"></div>
+
+  <p class="agradecimento">Essa peça saiu da nossa impressora direto pra você. Camada por camada, feita sob demanda.</p>
+
+  <div class="card chanfro">
+    <div class="card-interno chanfro-interno">
+      <h2>Sua avaliação faz diferença</h2>
+      <p>Uma avaliação com foto, na loja onde você comprou, ajuda muito um estúdio pequeno como o nosso. Leva um minuto e vale demais pra gente.</p>
+    </div>
+  </div>
+
+  <p class="suporte">Algum problema com a peça? Fala com a gente pelo chat da loja antes de avaliar. A gente resolve.</p>
+
+  <p class="rodape">fcs3dstudio na Shopee, Mercado Livre e TikTok Shop</p>
+</section>
+
+<section class="face verso">
+  <div class="topo">
+    <p class="kicker">Sorteio todo mês</p>
+    <img class="logo-mini" src="logo.png" alt="FCS 3D Studio">
+  </div>
+
+  <h1 class="titulo">Cadastre seu pedido<br>e concorra</h1>
+  <div class="regua"></div>
+
+  <p class="corpo">Todo mês sorteamos um produto do nosso catálogo entre os clientes cadastrados. O cadastro leva um minuto e, no final, você entra no nosso grupo do WhatsApp.</p>
+
+  <div class="qr-bloco">
+    <div class="qr-moldura chanfro">
+      <div class="qr-tile chanfro-interno">
+        <div class="qr-crop">
+          <img src="qr.svg" alt="QR code: fcs-erp.vercel.app/sorteio">
+        </div>
+      </div>
+    </div>
+    <p class="legenda">Aponte a câmera do celular pro código</p>
+    <p class="url">fcs-erp.vercel.app/sorteio</p>
+  </div>
+
+  <p class="aviso">Sorteio mensal entre clientes cadastrados. Regulamento na página. O cadastro não depende da avaliação.</p>
+</section>
+
+</body>
+</html>

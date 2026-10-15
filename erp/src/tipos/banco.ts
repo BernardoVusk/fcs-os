@@ -1090,6 +1090,84 @@ export type Database = {
         };
         Relationships: [];
       };
+      inscricoes_sorteio: {
+        Row: {
+          aceita_contato: boolean;
+          canal_id: string;
+          cliente_id: string;
+          criado_em: string;
+          id: string;
+          ip_hash: string | null;
+          origem: string;
+          produto_id: string | null;
+          produto_outro: string | null;
+          referencia: string;
+          user_agent: string | null;
+        };
+        Insert: {
+          aceita_contato?: boolean;
+          canal_id: string;
+          cliente_id: string;
+          criado_em?: string;
+          id?: string;
+          ip_hash?: string | null;
+          origem?: string;
+          produto_id?: string | null;
+          produto_outro?: string | null;
+          referencia?: string;
+          user_agent?: string | null;
+        };
+        Update: {
+          aceita_contato?: boolean;
+          canal_id?: string;
+          cliente_id?: string;
+          criado_em?: string;
+          id?: string;
+          ip_hash?: string | null;
+          origem?: string;
+          produto_id?: string | null;
+          produto_outro?: string | null;
+          referencia?: string;
+          user_agent?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "inscricoes_sorteio_canal_id_fkey";
+            columns: ["canal_id"];
+            isOneToOne: false;
+            referencedRelation: "canais_venda";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "inscricoes_sorteio_canal_id_fkey";
+            columns: ["canal_id"];
+            isOneToOne: false;
+            referencedRelation: "canais_venda_vigentes";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "inscricoes_sorteio_cliente_id_fkey";
+            columns: ["cliente_id"];
+            isOneToOne: false;
+            referencedRelation: "clientes";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "inscricoes_sorteio_produto_id_fkey";
+            columns: ["produto_id"];
+            isOneToOne: false;
+            referencedRelation: "estoque_produtos";
+            referencedColumns: ["produto_id"];
+          },
+          {
+            foreignKeyName: "inscricoes_sorteio_produto_id_fkey";
+            columns: ["produto_id"];
+            isOneToOne: false;
+            referencedRelation: "produtos";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       insumos: {
         Row: {
           ativo: boolean;
@@ -3359,6 +3437,38 @@ export type Database = {
           },
         ];
       };
+      sorteios: {
+        Row: {
+          id: string;
+          inscricao_id: string;
+          referencia: string;
+          sorteado_em: string;
+          sorteado_por: string | null;
+        };
+        Insert: {
+          id?: string;
+          inscricao_id: string;
+          referencia: string;
+          sorteado_em?: string;
+          sorteado_por?: string | null;
+        };
+        Update: {
+          id?: string;
+          inscricao_id?: string;
+          referencia?: string;
+          sorteado_em?: string;
+          sorteado_por?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "sorteios_inscricao_id_fkey";
+            columns: ["inscricao_id"];
+            isOneToOne: false;
+            referencedRelation: "inscricoes_sorteio";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       tokens_integracao: {
         Row: {
           criado_em: string;
@@ -3557,6 +3667,13 @@ export type Database = {
             referencedColumns: ["id"];
           },
         ];
+      };
+      inscricoes_sorteio_meses: {
+        Row: {
+          referencia: string | null;
+          total: number | null;
+        };
+        Relationships: [];
       };
       lancamentos_situacao: {
         Row: {
@@ -3950,6 +4067,21 @@ export type Database = {
       };
       garantir_recebivel: { Args: { p_pedido: string }; Returns: string };
       gerar_alertas: { Args: never; Returns: Json };
+      inscrever_sorteio: {
+        Args: {
+          p_aceita_contato: boolean;
+          p_canal: string;
+          p_email: string;
+          p_ip_hash?: string;
+          p_nome: string;
+          p_origem?: string;
+          p_produto?: string;
+          p_produto_outro?: string;
+          p_telefone: string;
+          p_user_agent?: string;
+        };
+        Returns: Json;
+      };
       listar_conhecimentos: {
         Args: {
           p_categoria?: string;
@@ -4031,6 +4163,7 @@ export type Database = {
         };
         Returns: Json;
       };
+      realizar_sorteio: { Args: { p_referencia: string }; Returns: Json };
     };
     Enums: {
       [_ in never]: never;

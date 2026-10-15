@@ -1,0 +1,14 @@
+[
+  { "id": "cena01", "texto": "Esse é o FCS ERP. O sistema que a gente fez para tocar a FCS 3D STUDIO: custo, estoque, produto, pedido, produção e caixa, num lugar só." },
+  { "id": "cena02", "texto": "Antes, isso vivia em planilha, na cabeça e em conversa. Agora cada número vem do banco. E quando não existe dado, o sistema diz: sem dados." },
+  { "id": "cena03", "texto": "A tela inicial mostra o mês: o que vem no planejamento, alertas, filamento consumido, receita, pedidos abertos e o que está na fila." },
+  { "id": "cena04", "texto": "O catálogo veio direto dos anúncios da Shopee, do Mercado Livre e do TikTok Shop. Cada produto tem a ficha: peso, tempo de impressão, material e impressora." },
+  { "id": "cena05", "texto": "O filamento entra por compra, com frete e desconto, e vira lote. O custo por grama aparece sozinho na calculadora." },
+  { "id": "cena06", "texto": "A calculadora fecha o custo da peça: material, energia, desgaste da impressora, mão de obra e embalagem. Soma as taxas do canal e mostra o preço de equilíbrio, o preço com margem e a margem real em cada marketplace." },
+  { "id": "cena07", "texto": "A ordem de produção consome o lote, registra o tempo real e dá entrada nas peças prontas. Custo estimado de um lado, custo realizado do outro." },
+  { "id": "cena08", "texto": "O pedido entra pelo canal, passa pelos status e, ao pagar, gera o recebível. Um só, sem duplicar." },
+  { "id": "cena09", "texto": "No financeiro: caixa realizado, projeção de trinta dias, vencidos, próximos. Fechar o mês sem planilha." },
+  { "id": "cena10", "texto": "A base de conhecimento guarda decisão, procedimento e solução. E o Claude Code conversa com ela: busca o que já foi documentado e salva o que aprendeu." },
+  { "id": "cena11", "texto": "O planejamento junta conteúdo, tarefa e campanha num calendário, num quadro e numa lista." },
+  { "id": "cena12", "texto": "E tudo se acha com Control K. FCS ERP. Decidir com número real, em menos cliques." }
+]

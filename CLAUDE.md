@@ -28,6 +28,7 @@ marketing e produção.
 - `mini-projetos/` — ferramentas internas pequenas, uma pasta por projeto, cada uma com `docs/` (estudo, spec, plano, checagem). Primeira: `fcs-spy/`, extensão de Chrome de estudo de mercado na Shopee
 - `erp/` — FCS ERP, o sistema de gestão (Next.js + Supabase). Regras próprias em `erp/CLAUDE.md`; plano aprovado em `erp/docs/superpowers/specs/2026-10-11-erp-fcs-design.md`; migrações do banco ficam em `supabase/migrations/` na raiz. Fases 1 a 10 concluídas em 12/10/2026 (`erp/docs/validacao.md`); publicado em https://fcs-erp.vercel.app em 12/10/2026 (Vercel, projeto `fcs-erp`, branch `main`; `erp/docs/implantacao.md`); faltam plano Pro, domínio, MFA do dono e o primeiro backup com restauração (`erp/docs/backups-e-recuperacao.md`)
 - `saidas/seguranca/` — relatórios da skill `/auditoria-seguranca`
+- `motion/` — estúdio de vídeo em motion (Remotion), na identidade da FCS. Peças só pela skill `/motion-fcs` (regras em `motion/CLAUDE.md`); referências de animação em `motion/referencias/` (não versionam); vídeo final aprovado em `motion/entregas/`. Primeira peça: `ApresentacaoERP` (13/10/2026)
 
 A ficha de produto vive no ERP (Fase 5), não em pasta.
 
@@ -80,6 +81,7 @@ Detalhe completo em `_memoria/preferencias.md`.
 - Toda sugestão de rotina precisa caber numa operação de uma pessoa só
 - **Nunca inventar número.** Painel que não abriu vira "não coletado" no relatório, nunca estimativa
 - Regra de negócio do ERP só em `erp/src/dominio`; migração só em `supabase/migrations/`, aplicada em dev e teste com `npm run migrar` dentro de `erp/`
+- Vídeo em motion só pela `/motion-fcs`: a `/motion` global aponta para o projeto da FX Minas. Chave do ElevenLabs da FCS na variável de usuário `FCS_ELEVENLABS_API_KEY` (plano gratuito: áudio só para uso interno)
 
 ## Como os dados de marketplace são coletados
 

@@ -70,6 +70,14 @@ Casos de referência: Anexo A da spec (B1, B2), reproduzidos em `src/dominio/est
 - O recebível e a conciliação com o repasse do canal nascem na Fase 7, ligados ao mesmo evento de pagamento aprovado.
 - Cliente é opcional; anonimizar apaga nome, contato, documento e endereço e mantém o histórico.
 
+## Sorteio do panfleto (página pública `/sorteio`)
+
+- `inscrever_sorteio` (0020, só service role): valida nome, e-mail, telefone (10 ou 11 dígitos sem o 55), canal (`canais_venda.tipo` ativo), produto ativo ou texto de "Outro" e consentimento obrigatório. Origem fora de panfleto, instagram ou outro vira outro.
+- Reaproveita cliente não anonimizado achado por `lower(email)` e, se não houver, pelos dígitos do telefone (o mais antigo). Nunca sobrescreve e-mail ou telefone existentes, só preenche os nulos; acrescenta a linha "Cadastro pelo sorteio (QR do panfleto) em dd/mm/aaaa" em `observacoes`. Cliente novo nasce com `canal_origem_id` = canal escolhido.
+- Mesmo cliente com inscrição do mesmo produto nas últimas 24 h devolve `repetida` sem gravar de novo. Mais de 20 inscrições do mesmo `ip_hash` em uma hora levanta `muitas_tentativas` (limite firme, no banco); a action ainda limita 10 envios por IP a cada 10 minutos por instância e descarta envios com o campo armadilha preenchido.
+- `realizar_sorteio(referencia)` (só dono): um ganhador por mês, aleatório entre as inscrições do mês com `aceita_contato` e cliente não anonimizado; grava em `sorteios` (unique por mês, então clique duplo cai em `duplicado`); mês já sorteado levanta `sorteio_ja_realizado`, mês sem inscrição elegível `sem_inscricoes`.
+- Prêmio, data e prazo de resposta estão no regulamento da página (`src/app/(publico)/sorteio/page.tsx`), não no banco.
+
 ## Financeiro (Fase 7)
 
 - Lançamento nasce `planejado` com previsto e data. Realizar menos que o restante leva a `parcial`; realizar o restante, ou encerrar com diferença justificada, leva a `realizado`. `planejado` sem realização pode ser `cancelado` com motivo; `parcial` não pode ser cancelado (dinheiro já se moveu): encerra e estorna. `realizado` só muda por estorno, que cria contra-lançamento de direção oposta, realizado na hora nas mesmas contas, com `estorna_id`; o original fica `estornado`. Nada é apagado. Atrasado é derivado (data prevista antes de hoje e ainda aberto), nunca gravado.

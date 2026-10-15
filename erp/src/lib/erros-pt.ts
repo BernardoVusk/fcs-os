@@ -129,6 +129,11 @@ const ERROS: Record<string, string> = {
   prazo_antes_do_inicio: "O prazo não pode ser antes do início.",
   status_padrao_nao_apagavel: "O status padrão do tipo não pode ser removido.",
   status_em_uso: "Há itens nesse status. Mova-os antes de remover.",
+  telefone_invalido: "Telefone inválido. Use DDD e número, como (31) 99999-9999.",
+  consentimento_obrigatorio: "Marque a autorização para participar.",
+  muitas_tentativas: "Muitas tentativas. Aguarde alguns minutos e tente de novo.",
+  sorteio_ja_realizado: "O sorteio deste mês já foi realizado.",
+  sem_inscricoes: "Não há inscrições elegíveis neste mês.",
 };
 
 export function erroPt(chave: string | undefined): string | undefined {

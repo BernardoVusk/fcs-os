@@ -2,7 +2,7 @@ import { podeLer, type Area, type Papel } from "@/lib/auth/papeis";
 import type { NomeIcone } from "./Icone";
 
 /** Fase mais recente entregue. Itens de fases futuras ficam ocultos. */
-export const FASE_ATUAL = 9;
+export const FASE_ATUAL = 10;
 
 export type ItemNav = {
   rota: string;
@@ -105,6 +105,7 @@ export const GRUPOS: GrupoNav[] = [
     itens: [
       { rota: "/vendas/pedidos", rotulo: "Pedidos", icone: "pedidos", area: "vendas", fase: 6 },
       { rota: "/vendas/clientes", rotulo: "Clientes", icone: "clientes", area: "vendas", fase: 6 },
+      { rota: "/vendas/sorteio", rotulo: "Sorteio", icone: "sorteio", area: "vendas", fase: 10 },
     ],
   },
   {
@@ -324,6 +325,7 @@ const ROTULOS_SEGMENTO: Record<string, string> = {
   impressoras: "Impressoras",
   pedidos: "Pedidos",
   clientes: "Clientes",
+  sorteio: "Sorteio",
   editar: "Editar",
   lancamentos: "Lançamentos",
   quadro: "Quadro",

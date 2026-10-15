@@ -663,7 +663,7 @@ Entregue: diagnóstico, stack, modelo de dados, integração, motor de custos, d
 
 - Autenticação: Supabase Auth e-mail e senha, sessão em cookie via `@supabase/ssr`, MFA TOTP recomendado para `dono`. E-mails de auth pelo SMTP padrão do Supabase (limite por hora suficiente para até 3 usuários).
 - Autorização: papéis `dono`, `operador`, `leitura` em `usuarios_app`; RLS em todas as tabelas com função `papel_atual()`; server actions chamam `exigirPapel`; middleware protege rotas; rotas de exportação ficam sob o mesmo guarda.
-- Endpoints: só server actions, rotas de exportação e `/api/mcp`. Nenhuma rota recebe service role do cliente. `import 'server-only'` nos módulos de dados.
+- Endpoints: só server actions, rotas de exportação, `/api/mcp` e a página pública `/sorteio` (cadastro do panfleto, 15/10/2026: action sem sessão em `acoes/publico`, escrita só pela função `inscrever_sorteio` executável pela service role). Nenhuma rota recebe service role do cliente. `import 'server-only'` nos módulos de dados.
 - Validação: zod em toda entrada (formulário, importação, MCP); parâmetros de busca sanitizados; consultas via cliente Supabase (sem SQL concatenado); funções SQL com `security invoker` e `search_path` fixo.
 - Arquivos: buckets privados, URL assinada de 10 minutos, limite de tamanho e tipo por bucket, nome de arquivo normalizado, hash gravado.
 - Segredos: `erp/.env.local` ignorado; `.env.example` só com nomes; variáveis de produção no painel do host; service role nunca em `NEXT_PUBLIC_*`; verificação no CI que falha se `SUPABASE_SERVICE_ROLE_KEY` aparecer em bundle de cliente.
@@ -672,7 +672,7 @@ Entregue: diagnóstico, stack, modelo de dados, integração, motor de custos, d
 - Auditoria: trigger nas tabelas críticas; tela de consulta; retenção indefinida.
 - Backup: Free não tem backup automático. Rotina semanal própria (seção 10, Fase 10) desde que houver dado financeiro real; recomendação de subir para Pro quando o sistema virar fonte de verdade (backup diário, sem pausa).
 - Exclusão e histórico: soft delete em cadastros; proibição de apagar registro com movimentação; dados de cliente anonimizáveis; snapshots e movimentações nunca mudam.
-- Abuso: limite de taxa no MCP; login com limite do Supabase; sem necessidade de WAF no MVP.
+- Abuso: limite de taxa no MCP; login com limite do Supabase; na página pública `/sorteio`, limite por IP na instância e no banco, campo armadilha e consentimento obrigatório; sem necessidade de WAF no MVP.
 - Não é segurança: bloquear F12 ou console. Fora do plano.
 
 ---

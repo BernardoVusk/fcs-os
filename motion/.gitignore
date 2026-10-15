@@ -1,0 +1,12 @@
+node_modules/
+out/
+.env
+.env.local
+*.log
+whisper.cpp/
+# marcador de instalacao completa desta maquina (setup-integracoes.ps1 -Motion)
+.instalado
+
+# Referencias de animacao sao de terceiros: ficam so na maquina, nao versionam.
+referencias/*
+!referencias/LEIA-ME.md

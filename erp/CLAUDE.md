@@ -4,7 +4,7 @@ Aplicação Next.js 16 do sistema de gestão da FCS 3D STUDIO. Spec aprovada: `d
 
 ## Comandos
 
-`npm run dev`, `npm run build`, `npm run lint`, `npm run typecheck`, `npm test`, `npm run test:integracao` (projeto de teste), `npm run e2e`, `npm run migrar -- --alvo dev|teste`, `npm run tipos`, `npm run formatar` (rodar antes de commitar; toda a base já está formatada), `node ferramentas/sql.mjs "select ..."`.
+`npm run dev`, `npm run build`, `npm run lint`, `npm run typecheck`, `npm test`, `npm run test:integracao` (projeto de teste), `npm run e2e`, `npm run migrar -- --alvo dev|teste`, `npm run tipos`, `node ferramentas/otimizar-fotos-sorteio.mjs <pasta>` (fotos do carrossel da página pública), `npm run formatar` (rodar antes de commitar; toda a base já está formatada), `node ferramentas/sql.mjs "select ..."`.
 
 ## Regras de camadas
 
@@ -12,6 +12,7 @@ Aplicação Next.js 16 do sistema de gestão da FCS 3D STUDIO. Spec aprovada: `d
 - `src/acoes/`: server actions, sempre `exigirEscrita(area)` antes de qualquer coisa, zod depois, `revalidatePath` no fim. Arquivo `"use server"` só exporta funções assíncronas; constantes vão para `dominio/`.
 - `src/dados/`: só consultas, `import "server-only"`, cliente com sessão (`clienteServidor`). Service role só em `lib/supabase/admin.ts` e `ferramentas/`.
 - `src/app/`: composição. Nenhuma regra de negócio em componente.
+- Exceção única às duas regras acima: `acoes/publico/` e `dados/publico/` servem a página pública `/sorteio` sem sessão; a escrita passa por limite por IP, campo armadilha, zod e `rpc` pela service role a `inscrever_sorteio`, executável só por `service_role`; a leitura é só id e nome de produtos ativos. Nada mais entra nessas pastas sem decisão registrada. A página tem cores fixas (não segue o cookie de tema) e não usa `Campo` nem `SelectNativo`.
 
 ## Banco
 
@@ -38,7 +39,7 @@ Aplicação Next.js 16 do sistema de gestão da FCS 3D STUDIO. Spec aprovada: `d
 
 ## Áreas críticas
 
-Permissões (`lib/auth/papeis.ts` e policies), auditoria (`app.auditar`), servidor MCP (`src/mcp/`, escopos e filtro de segredos), motor de custos (`src/dominio/custos`, `src/dominio/precos`, `docs/formulas-de-custo.md`), estoque (funções SQL de 0007 a 0009), produção (`concluir_ordem_producao` e `reabrir_ordem_producao` em 0013), pedidos (`mudar_status_pedido` em 0014), financeiro (`realizar_lancamento`, `cancelar_lancamento`, `estornar_lancamento`, `garantir_recebivel` e os gatilhos de 0015), planejamento (`validar_item_plano` e `historico_item_plano` em 0016), alertas (`gerar_alertas` em 0017, job do pg_cron em 0018), exportação (`dominio/relatorios/{csv,xlsx}.ts`). Mudança nessas áreas exige teste de integração novo.
+Permissões (`lib/auth/papeis.ts` e policies), auditoria (`app.auditar`), servidor MCP (`src/mcp/`, escopos e filtro de segredos), motor de custos (`src/dominio/custos`, `src/dominio/precos`, `docs/formulas-de-custo.md`), estoque (funções SQL de 0007 a 0009), produção (`concluir_ordem_producao` e `reabrir_ordem_producao` em 0013), pedidos (`mudar_status_pedido` em 0014), financeiro (`realizar_lancamento`, `cancelar_lancamento`, `estornar_lancamento`, `garantir_recebivel` e os gatilhos de 0015), planejamento (`validar_item_plano` e `historico_item_plano` em 0016), sorteio (`inscrever_sorteio` e `realizar_sorteio` em 0020), alertas (`gerar_alertas` em 0017, job do pg_cron em 0018), exportação (`dominio/relatorios/{csv,xlsx}.ts`). Mudança nessas áreas exige teste de integração novo.
 
 ## Segurança e sessão
 

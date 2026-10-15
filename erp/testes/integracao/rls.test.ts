@@ -61,6 +61,26 @@ describe("RLS", () => {
     expect(b).toEqual([]);
   });
 
+  it("anônimo e leitura não executam inscrever_sorteio; anônimo não lê inscricoes_sorteio", async () => {
+    const parametros = {
+      p_nome: "RLS",
+      p_email: "rls-sorteio@exemplo.com",
+      p_telefone: "31999990000",
+      p_canal: "shopee",
+      p_produto_outro: "x",
+      p_aceita_contato: true,
+      p_origem: "panfleto",
+    };
+    const { error: a } = await anonimo().rpc("inscrever_sorteio", parametros);
+    expect(a?.code).toBe("42501");
+    const { error: l } = await leitura.cliente.rpc("inscrever_sorteio", parametros);
+    expect(l?.code).toBe("42501");
+    const { data } = await anonimo().from("inscricoes_sorteio").select("id");
+    expect(data).toEqual([]);
+    const { data: s } = await anonimo().from("sorteios").select("id");
+    expect(s).toEqual([]);
+  });
+
   it("leitura não altera o próprio papel", async () => {
     const { error } = await leitura.cliente
       .from("usuarios_app")

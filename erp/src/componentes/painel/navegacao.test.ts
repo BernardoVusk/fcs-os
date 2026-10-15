@@ -37,6 +37,11 @@ describe("navegacao", () => {
         .some((i) => i.rota === "/alertas"),
     ).toBe(false);
   });
+  it("na fase 10 o perfil leitura vê Sorteio em Vendas", () => {
+    const vendas = gruposVisiveis("leitura", 10).find((g) => g.rotulo === "Vendas");
+    expect(vendas?.itens.map((i) => i.rotulo)).toEqual(["Pedidos", "Clientes", "Sorteio"]);
+    expect(trilha("/vendas/sorteio").map((t) => t.rotulo)).toEqual(["Vendas", "Sorteio"]);
+  });
   it("marca o item ativo pela rota", () => {
     expect(itemAtivo("/configuracoes/canais/abc", "/configuracoes/canais")).toBe(true);
     expect(itemAtivo("/financeiro/lancamentos", "/financeiro")).toBe(false);

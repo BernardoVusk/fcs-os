@@ -185,6 +185,9 @@
       animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
     }
+    .marquee-faixa {
+      animation-play-state: paused;
+    }
   }
 }
 
@@ -266,4 +269,16 @@
 .prosa :where(img) {
   max-width: 100%;
   border-radius: 12px;
+}
+
+/* Carrossel infinito da página pública do sorteio: o trilho tem a lista duas vezes e anda metade. */
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+.marquee-faixa {
+  display: flex;
+  width: max-content;
+  animation: marquee 45s linear infinite;
 }
