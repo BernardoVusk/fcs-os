@@ -2,7 +2,7 @@ import { podeLer, type Area, type Papel } from "@/lib/auth/papeis";
 import type { NomeIcone } from "./Icone";
 
 /** Fase mais recente entregue. Itens de fases futuras ficam ocultos. */
-export const FASE_ATUAL = 10;
+export const FASE_ATUAL = 11;
 
 export type ItemNav = {
   rota: string;
@@ -210,6 +210,71 @@ export const GRUPOS: GrupoNav[] = [
     ],
   },
   {
+    rotulo: "Grupos de Ofertas",
+    itens: [
+      {
+        rota: "/ofertas",
+        rotulo: "Painel de ofertas",
+        icone: "ofertas",
+        area: "ofertas",
+        fase: 11,
+      },
+      { rota: "/ofertas/gerar", rotulo: "Gerar oferta", icone: "gerar", area: "ofertas", fase: 13 },
+      {
+        rota: "/ofertas/publicar",
+        rotulo: "Publicar",
+        icone: "publicar",
+        area: "ofertas",
+        fase: 13,
+      },
+      { rota: "/ofertas/filas", rotulo: "Filas", icone: "filas", area: "ofertas", fase: 15 },
+      {
+        rota: "/ofertas/copiador",
+        rotulo: "Copiador",
+        icone: "copiador",
+        area: "ofertas",
+        fase: 16,
+      },
+      { rota: "/ofertas/cupons", rotulo: "Cupons", icone: "cupons", area: "ofertas", fase: 13 },
+      {
+        rota: "/ofertas/modelos",
+        rotulo: "Modelos de mensagem",
+        icone: "modelos",
+        area: "ofertas",
+        fase: 13,
+      },
+      { rota: "/ofertas/grupos", rotulo: "Grupos", icone: "grupos", area: "ofertas", fase: 13 },
+      {
+        rota: "/ofertas/numeros",
+        rotulo: "Números de WhatsApp",
+        icone: "numeros",
+        area: "ofertas",
+        fase: 14,
+      },
+      {
+        rota: "/ofertas/integracoes",
+        rotulo: "Integrações de afiliados",
+        icone: "afiliados",
+        area: "usuarios",
+        fase: 12,
+      },
+      {
+        rota: "/ofertas/relatorios",
+        rotulo: "Relatórios de ofertas",
+        icone: "relatorios",
+        area: "ofertas",
+        fase: 18,
+      },
+      {
+        rota: "/ofertas/historico",
+        rotulo: "Histórico de envios",
+        icone: "historico",
+        area: "ofertas",
+        fase: 18,
+      },
+    ],
+  },
+  {
     rotulo: "Relatórios",
     itens: [
       {
@@ -339,6 +404,12 @@ const ROTULOS_SEGMENTO: Record<string, string> = {
   conciliar: "Conciliar repasses",
   contas: "Contas",
   "status-pedido": "Status de pedido",
+  ofertas: "Grupos de Ofertas",
+  filas: "Filas",
+  grupos: "Grupos",
+  numeros: "Números de WhatsApp",
+  copiador: "Copiador",
+  cupons: "Cupons",
 };
 
 /** Trilha para o breadcrumb: rótulos conhecidos da navegação, resto vira o segmento. */

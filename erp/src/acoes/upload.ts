@@ -108,3 +108,39 @@ export async function assinarEnvioAnexo(entrada: {
   if (error || !data) return { ok: false, erro: "erro_inesperado" };
   return { ok: true, url: data.signedUrl, caminho: data.path, bucket: "anexos-conhecimento" };
 }
+
+const TIPOS_IMAGEM_OFERTA = ["image/png", "image/jpeg", "image/webp"];
+const LIMITE_IMAGEM_OFERTA = 5 * 1024 * 1024;
+
+/** Imagem de oferta enviada pelo usuário (substitui a da API): bucket privado, até 5 MB. */
+export async function assinarEnvioImagemOferta(entrada: {
+  nomeArquivo: string;
+  tamanho: number;
+  mime: string;
+}): Promise<EnvioAssinado> {
+  try {
+    await exigirEscrita("ofertas");
+  } catch {
+    return { ok: false, erro: "sem_permissao" };
+  }
+  const r = z
+    .object({
+      nomeArquivo: z.string().min(1).max(255),
+      tamanho: z.number().int().positive(),
+      mime: z.string().max(120),
+    })
+    .safeParse(entrada);
+  if (!r.success) return { ok: false, erro: "tipo_invalido" };
+  const d = r.data;
+  if (d.tamanho > LIMITE_IMAGEM_OFERTA) return { ok: false, erro: "imagem_grande" };
+  if (!TIPOS_IMAGEM_OFERTA.includes(d.mime) || !EXTENSOES.imagem.test(d.nomeArquivo))
+    return { ok: false, erro: "arquivo_tipo" };
+  const mes = new Date().toISOString().slice(0, 7);
+  const caminho = `${mes}/${Date.now()}-${nomeSeguro(d.nomeArquivo) || "imagem"}`;
+  const supabase = await clienteServidor();
+  const { data, error } = await supabase.storage
+    .from("ofertas-imagens")
+    .createSignedUploadUrl(caminho);
+  if (error || !data) return { ok: false, erro: "erro_inesperado" };
+  return { ok: true, url: data.signedUrl, caminho: data.path, bucket: "ofertas-imagens" };
+}

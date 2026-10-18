@@ -17,6 +17,7 @@ export const AREAS = [
   "planejamento",
   "relatorios",
   "alertas",
+  "ofertas",
   "configuracoes",
   "usuarios",
 ] as const;
@@ -39,6 +40,7 @@ const ESCRITA: Record<Papel, readonly Area[]> = {
     "vendas",
     "planejamento",
     "alertas",
+    "ofertas",
   ],
   leitura: [],
 };
@@ -60,6 +62,8 @@ export function areaDaRota(pathname: string): Area | null {
   const limpo = pathname.replace(/\/+$/, "") || "/";
   if (limpo === "/") return "inicio";
   if (limpo.startsWith("/configuracoes/usuarios")) return "usuarios";
+  // Credenciais de afiliado: só o dono, mesmo dentro de Grupos de Ofertas.
+  if (limpo.startsWith("/ofertas/integracoes")) return "usuarios";
   const primeiro = limpo.split("/")[1];
   return AREAS.includes(primeiro as Area) ? (primeiro as Area) : null;
 }

@@ -27,5 +27,13 @@ describe("papeis", () => {
     expect(areaDaRota("/configuracoes/usuarios")).toBe("usuarios");
     expect(areaDaRota("/perfil")).toBeNull();
     expect(areaDaRota("/estoque/")).toBe("estoque");
+    expect(areaDaRota("/ofertas/filas/abc")).toBe("ofertas");
+    expect(areaDaRota("/ofertas/integracoes")).toBe("usuarios");
+  });
+  it("grupos de ofertas: operador escreve, leitura só lê, credenciais só do dono", () => {
+    expect(podeEscrever("operador", "ofertas")).toBe(true);
+    expect(podeLer("leitura", "ofertas")).toBe(true);
+    expect(podeEscrever("leitura", "ofertas")).toBe(false);
+    expect(podeEscrever("operador", "usuarios")).toBe(false);
   });
 });

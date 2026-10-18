@@ -42,6 +42,15 @@ describe("navegacao", () => {
     expect(vendas?.itens.map((i) => i.rotulo)).toEqual(["Pedidos", "Clientes", "Sorteio"]);
     expect(trilha("/vendas/sorteio").map((t) => t.rotulo)).toEqual(["Vendas", "Sorteio"]);
   });
+  it("Grupos de Ofertas: itens por fase e credenciais só para o dono", () => {
+    const naFase11 = gruposVisiveis("operador", 11).find((g) => g.rotulo === "Grupos de Ofertas");
+    expect(naFase11?.itens.map((i) => i.rota)).toEqual(["/ofertas"]);
+    const dono = gruposVisiveis("dono", 19).find((g) => g.rotulo === "Grupos de Ofertas");
+    expect(dono?.itens.some((i) => i.rota === "/ofertas/integracoes")).toBe(true);
+    const operador = gruposVisiveis("operador", 19).find((g) => g.rotulo === "Grupos de Ofertas");
+    expect(operador?.itens.some((i) => i.rota === "/ofertas/integracoes")).toBe(false);
+    expect(trilha("/ofertas/filas").map((t) => t.rotulo)).toEqual(["Painel de ofertas", "Filas"]);
+  });
   it("marca o item ativo pela rota", () => {
     expect(itemAtivo("/configuracoes/canais/abc", "/configuracoes/canais")).toBe(true);
     expect(itemAtivo("/financeiro/lancamentos", "/financeiro")).toBe(false);

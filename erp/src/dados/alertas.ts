@@ -64,8 +64,12 @@ export async function tiposDeAlerta(): Promise<{ tipo: string; total: number }[]
 
 /** Rota da entidade ligada ao alerta, para o link "Abrir". */
 export function rotaDaEntidade(a: Pick<Alerta, "entidade_tipo" | "entidade_id">): string | null {
-  if (!a.entidade_id)
-    return a.entidade_tipo === "financeiro" ? "/financeiro/lancamentos?estado=atrasado" : null;
+  if (!a.entidade_id) {
+    if (a.entidade_tipo === "financeiro") return "/financeiro/lancamentos?estado=atrasado";
+    if (a.entidade_tipo === "ofe_worker") return "/ofertas/numeros";
+    if (a.entidade_tipo === "ofe_publicacao") return "/ofertas/publicar";
+    return null;
+  }
   switch (a.entidade_tipo) {
     case "insumo":
       return `/estoque/insumos/${a.entidade_id}`;
@@ -83,6 +87,18 @@ export function rotaDaEntidade(a: Pick<Alerta, "entidade_tipo" | "entidade_id">)
       return `/planejamento/itens/${a.entidade_id}`;
     case "lancamento":
       return `/financeiro/lancamentos?destaque=${a.entidade_id}`;
+    case "ofe_integracao":
+      return "/ofertas/integracoes";
+    case "ofe_numero":
+      return `/ofertas/numeros?destaque=${a.entidade_id}`;
+    case "ofe_fila":
+      return `/ofertas/filas/${a.entidade_id}?aba=falhas`;
+    case "ofe_automacao":
+      return `/ofertas/copiador/${a.entidade_id}`;
+    case "ofe_cupom":
+      return `/ofertas/cupons?destaque=${a.entidade_id}`;
+    case "ofe_publicacao":
+      return `/ofertas/publicar?destaque=${a.entidade_id}`;
     default:
       return null;
   }
@@ -99,4 +115,11 @@ export const TIPO_ALERTA_ROTULO: Record<string, string> = {
   pedido_parado: "Pedido pago sem envio",
   lancamento_vencido: "Lançamento vencido",
   manutencao_prevista: "Manutenção prevista",
+  ofe_integracao_erro: "Integração de afiliado com erro",
+  ofe_numero_desconectado: "Número de WhatsApp desconectado",
+  ofe_worker_parado: "Worker do WhatsApp parado",
+  ofe_envio_falhou: "Envio de oferta com falha",
+  ofe_envio_incerto: "Envio de oferta incerto",
+  ofe_cupom_vencendo: "Cupom perto de vencer",
+  ofe_publicacao_atrasada: "Publicação manual atrasada",
 };

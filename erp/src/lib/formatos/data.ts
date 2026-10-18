@@ -27,3 +27,19 @@ export function formatarDataHora(valor: string | Date | null | undefined): strin
 export function hojeSaoPaulo(): string {
   return format(new TZDate(new Date(), FUSO), "yyyy-MM-dd");
 }
+
+/** "2026-10-18T14:30" digitado em São Paulo para ISO em UTC; inválido vira null. */
+export function localParaIso(local: string | null | undefined): string | null {
+  if (!local) return null;
+  const m = local.trim().match(/^(\d{4})-(\d{2})-(\d{2})(?:T(\d{2}):(\d{2}))?$/);
+  if (!m) return null;
+  const [, a, mes, d, h = "00", min = "00"] = m;
+  const data = new TZDate(Number(a), Number(mes) - 1, Number(d), Number(h), Number(min), FUSO);
+  return Number.isNaN(data.getTime()) ? null : new Date(data.getTime()).toISOString();
+}
+
+/** ISO para o valor de um input datetime-local em São Paulo. */
+export function isoParaLocal(iso: string | null | undefined): string {
+  if (!iso) return "";
+  return format(new TZDate(iso, FUSO), "yyyy-MM-dd'T'HH:mm");
+}

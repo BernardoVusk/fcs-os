@@ -1725,6 +1725,592 @@ export type Database = {
           },
         ];
       };
+      ofe_awin_anunciantes: {
+        Row: {
+          advertiser_id: number;
+          deeplink_permitido: boolean;
+          dominios: string[];
+          id: string;
+          nome: string;
+          sincronizado_em: string;
+        };
+        Insert: {
+          advertiser_id: number;
+          deeplink_permitido?: boolean;
+          dominios?: string[];
+          id?: string;
+          nome: string;
+          sincronizado_em?: string;
+        };
+        Update: {
+          advertiser_id?: number;
+          deeplink_permitido?: boolean;
+          dominios?: string[];
+          id?: string;
+          nome?: string;
+          sincronizado_em?: string;
+        };
+        Relationships: [];
+      };
+      ofe_cupons: {
+        Row: {
+          anunciante_awin: number | null;
+          aplicabilidade: string | null;
+          atualizado_em: string;
+          beneficio: string | null;
+          codigo: string | null;
+          criado_em: string;
+          descricao: string;
+          fim_em: string | null;
+          fonte: string;
+          id: string;
+          inicio_em: string | null;
+          plataforma: string;
+          referencia_externa: string | null;
+          regras: string | null;
+          status: string;
+          url_referencia: string | null;
+          validade_confirmada: boolean;
+          valor_minimo: number | null;
+          verificacao: string;
+          verificado_em: string | null;
+        };
+        Insert: {
+          anunciante_awin?: number | null;
+          aplicabilidade?: string | null;
+          atualizado_em?: string;
+          beneficio?: string | null;
+          codigo?: string | null;
+          criado_em?: string;
+          descricao: string;
+          fim_em?: string | null;
+          fonte?: string;
+          id?: string;
+          inicio_em?: string | null;
+          plataforma: string;
+          referencia_externa?: string | null;
+          regras?: string | null;
+          status?: string;
+          url_referencia?: string | null;
+          validade_confirmada?: boolean;
+          valor_minimo?: number | null;
+          verificacao?: string;
+          verificado_em?: string | null;
+        };
+        Update: {
+          anunciante_awin?: number | null;
+          aplicabilidade?: string | null;
+          atualizado_em?: string;
+          beneficio?: string | null;
+          codigo?: string | null;
+          criado_em?: string;
+          descricao?: string;
+          fim_em?: string | null;
+          fonte?: string;
+          id?: string;
+          inicio_em?: string | null;
+          plataforma?: string;
+          referencia_externa?: string | null;
+          regras?: string | null;
+          status?: string;
+          url_referencia?: string | null;
+          validade_confirmada?: boolean;
+          valor_minimo?: number | null;
+          verificacao?: string;
+          verificado_em?: string | null;
+        };
+        Relationships: [];
+      };
+      ofe_envios: {
+        Row: {
+          agendado_para: string;
+          atualizado_em: string;
+          criado_em: string;
+          despacho_iniciado_em: string | null;
+          enviado_em: string | null;
+          enviado_por: string | null;
+          erro_detalhe: string | null;
+          grupo_id: string;
+          id: string;
+          link_origem: string | null;
+          link_url: string | null;
+          modo: string;
+          motivo: string | null;
+          preparado_em: string | null;
+          proxima_tentativa_em: string | null;
+          publicacao_id: string;
+          reservado_ate: string | null;
+          reservado_por: string | null;
+          status: string;
+          tentativas: number;
+          texto_final: string | null;
+          wa_mensagem_id: string | null;
+        };
+        Insert: {
+          agendado_para: string;
+          atualizado_em?: string;
+          criado_em?: string;
+          despacho_iniciado_em?: string | null;
+          enviado_em?: string | null;
+          enviado_por?: string | null;
+          erro_detalhe?: string | null;
+          grupo_id: string;
+          id?: string;
+          link_origem?: string | null;
+          link_url?: string | null;
+          modo: string;
+          motivo?: string | null;
+          preparado_em?: string | null;
+          proxima_tentativa_em?: string | null;
+          publicacao_id: string;
+          reservado_ate?: string | null;
+          reservado_por?: string | null;
+          status?: string;
+          tentativas?: number;
+          texto_final?: string | null;
+          wa_mensagem_id?: string | null;
+        };
+        Update: {
+          agendado_para?: string;
+          atualizado_em?: string;
+          criado_em?: string;
+          despacho_iniciado_em?: string | null;
+          enviado_em?: string | null;
+          enviado_por?: string | null;
+          erro_detalhe?: string | null;
+          grupo_id?: string;
+          id?: string;
+          link_origem?: string | null;
+          link_url?: string | null;
+          modo?: string;
+          motivo?: string | null;
+          preparado_em?: string | null;
+          proxima_tentativa_em?: string | null;
+          publicacao_id?: string;
+          reservado_ate?: string | null;
+          reservado_por?: string | null;
+          status?: string;
+          tentativas?: number;
+          texto_final?: string | null;
+          wa_mensagem_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "ofe_envios_grupo_id_fkey";
+            columns: ["grupo_id"];
+            isOneToOne: false;
+            referencedRelation: "ofe_grupos";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "ofe_envios_publicacao_id_fkey";
+            columns: ["publicacao_id"];
+            isOneToOne: false;
+            referencedRelation: "ofe_publicacoes";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "ofe_envios_publicacao_id_fkey";
+            columns: ["publicacao_id"];
+            isOneToOne: false;
+            referencedRelation: "ofe_publicacoes_status";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      ofe_grupos: {
+        Row: {
+          ativo: boolean;
+          atualizado_em: string;
+          autorizacao_descricao: string | null;
+          autorizado_em: string | null;
+          autorizado_por: string | null;
+          cadastro: string;
+          campanha: string | null;
+          criado_em: string;
+          funcao: string;
+          id: string;
+          jid: string | null;
+          link_convite: string | null;
+          nome: string;
+          observacoes: string | null;
+          tag_amazon: string | null;
+        };
+        Insert: {
+          ativo?: boolean;
+          atualizado_em?: string;
+          autorizacao_descricao?: string | null;
+          autorizado_em?: string | null;
+          autorizado_por?: string | null;
+          cadastro?: string;
+          campanha?: string | null;
+          criado_em?: string;
+          funcao?: string;
+          id?: string;
+          jid?: string | null;
+          link_convite?: string | null;
+          nome: string;
+          observacoes?: string | null;
+          tag_amazon?: string | null;
+        };
+        Update: {
+          ativo?: boolean;
+          atualizado_em?: string;
+          autorizacao_descricao?: string | null;
+          autorizado_em?: string | null;
+          autorizado_por?: string | null;
+          cadastro?: string;
+          campanha?: string | null;
+          criado_em?: string;
+          funcao?: string;
+          id?: string;
+          jid?: string | null;
+          link_convite?: string | null;
+          nome?: string;
+          observacoes?: string | null;
+          tag_amazon?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "ofe_grupos_autorizado_por_fkey";
+            columns: ["autorizado_por"];
+            isOneToOne: false;
+            referencedRelation: "usuarios_app";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      ofe_integracoes: {
+        Row: {
+          atualizado_em: string;
+          conformidade_em: string | null;
+          conformidade_observacao: string | null;
+          conformidade_por: string | null;
+          criado_em: string;
+          id: string;
+          identificadores: Json;
+          plataforma: string;
+          recursos: Json;
+          segredo_configurado_em: string | null;
+          status: string;
+          testado_em: string | null;
+          ultimo_erro: string | null;
+          ultimo_erro_em: string | null;
+        };
+        Insert: {
+          atualizado_em?: string;
+          conformidade_em?: string | null;
+          conformidade_observacao?: string | null;
+          conformidade_por?: string | null;
+          criado_em?: string;
+          id?: string;
+          identificadores?: Json;
+          plataforma: string;
+          recursos?: Json;
+          segredo_configurado_em?: string | null;
+          status?: string;
+          testado_em?: string | null;
+          ultimo_erro?: string | null;
+          ultimo_erro_em?: string | null;
+        };
+        Update: {
+          atualizado_em?: string;
+          conformidade_em?: string | null;
+          conformidade_observacao?: string | null;
+          conformidade_por?: string | null;
+          criado_em?: string;
+          id?: string;
+          identificadores?: Json;
+          plataforma?: string;
+          recursos?: Json;
+          segredo_configurado_em?: string | null;
+          status?: string;
+          testado_em?: string | null;
+          ultimo_erro?: string | null;
+          ultimo_erro_em?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "ofe_integracoes_conformidade_por_fkey";
+            columns: ["conformidade_por"];
+            isOneToOne: false;
+            referencedRelation: "usuarios_app";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      ofe_integracoes_segredos: {
+        Row: {
+          chave_id: string;
+          integracao_id: string;
+          salvo_em: string;
+          salvo_por: string | null;
+          segredo: string;
+        };
+        Insert: {
+          chave_id: string;
+          integracao_id: string;
+          salvo_em?: string;
+          salvo_por?: string | null;
+          segredo: string;
+        };
+        Update: {
+          chave_id?: string;
+          integracao_id?: string;
+          salvo_em?: string;
+          salvo_por?: string | null;
+          segredo?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "ofe_integracoes_segredos_integracao_id_fkey";
+            columns: ["integracao_id"];
+            isOneToOne: true;
+            referencedRelation: "ofe_integracoes";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      ofe_links: {
+        Row: {
+          gerado_em: string;
+          grupo_id: string | null;
+          id: string;
+          oferta_id: string;
+          origem: string;
+          url: string;
+        };
+        Insert: {
+          gerado_em?: string;
+          grupo_id?: string | null;
+          id?: string;
+          oferta_id: string;
+          origem: string;
+          url: string;
+        };
+        Update: {
+          gerado_em?: string;
+          grupo_id?: string | null;
+          id?: string;
+          oferta_id?: string;
+          origem?: string;
+          url?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "ofe_links_grupo_id_fkey";
+            columns: ["grupo_id"];
+            isOneToOne: false;
+            referencedRelation: "ofe_grupos";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "ofe_links_oferta_id_fkey";
+            columns: ["oferta_id"];
+            isOneToOne: false;
+            referencedRelation: "ofe_ofertas";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      ofe_modelos: {
+        Row: {
+          ativo: boolean;
+          atualizado_em: string;
+          corpo: string;
+          criado_em: string;
+          id: string;
+          nome: string;
+          padrao: boolean;
+          plataforma: string | null;
+          tipo: string;
+        };
+        Insert: {
+          ativo?: boolean;
+          atualizado_em?: string;
+          corpo: string;
+          criado_em?: string;
+          id?: string;
+          nome: string;
+          padrao?: boolean;
+          plataforma?: string | null;
+          tipo: string;
+        };
+        Update: {
+          ativo?: boolean;
+          atualizado_em?: string;
+          corpo?: string;
+          criado_em?: string;
+          id?: string;
+          nome?: string;
+          padrao?: boolean;
+          plataforma?: string | null;
+          tipo?: string;
+        };
+        Relationships: [];
+      };
+      ofe_ofertas: {
+        Row: {
+          anunciante_awin: number | null;
+          atualizado_em: string;
+          avaliacao: number | null;
+          avaliacoes_qtd: number | null;
+          campanha: string | null;
+          chave_produto: string | null;
+          criado_em: string;
+          criado_por: string | null;
+          cta: string | null;
+          cupom_id: string | null;
+          dados_atualizados_em: string | null;
+          desconto: number | null;
+          fontes: Json;
+          id: string;
+          imagem_caminho: string | null;
+          imagem_url: string | null;
+          link_colado: string | null;
+          loja: string | null;
+          modelo_id: string | null;
+          parcelamento: string | null;
+          plataforma: string;
+          preco_anterior: number | null;
+          preco_atual: number | null;
+          preco_pix: number | null;
+          preco_variavel: boolean;
+          status: string;
+          titulo: string | null;
+          url_original: string;
+          url_produto: string | null;
+        };
+        Insert: {
+          anunciante_awin?: number | null;
+          atualizado_em?: string;
+          avaliacao?: number | null;
+          avaliacoes_qtd?: number | null;
+          campanha?: string | null;
+          chave_produto?: string | null;
+          criado_em?: string;
+          criado_por?: string | null;
+          cta?: string | null;
+          cupom_id?: string | null;
+          dados_atualizados_em?: string | null;
+          desconto?: number | null;
+          fontes?: Json;
+          id?: string;
+          imagem_caminho?: string | null;
+          imagem_url?: string | null;
+          link_colado?: string | null;
+          loja?: string | null;
+          modelo_id?: string | null;
+          parcelamento?: string | null;
+          plataforma: string;
+          preco_anterior?: number | null;
+          preco_atual?: number | null;
+          preco_pix?: number | null;
+          preco_variavel?: boolean;
+          status?: string;
+          titulo?: string | null;
+          url_original: string;
+          url_produto?: string | null;
+        };
+        Update: {
+          anunciante_awin?: number | null;
+          atualizado_em?: string;
+          avaliacao?: number | null;
+          avaliacoes_qtd?: number | null;
+          campanha?: string | null;
+          chave_produto?: string | null;
+          criado_em?: string;
+          criado_por?: string | null;
+          cta?: string | null;
+          cupom_id?: string | null;
+          dados_atualizados_em?: string | null;
+          desconto?: number | null;
+          fontes?: Json;
+          id?: string;
+          imagem_caminho?: string | null;
+          imagem_url?: string | null;
+          link_colado?: string | null;
+          loja?: string | null;
+          modelo_id?: string | null;
+          parcelamento?: string | null;
+          plataforma?: string;
+          preco_anterior?: number | null;
+          preco_atual?: number | null;
+          preco_pix?: number | null;
+          preco_variavel?: boolean;
+          status?: string;
+          titulo?: string | null;
+          url_original?: string;
+          url_produto?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "ofe_ofertas_cupom_id_fkey";
+            columns: ["cupom_id"];
+            isOneToOne: false;
+            referencedRelation: "ofe_cupons";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "ofe_ofertas_modelo_id_fkey";
+            columns: ["modelo_id"];
+            isOneToOne: false;
+            referencedRelation: "ofe_modelos";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      ofe_publicacoes: {
+        Row: {
+          agendado_para: string;
+          criado_em: string;
+          criado_por: string | null;
+          cupom_id: string | null;
+          id: string;
+          modo: string;
+          oferta_id: string | null;
+          origem: string;
+          texto_editado: string | null;
+        };
+        Insert: {
+          agendado_para?: string;
+          criado_em?: string;
+          criado_por?: string | null;
+          cupom_id?: string | null;
+          id?: string;
+          modo: string;
+          oferta_id?: string | null;
+          origem?: string;
+          texto_editado?: string | null;
+        };
+        Update: {
+          agendado_para?: string;
+          criado_em?: string;
+          criado_por?: string | null;
+          cupom_id?: string | null;
+          id?: string;
+          modo?: string;
+          oferta_id?: string | null;
+          origem?: string;
+          texto_editado?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "ofe_publicacoes_cupom_id_fkey";
+            columns: ["cupom_id"];
+            isOneToOne: false;
+            referencedRelation: "ofe_cupons";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "ofe_publicacoes_oferta_id_fkey";
+            columns: ["oferta_id"];
+            isOneToOne: false;
+            referencedRelation: "ofe_ofertas";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       ordens_consumo: {
         Row: {
           criado_em: string;
@@ -3779,6 +4365,42 @@ export type Database = {
           },
         ];
       };
+      ofe_publicacoes_status: {
+        Row: {
+          agendado_para: string | null;
+          aguardando: number | null;
+          cancelados: number | null;
+          criado_em: string | null;
+          cupom_id: string | null;
+          enviados: number | null;
+          falhas: number | null;
+          id: string | null;
+          ignorados: number | null;
+          incertos: number | null;
+          modo: string | null;
+          oferta_id: string | null;
+          origem: string | null;
+          processando: number | null;
+          status: string | null;
+          total: number | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "ofe_publicacoes_cupom_id_fkey";
+            columns: ["cupom_id"];
+            isOneToOne: false;
+            referencedRelation: "ofe_cupons";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "ofe_publicacoes_oferta_id_fkey";
+            columns: ["oferta_id"];
+            isOneToOne: false;
+            referencedRelation: "ofe_ofertas";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       parametros_custo_vigentes: {
         Row: {
           criado_em: string | null;
@@ -4146,6 +4768,36 @@ export type Database = {
           p_status_codigo: string;
         };
         Returns: Json;
+      };
+      ofe_cancelar_publicacao: {
+        Args: { p_publicacao: string };
+        Returns: number;
+      };
+      ofe_criar_publicacao: {
+        Args: {
+          p_agendado_para: string;
+          p_cupom: string;
+          p_envios: Json;
+          p_modo: string;
+          p_oferta: string;
+          p_origem?: string;
+          p_texto_editado?: string;
+        };
+        Returns: string;
+      };
+      ofe_gerar_alertas: { Args: never; Returns: Json };
+      ofe_marcar_publicado: { Args: { p_envio: string }; Returns: undefined };
+      ofe_pular_envio: {
+        Args: { p_envio: string; p_motivo?: string };
+        Returns: undefined;
+      };
+      ofe_remover_segredo: {
+        Args: { p_plataforma: string };
+        Returns: undefined;
+      };
+      ofe_salvar_segredo: {
+        Args: { p_chave_id: string; p_plataforma: string; p_segredo: string };
+        Returns: undefined;
       };
       reabrir_ordem_producao: {
         Args: { p_motivo: string; p_ordem: string };
