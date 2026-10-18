@@ -1,0 +1,23 @@
+{
+  "name": "fcs-ofertas-worker",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Worker do WhatsApp do módulo Grupos de Ofertas (FCS ERP). Fala com o ERP só pelo banco.",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "build": "node build.mjs",
+    "start": "node dist/index.mjs",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "dependencies": {
+    "baileys": "7.0.0-rc14",
+    "pg": "8.23.1",
+    "qrcode": "1.5.4"
+  },
+  "devDependencies": {
+    "@types/pg": "8.23.1",
+    "@types/qrcode": "1.5.6",
+    "esbuild": "0.28.2"
+  }
+}

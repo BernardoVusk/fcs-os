@@ -1,0 +1,16 @@
+# Worker do WhatsApp do FCS ERP (Grupos de Ofertas). Sem porta de entrada: nenhum
+# [http_service] nem [[services]]. Uma máquina só (fly scale count 1), em São Paulo.
+app = "fcs-ofertas-worker"
+primary_region = "gru"
+kill_signal = "SIGTERM"
+kill_timeout = 30
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  NODE_ENV = "production"
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "512mb"

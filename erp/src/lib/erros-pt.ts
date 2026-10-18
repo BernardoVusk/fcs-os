@@ -206,6 +206,17 @@ const ERROS: Record<string, string> = {
   mensagem_longa: "Mensagem acima de 4.096 caracteres, o limite do WhatsApp.",
   titulo_produto_obrigatorio: "Informe o nome do produto.",
   imagem_grande: "Imagem acima de 5 MB.",
+  aceite_obrigatorio: "Leia e aceite o risco da conexão não oficial antes de conectar.",
+  telefone_obrigatorio: "Cadastre o telefone do número para usar o código de pareamento.",
+  grupo_teste_obrigatorio:
+    "Escolha um grupo marcado como Teste controlado e já sincronizado pelo número.",
+  hora_invalida: "Hora inválida. Use HH:MM.",
+  janela_invalida: "O fim da janela precisa ser depois do início (sem passar da meia-noite).",
+  limite_dia_menor: "O limite por dia não pode ser menor que o limite por hora.",
+  grupo_com_historico:
+    "O grupo sincronizado já tem envios: una pelo outro lado ou mantenha os dois.",
+  sessao_desconectada: "Número desconectado. Conecte antes de continuar.",
+  numero_nao_encontrado: "Número não encontrado ou removido.",
   cupom_incompativel: "O cupom é de outra plataforma e não vale para esta oferta.",
 };
 

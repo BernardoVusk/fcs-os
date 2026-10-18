@@ -42,3 +42,7 @@ next-env.d.ts
 
 # o exemplo de env e versionado
 !.env.example
+
+# worker do WhatsApp (Grupos de Ofertas)
+/worker/node_modules
+/worker/dist

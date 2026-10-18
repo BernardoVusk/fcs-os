@@ -141,3 +141,20 @@ test("cupom vencido aparece como vencido e não oferece publicar", async ({ page
   await expect(linha.getByText("Vencido", { exact: true })).toBeVisible();
   await expect(linha.getByRole("button", { name: "Publicar cupom" })).toHaveCount(0);
 });
+
+test("números mostram o estado do worker; grupo mostra visualizações como não disponível", async ({
+  page,
+}) => {
+  test.skip(!criados.grupo, "defina SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY em erp/.env.local");
+  await entrar(page);
+  await page.goto("/ofertas/numeros");
+  await expect(page.getByRole("heading", { name: "Números de WhatsApp" })).toBeVisible({
+    timeout: 60_000,
+  });
+  await expect(page.getByText(/Worker (no ar|sem sinal)/)).toBeVisible();
+  await page.goto(`/ofertas/grupos/${criados.grupo}`);
+  const vis = page.getByRole("region", { name: "Visualizações" });
+  await expect(vis).toContainText("Sem dados");
+  await expect(vis).toContainText("Não disponível pela integração");
+  await expect(page.getByRole("region", { name: "Taxa de evasão" })).toContainText("Sem dados");
+});

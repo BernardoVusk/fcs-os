@@ -49,3 +49,21 @@ export function periodoAnterior(
     fim: atual.inicio,
   };
 }
+
+/** Intervalo de datas digitado (aaaa-mm-dd, em São Paulo), com o fim incluído no período. */
+export function intervaloPersonalizado(
+  de: string | undefined,
+  ate: string | undefined,
+): { inicio: string; fim: string } | null {
+  const data = (v: string | undefined) => {
+    const m = v?.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    return m ? ([Number(m[1]), Number(m[2]) - 1, Number(m[3])] as const) : null;
+  };
+  const a = data(de);
+  const b = data(ate);
+  if (!a || !b || de! > ate!) return null;
+  return {
+    inicio: new Date(new TZDate(a[0], a[1], a[2], FUSO).getTime()).toISOString(),
+    fim: new Date(new TZDate(b[0], b[1], b[2] + 1, FUSO).getTime()).toISOString(),
+  };
+}
