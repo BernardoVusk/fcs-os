@@ -28,6 +28,8 @@ import { Banner } from "@/componentes/painel/Banner";
 import { EstadoVazio } from "@/componentes/painel/EstadoVazio";
 import { Selo } from "@/componentes/ofertas/Selo";
 import { GeradorOferta } from "@/componentes/ofertas/GeradorOferta";
+import { AdicionarAFila } from "@/componentes/ofertas/AdicionarAFila";
+import { listarFilas } from "@/dados/ofertas/filas";
 import { Button } from "@/componentes/ui/button";
 
 export const metadata = { title: "Gerar oferta" };
@@ -41,15 +43,17 @@ export default async function PaginaGerarOferta({
   const { id } = await searchParams;
   const oferta = id ? await obterOferta(id) : null;
   if (id && !oferta) notFound();
-  const [grupos, modelos, cupons, liberadas, recentes, imagem, publicacoes] = await Promise.all([
-    gruposDestino(),
-    listarModelos(),
-    listarCupons(),
-    plataformasLiberadas(),
-    listarOfertas(undefined, 30),
-    urlImagem(oferta?.imagem_caminho ?? null),
-    oferta ? publicacoesDaOferta(oferta.id) : Promise.resolve([]),
-  ]);
+  const [grupos, modelos, cupons, liberadas, recentes, imagem, publicacoes, filas] =
+    await Promise.all([
+      gruposDestino(),
+      listarModelos(),
+      listarCupons(),
+      plataformasLiberadas(),
+      listarOfertas(undefined, 30),
+      urlImagem(oferta?.imagem_caminho ?? null),
+      oferta ? publicacoesDaOferta(oferta.id) : Promise.resolve([]),
+      oferta ? listarFilas() : Promise.resolve([]),
+    ]);
   const escreve = podeEscrever(usuario.papel, "ofertas");
   return (
     <div className="space-y-6">
@@ -82,6 +86,24 @@ export default async function PaginaGerarOferta({
           cupons={cupons}
           liberadas={liberadas}
         />
+      )}
+
+      {oferta && escreve && (
+        <section
+          className="flex flex-wrap items-center gap-3 rounded-2xl bg-card p-4 shadow-painel"
+          aria-label="Fila"
+        >
+          <p className="text-sm text-texto-2">Programar em uma fila:</p>
+          <AdicionarAFila
+            ofertaId={oferta.id}
+            filas={filas
+              .filter((f) => f.status !== "encerrada")
+              .map((f) => ({ id: f.id, nome: f.nome }))}
+          />
+          {filas.length === 0 && (
+            <span className="text-sm text-texto-3">Nenhuma fila criada ainda.</span>
+          )}
+        </section>
       )}
 
       {oferta && publicacoes.length > 0 && (

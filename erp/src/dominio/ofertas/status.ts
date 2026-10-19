@@ -75,6 +75,18 @@ export const MOTIVO_ROTULO: Record<string, string> = {
   duplicado: "Oferta repetida no período",
   resultado_desconhecido: "Resultado desconhecido: conferir no grupo",
   falha_envio: "Falha no envio",
+  variaveis_ausentes: "Faltam dados usados no texto",
+  dados_desatualizados: "Preço desatualizado (Amazon, mais de 24 h)",
+  modelo_obrigatorio: "Sem modelo de mensagem",
+  descartado: "Descartado por você",
+  oferta_obrigatoria: "Sem oferta ou cupom",
+};
+
+export const STATUS_FILA_ROTULO: Record<string, string> = {
+  rascunho: "Rascunho",
+  ativa: "Ativa",
+  pausada: "Pausada",
+  encerrada: "Encerrada",
 };
 
 export const STATUS_OFERTA_ROTULO: Record<string, string> = {

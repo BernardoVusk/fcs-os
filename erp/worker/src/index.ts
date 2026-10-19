@@ -1,6 +1,7 @@
 import { hostname } from "node:os";
 import { chavesDoAmbiente } from "@/lib/cripto";
 import { BancoPg, criarPool } from "./banco";
+import { BancoEnviosPg } from "./banco-envios";
 import { ConectorBaileys } from "./conector-baileys";
 import { GerenciadorSessoes } from "./sessoes";
 import { processarComando } from "./comandos";
@@ -20,7 +21,10 @@ const worker = process.env.OFERTAS_WORKER_ID || `fly-${hostname()}`;
 const chaves = chavesDoAmbiente();
 registrarSegredo(url, process.env.OFERTAS_CHAVE_CRIPTO, process.env.OFERTAS_CHAVE_CRIPTO_ANTERIOR);
 
-const banco = new BancoPg(criarPool(url));
+const pool = criarPool(url);
+const banco = new BancoPg(pool);
+const envios = new BancoEnviosPg(pool);
+const storageUrl = process.env.SUPABASE_URL ?? null;
 const sessoes = new GerenciadorSessoes(
   banco,
   worker,
@@ -57,8 +61,18 @@ async function principal() {
   });
   repetir("sincronizacao", 6 * 3_600_000, () => sessoes.sincronizarTodos());
   repetir("alertas", 5 * 60_000, () => banco.gerarAlertas());
-  laços.push(...iniciarDespacho({ banco, sessoes, worker, chaves, parando: () => parando }));
-  iniciarCopiador({ banco, sessoes, chaves });
+  laços.push(
+    ...iniciarDespacho({
+      banco,
+      envios,
+      sessoes,
+      worker,
+      chaves,
+      storageUrl,
+      parando: () => parando,
+    }),
+  );
+  iniciarCopiador({ banco, envios, sessoes, chaves });
 }
 
 async function encerrar(sinal: string) {

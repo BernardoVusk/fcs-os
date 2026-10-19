@@ -4,11 +4,12 @@
  * sai de desconto, avaliação não sai de vendas).
  */
 
-export const FONTES_DADO = ["api_shopee", "creators_api", "manual"] as const;
+export const FONTES_DADO = ["api_shopee", "creators_api", "csv_shopee", "manual"] as const;
 export type FonteDado = (typeof FONTES_DADO)[number];
 export const FONTE_DADO_ROTULO: Record<FonteDado, string> = {
   api_shopee: "Open API da Shopee",
   creators_api: "Creators API da Amazon",
+  csv_shopee: "Arquivo CSV do portal da Shopee",
   manual: "Digitado por você",
 };
 

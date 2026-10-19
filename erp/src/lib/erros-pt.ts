@@ -217,6 +217,12 @@ const ERROS: Record<string, string> = {
     "O grupo sincronizado já tem envios: una pelo outro lado ou mantenha os dois.",
   sessao_desconectada: "Número desconectado. Conecte antes de continuar.",
   numero_nao_encontrado: "Número não encontrado ou removido.",
+  nenhum_link_valido: "Nenhum link válido foi incluído. Veja os detalhes abaixo.",
+  fila_com_problemas: "A fila tem itens com problema. Corrija a lista abaixo antes de ativar.",
+  csv_sem_coluna_link:
+    "O arquivo não tem a coluna de link (Offer Link). Use o CSV de Oferta de Produto > Obter Link do portal da Shopee.",
+  csv_grande: "Arquivo com mais de 500 linhas. Divida em partes.",
+  envio_sem_texto: "Envio sem texto preparado.",
   cupom_incompativel: "O cupom é de outra plataforma e não vale para esta oferta.",
 };
 

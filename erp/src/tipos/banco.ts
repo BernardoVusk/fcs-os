@@ -2011,6 +2011,208 @@ export type Database = {
           },
         ];
       };
+      ofe_envios_tentativas: {
+        Row: {
+          envio_id: string;
+          erro: string | null;
+          id: number;
+          iniciado_em: string;
+          resultado: string | null;
+          terminado_em: string | null;
+          worker_id: string | null;
+        };
+        Insert: {
+          envio_id: string;
+          erro?: string | null;
+          id?: never;
+          iniciado_em?: string;
+          resultado?: string | null;
+          terminado_em?: string | null;
+          worker_id?: string | null;
+        };
+        Update: {
+          envio_id?: string;
+          erro?: string | null;
+          id?: never;
+          iniciado_em?: string;
+          resultado?: string | null;
+          terminado_em?: string | null;
+          worker_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "ofe_envios_tentativas_envio_id_fkey";
+            columns: ["envio_id"];
+            isOneToOne: false;
+            referencedRelation: "ofe_envios";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      ofe_filas: {
+        Row: {
+          atualizado_em: string;
+          criado_em: string;
+          criado_por: string | null;
+          id: string;
+          inicio_em: string | null;
+          intervalo_segundos: number;
+          janela_fim: string;
+          janela_inicio: string;
+          manual_expira_horas: number;
+          modelo_id: string | null;
+          nome: string;
+          numero_id: string | null;
+          reinicio_diario: boolean;
+          rodada: number;
+          rodada_data: string | null;
+          status: string;
+        };
+        Insert: {
+          atualizado_em?: string;
+          criado_em?: string;
+          criado_por?: string | null;
+          id?: string;
+          inicio_em?: string | null;
+          intervalo_segundos?: number;
+          janela_fim?: string;
+          janela_inicio?: string;
+          manual_expira_horas?: number;
+          modelo_id?: string | null;
+          nome: string;
+          numero_id?: string | null;
+          reinicio_diario?: boolean;
+          rodada?: number;
+          rodada_data?: string | null;
+          status?: string;
+        };
+        Update: {
+          atualizado_em?: string;
+          criado_em?: string;
+          criado_por?: string | null;
+          id?: string;
+          inicio_em?: string | null;
+          intervalo_segundos?: number;
+          janela_fim?: string;
+          janela_inicio?: string;
+          manual_expira_horas?: number;
+          modelo_id?: string | null;
+          nome?: string;
+          numero_id?: string | null;
+          reinicio_diario?: boolean;
+          rodada?: number;
+          rodada_data?: string | null;
+          status?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "ofe_filas_modelo_id_fkey";
+            columns: ["modelo_id"];
+            isOneToOne: false;
+            referencedRelation: "ofe_modelos";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "ofe_filas_numero_id_fkey";
+            columns: ["numero_id"];
+            isOneToOne: false;
+            referencedRelation: "ofe_numeros";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      ofe_filas_destinos: {
+        Row: {
+          fila_id: string;
+          grupo_id: string;
+        };
+        Insert: {
+          fila_id: string;
+          grupo_id: string;
+        };
+        Update: {
+          fila_id?: string;
+          grupo_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "ofe_filas_destinos_fila_id_fkey";
+            columns: ["fila_id"];
+            isOneToOne: false;
+            referencedRelation: "ofe_filas";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "ofe_filas_destinos_grupo_id_fkey";
+            columns: ["grupo_id"];
+            isOneToOne: false;
+            referencedRelation: "ofe_grupos";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "ofe_filas_destinos_grupo_id_fkey";
+            columns: ["grupo_id"];
+            isOneToOne: false;
+            referencedRelation: "ofe_grupos_resumo";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      ofe_filas_itens: {
+        Row: {
+          ativo: boolean;
+          criado_em: string;
+          cupom_id: string | null;
+          fila_id: string;
+          id: string;
+          oferta_id: string | null;
+          posicao: number;
+          texto_editado: string | null;
+        };
+        Insert: {
+          ativo?: boolean;
+          criado_em?: string;
+          cupom_id?: string | null;
+          fila_id: string;
+          id?: string;
+          oferta_id?: string | null;
+          posicao?: number;
+          texto_editado?: string | null;
+        };
+        Update: {
+          ativo?: boolean;
+          criado_em?: string;
+          cupom_id?: string | null;
+          fila_id?: string;
+          id?: string;
+          oferta_id?: string | null;
+          posicao?: number;
+          texto_editado?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "ofe_filas_itens_cupom_id_fkey";
+            columns: ["cupom_id"];
+            isOneToOne: false;
+            referencedRelation: "ofe_cupons";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "ofe_filas_itens_fila_id_fkey";
+            columns: ["fila_id"];
+            isOneToOne: false;
+            referencedRelation: "ofe_filas";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "ofe_filas_itens_oferta_id_fkey";
+            columns: ["oferta_id"];
+            isOneToOne: false;
+            referencedRelation: "ofe_ofertas";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       ofe_grupos: {
         Row: {
           ativo: boolean;
@@ -2641,11 +2843,14 @@ export type Database = {
           criado_em: string;
           criado_por: string | null;
           cupom_id: string | null;
+          fila_id: string | null;
+          fila_item_id: string | null;
           id: string;
           modo: string;
           numero_id: string | null;
           oferta_id: string | null;
           origem: string;
+          rodada: number | null;
           texto_editado: string | null;
         };
         Insert: {
@@ -2653,11 +2858,14 @@ export type Database = {
           criado_em?: string;
           criado_por?: string | null;
           cupom_id?: string | null;
+          fila_id?: string | null;
+          fila_item_id?: string | null;
           id?: string;
           modo: string;
           numero_id?: string | null;
           oferta_id?: string | null;
           origem?: string;
+          rodada?: number | null;
           texto_editado?: string | null;
         };
         Update: {
@@ -2665,11 +2873,14 @@ export type Database = {
           criado_em?: string;
           criado_por?: string | null;
           cupom_id?: string | null;
+          fila_id?: string | null;
+          fila_item_id?: string | null;
           id?: string;
           modo?: string;
           numero_id?: string | null;
           oferta_id?: string | null;
           origem?: string;
+          rodada?: number | null;
           texto_editado?: string | null;
         };
         Relationships: [
@@ -2678,6 +2889,20 @@ export type Database = {
             columns: ["cupom_id"];
             isOneToOne: false;
             referencedRelation: "ofe_cupons";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "ofe_publicacoes_fila_id_fkey";
+            columns: ["fila_id"];
+            isOneToOne: false;
+            referencedRelation: "ofe_filas";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "ofe_publicacoes_fila_item_id_fkey";
+            columns: ["fila_item_id"];
+            isOneToOne: false;
+            referencedRelation: "ofe_filas_itens";
             referencedColumns: ["id"];
           },
           {
@@ -5276,9 +5501,20 @@ export type Database = {
         };
         Returns: Json;
       };
+      ofe_avancar_filas: { Args: never; Returns: number };
       ofe_cancelar_publicacao: {
         Args: { p_publicacao: string };
         Returns: number;
+      };
+      ofe_concluir_envio: {
+        Args: {
+          p_envio: string;
+          p_erro?: string;
+          p_resultado: string;
+          p_wa_id?: string;
+          p_worker: string;
+        };
+        Returns: undefined;
       };
       ofe_criar_publicacao: {
         Args: {
@@ -5292,20 +5528,52 @@ export type Database = {
         };
         Returns: string;
       };
+      ofe_descartar_envios: { Args: { p_envios: string[] }; Returns: number };
       ofe_enviar_comando: {
         Args: { p_numero: string; p_payload?: Json; p_tipo: string };
         Returns: string;
       };
       ofe_gerar_alertas: { Args: never; Returns: Json };
+      ofe_marcar_despacho: {
+        Args: { p_envio: string; p_worker: string };
+        Returns: boolean;
+      };
       ofe_marcar_publicado: { Args: { p_envio: string }; Returns: undefined };
+      ofe_preparar_envio: {
+        Args: {
+          p_detalhe?: string;
+          p_envio: string;
+          p_link: string;
+          p_motivo?: string;
+          p_origem: string;
+          p_texto: string;
+        };
+        Returns: undefined;
+      };
       ofe_pular_envio: {
         Args: { p_envio: string; p_motivo?: string };
         Returns: undefined;
       };
+      ofe_reenviar: { Args: { p_envios: string[] }; Returns: number };
       ofe_remover_segredo: {
         Args: { p_plataforma: string };
         Returns: undefined;
       };
+      ofe_reservar_envio: {
+        Args: { p_worker: string };
+        Returns: {
+          envio_id: string;
+          grupo_jid: string;
+          imagem_caminho: string;
+          imagem_url: string;
+          link_url: string;
+          numero_id: string;
+          plataforma: string;
+          publicacao_id: string;
+          texto: string;
+        }[];
+      };
+      ofe_rotina_diaria: { Args: never; Returns: undefined };
       ofe_salvar_segredo: {
         Args: { p_chave_id: string; p_plataforma: string; p_segredo: string };
         Returns: undefined;
@@ -5318,6 +5586,19 @@ export type Database = {
       ofe_w_assumir_numero: {
         Args: { p_numero: string; p_segundos?: number; p_worker: string };
         Returns: boolean;
+      };
+      ofe_w_atualizar_oferta: {
+        Args: {
+          p_avaliacao: number;
+          p_desconto: number;
+          p_fontes: Json;
+          p_imagem: string;
+          p_oferta: string;
+          p_preco: number;
+          p_titulo: string;
+          p_variavel: boolean;
+        };
+        Returns: undefined;
       };
       ofe_w_batimento: {
         Args: { p_versao: string; p_worker: string };
@@ -5358,6 +5639,10 @@ export type Database = {
       ofe_w_liberar_numero: {
         Args: { p_numero: string; p_worker: string };
         Returns: undefined;
+      };
+      ofe_w_para_preparar: {
+        Args: { p_limite?: number; p_worker: string };
+        Returns: string[];
       };
       ofe_w_proximo_comando: {
         Args: { p_worker: string };

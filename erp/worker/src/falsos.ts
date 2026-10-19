@@ -5,6 +5,8 @@ import type {
   GrupoRemoto,
 } from "@/dominio/ofertas/conector";
 import type { Banco, Comando, NumeroCfg } from "./banco";
+import type { BancoEnvios, ContextoEnvio, Reservado } from "./banco-envios";
+import type { LinkPronto } from "@/integracoes/montar-envios";
 
 /** Conector e banco em memória para os testes do worker. Nada aqui roda em produção. */
 
@@ -133,4 +135,70 @@ export function numeroCfg(id: string, extra: Partial<NumeroCfg> = {}): NumeroCfg
     tem_sessao: false,
     ...extra,
   };
+}
+
+export class BancoEnviosFalso implements BancoEnvios {
+  linhas: { plataforma: string; identificadores: unknown; segredo: string | null }[] = [];
+  contextos = new Map<string, ContextoEnvio>();
+  preparar: string[] = [];
+  preparos: { envio: string; r: unknown }[] = [];
+  links: { oferta: string; grupo: string; link: LinkPronto }[] = [];
+  fila: Reservado[] = [];
+  ordem: string[] = [];
+  conclusoes: { envio: string; resultado: string; waId?: string | null; erro?: string | null }[] =
+    [];
+
+  async integracoes() {
+    return this.linhas;
+  }
+  async anunciantes() {
+    return [];
+  }
+  async modelos() {
+    return [
+      {
+        id: "m1",
+        tipo: "oferta" as const,
+        plataforma: null,
+        padrao: true,
+        ativo: true,
+        corpo: "{{produto}}\n{{link}}",
+      },
+    ];
+  }
+  async avancarFilas() {
+    return 0;
+  }
+  async paraPreparar() {
+    const r = this.preparar;
+    this.preparar = [];
+    return r;
+  }
+  async contexto(envio: string) {
+    return this.contextos.get(envio) ?? null;
+  }
+  async gravarPreparo(envio: string, r: unknown) {
+    this.preparos.push({ envio, r });
+  }
+  async gravarLink(oferta: string, grupo: string, link: LinkPronto) {
+    this.links.push({ oferta, grupo, link });
+  }
+  async atualizarOferta() {}
+  async reservar() {
+    return this.fila.shift() ?? null;
+  }
+  async marcarDespacho(envio: string) {
+    this.ordem.push(`despacho:${envio}`);
+    return true;
+  }
+  async concluir(
+    envio: string,
+    _w: string,
+    resultado: string,
+    waId?: string | null,
+    erro?: string | null,
+  ) {
+    this.ordem.push(`concluir:${envio}`);
+    this.conclusoes.push({ envio, resultado, waId, erro });
+  }
 }

@@ -52,6 +52,7 @@ test.beforeAll(async () => {
     texto_final: `${marca} miniatura\nhttps://mercadolivre.com/sec/e2e`,
     link_url: "https://mercadolivre.com/sec/e2e",
     link_origem: "colado",
+    preparado_em: new Date().toISOString(),
   });
   criados.cupom = (
     await a
@@ -157,4 +158,36 @@ test("números mostram o estado do worker; grupo mostra visualizações como nã
   await expect(vis).toContainText("Sem dados");
   await expect(vis).toContainText("Não disponível pela integração");
   await expect(page.getByRole("region", { name: "Taxa de evasão" })).toContainText("Sem dados");
+});
+
+test("fila manual: cria, recebe link e a ativação mostra os problemas sem ativar", async ({
+  page,
+}) => {
+  test.skip(!criados.grupo, "defina SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY em erp/.env.local");
+  await entrar(page);
+  await page.goto("/ofertas/filas");
+  await page.getByRole("button", { name: "Nova fila" }).click();
+  await page.getByLabel("Nome da fila").fill(`${marca} fila`);
+  await page.getByRole("button", { name: "Criar fila" }).click();
+  await expect(page).toHaveURL(/\/ofertas\/filas\/[0-9a-f-]{36}/, { timeout: 30_000 });
+  const filaId = page.url().split("/ofertas/filas/")[1].split("?")[0];
+  await page
+    .getByLabel("Colar links (um por linha, até 30)")
+    .fill("https://produto.mercadolivre.com.br/MLB-5566778899-e2e");
+  await page.getByRole("button", { name: "Incluir links" }).click();
+  await expect(page.getByText(/1 oferta\(s\) na fila/)).toBeVisible({ timeout: 30_000 });
+  await page.getByRole("button", { name: "Ativar fila" }).click();
+  await page.getByRole("button", { name: "Validar e ativar" }).click();
+  await expect(page.getByText(/Nenhum grupo de destino ativo/)).toBeVisible({ timeout: 30_000 });
+  await expect(page.getByText(/não tem API de links/)).toBeVisible();
+  const a = await servico();
+  const { data: f } = await a!.from("ofe_filas").select("status").eq("id", filaId).single();
+  expect(f?.status).toBe("rascunho");
+  const { data: itens } = await a!
+    .from("ofe_filas_itens")
+    .select("oferta_id")
+    .eq("fila_id", filaId);
+  await a!.from("ofe_filas").delete().eq("id", filaId);
+  for (const i of itens ?? [])
+    if (i.oferta_id) await a!.from("ofe_ofertas").delete().eq("id", i.oferta_id);
 });

@@ -7,6 +7,7 @@ import { EstadoVazio } from "@/componentes/painel/EstadoVazio";
 import { Banner } from "@/componentes/painel/Banner";
 import { Button } from "@/componentes/ui/button";
 import { CartaoPublicar } from "@/componentes/ofertas/CartaoPublicar";
+import { PrepararPendentes } from "@/componentes/ofertas/PrepararPendentes";
 
 export const metadata = { title: "Publicar" };
 
@@ -30,6 +31,7 @@ export default async function PaginaPublicar() {
           <Link href="/ofertas/gerar">Gerar oferta</Link>
         </Button>
       </div>
+      {escreve && <PrepararPendentes />}
       {devidos.length === 0 && proximos.length === 0 ? (
         <EstadoVazio
           titulo="Nada para publicar agora"
