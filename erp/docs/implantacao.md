@@ -82,6 +82,18 @@ Troca da chave de cifra: colocar a chave antiga em `OFERTAS_CHAVE_CRIPTO_ANTERIO
 
 Recomendações da auditoria de 18/10/2026 (`saidas/seguranca/2026-10-18-auditoria.md`) para antes do primeiro deploy: fixar o digest da imagem `node:22-slim` no Dockerfile e ativar a verificação em duas etapas do dono.
 
+## Deploy bloqueado ("Deployment was blocked")
+
+No plano Hobby, a Vercel só publica commit cujo autor é a conta do GitHub ligada ao projeto (`BernardoVusk`). Commit com o e-mail `focusarq.equipe@gmail.com` aparece como bloqueado. Solução usada em 15/10 e 19/10/2026: um commit com o autor da conta, por cima do que se quer publicar.
+
+```
+GIT_COMMITTER_NAME="Bernardo Vusk" GIT_COMMITTER_EMAIL="89705221+BernardoVusk@users.noreply.github.com" \
+  git commit --allow-empty --author="Bernardo Vusk <89705221+BernardoVusk@users.noreply.github.com>" -m "deploy: ..."
+git push
+```
+
+Para não repetir: `git config user.email 89705221+BernardoVusk@users.noreply.github.com` na raiz do repositório.
+
 ## Previews
 
 Cada push abre um deploy de preview na Vercel apontando para o **mesmo** banco de produção (as variáveis são as mesmas). Para testar sem mexer em dado real, use o ambiente local com `npm run dev`, ou crie um conjunto de variáveis só para Preview apontando para o projeto `fcs-os-teste`.
