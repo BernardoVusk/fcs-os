@@ -1725,6 +1725,119 @@ export type Database = {
           },
         ];
       };
+      ofe_automacoes: {
+        Row: {
+          atualizado_em: string;
+          criado_em: string;
+          criado_por: string | null;
+          filtros: Json;
+          grupo_origem_id: string;
+          id: string;
+          intervalo_segundos: number;
+          janela_duplicidade_horas: number;
+          limpeza: Json;
+          nome: string;
+          numero_id: string | null;
+          plataformas: string[];
+          revisao_manual: boolean;
+          status: string;
+          ultimo_erro: string | null;
+        };
+        Insert: {
+          atualizado_em?: string;
+          criado_em?: string;
+          criado_por?: string | null;
+          filtros?: Json;
+          grupo_origem_id: string;
+          id?: string;
+          intervalo_segundos?: number;
+          janela_duplicidade_horas?: number;
+          limpeza?: Json;
+          nome: string;
+          numero_id?: string | null;
+          plataformas?: string[];
+          revisao_manual?: boolean;
+          status?: string;
+          ultimo_erro?: string | null;
+        };
+        Update: {
+          atualizado_em?: string;
+          criado_em?: string;
+          criado_por?: string | null;
+          filtros?: Json;
+          grupo_origem_id?: string;
+          id?: string;
+          intervalo_segundos?: number;
+          janela_duplicidade_horas?: number;
+          limpeza?: Json;
+          nome?: string;
+          numero_id?: string | null;
+          plataformas?: string[];
+          revisao_manual?: boolean;
+          status?: string;
+          ultimo_erro?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "ofe_automacoes_grupo_origem_id_fkey";
+            columns: ["grupo_origem_id"];
+            isOneToOne: false;
+            referencedRelation: "ofe_grupos";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "ofe_automacoes_grupo_origem_id_fkey";
+            columns: ["grupo_origem_id"];
+            isOneToOne: false;
+            referencedRelation: "ofe_grupos_resumo";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "ofe_automacoes_numero_id_fkey";
+            columns: ["numero_id"];
+            isOneToOne: false;
+            referencedRelation: "ofe_numeros";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      ofe_automacoes_destinos: {
+        Row: {
+          automacao_id: string;
+          grupo_id: string;
+        };
+        Insert: {
+          automacao_id: string;
+          grupo_id: string;
+        };
+        Update: {
+          automacao_id?: string;
+          grupo_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "ofe_automacoes_destinos_automacao_id_fkey";
+            columns: ["automacao_id"];
+            isOneToOne: false;
+            referencedRelation: "ofe_automacoes";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "ofe_automacoes_destinos_grupo_id_fkey";
+            columns: ["grupo_id"];
+            isOneToOne: false;
+            referencedRelation: "ofe_grupos";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "ofe_automacoes_destinos_grupo_id_fkey";
+            columns: ["grupo_id"];
+            isOneToOne: false;
+            referencedRelation: "ofe_grupos_resumo";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       ofe_awin_anunciantes: {
         Row: {
           advertiser_id: number;
@@ -2548,6 +2661,115 @@ export type Database = {
             columns: ["oferta_id"];
             isOneToOne: false;
             referencedRelation: "ofe_ofertas";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      ofe_mensagens_origem: {
+        Row: {
+          automacao_id: string;
+          chave_produto: string | null;
+          grupo_id: string;
+          hash_conteudo: string | null;
+          id: string;
+          link_original: string | null;
+          motivo: string | null;
+          oferta_id: string | null;
+          plataforma: string | null;
+          publicacao_id: string | null;
+          recebida_em: string;
+          removidos: string[];
+          revisado_em: string | null;
+          revisado_por: string | null;
+          status: string;
+          texto: string | null;
+          texto_processado: string | null;
+          titulo_sugerido: string | null;
+          wa_mensagem_id: string;
+        };
+        Insert: {
+          automacao_id: string;
+          chave_produto?: string | null;
+          grupo_id: string;
+          hash_conteudo?: string | null;
+          id?: string;
+          link_original?: string | null;
+          motivo?: string | null;
+          oferta_id?: string | null;
+          plataforma?: string | null;
+          publicacao_id?: string | null;
+          recebida_em?: string;
+          removidos?: string[];
+          revisado_em?: string | null;
+          revisado_por?: string | null;
+          status?: string;
+          texto?: string | null;
+          texto_processado?: string | null;
+          titulo_sugerido?: string | null;
+          wa_mensagem_id: string;
+        };
+        Update: {
+          automacao_id?: string;
+          chave_produto?: string | null;
+          grupo_id?: string;
+          hash_conteudo?: string | null;
+          id?: string;
+          link_original?: string | null;
+          motivo?: string | null;
+          oferta_id?: string | null;
+          plataforma?: string | null;
+          publicacao_id?: string | null;
+          recebida_em?: string;
+          removidos?: string[];
+          revisado_em?: string | null;
+          revisado_por?: string | null;
+          status?: string;
+          texto?: string | null;
+          texto_processado?: string | null;
+          titulo_sugerido?: string | null;
+          wa_mensagem_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "ofe_mensagens_origem_automacao_id_fkey";
+            columns: ["automacao_id"];
+            isOneToOne: false;
+            referencedRelation: "ofe_automacoes";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "ofe_mensagens_origem_grupo_id_fkey";
+            columns: ["grupo_id"];
+            isOneToOne: false;
+            referencedRelation: "ofe_grupos";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "ofe_mensagens_origem_grupo_id_fkey";
+            columns: ["grupo_id"];
+            isOneToOne: false;
+            referencedRelation: "ofe_grupos_resumo";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "ofe_mensagens_origem_oferta_id_fkey";
+            columns: ["oferta_id"];
+            isOneToOne: false;
+            referencedRelation: "ofe_ofertas";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "ofe_mensagens_origem_publicacao_id_fkey";
+            columns: ["publicacao_id"];
+            isOneToOne: false;
+            referencedRelation: "ofe_publicacoes";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "ofe_mensagens_origem_publicacao_id_fkey";
+            columns: ["publicacao_id"];
+            isOneToOne: false;
+            referencedRelation: "ofe_publicacoes_status";
             referencedColumns: ["id"];
           },
         ];
@@ -5529,6 +5751,14 @@ export type Database = {
         Returns: string;
       };
       ofe_descartar_envios: { Args: { p_envios: string[] }; Returns: number };
+      ofe_descartar_mensagem: {
+        Args: { p_mensagem: string };
+        Returns: undefined;
+      };
+      ofe_enfileirar_mensagem: {
+        Args: { p_link_colado?: string; p_mensagem: string; p_texto?: string };
+        Returns: string;
+      };
       ofe_enviar_comando: {
         Args: { p_numero: string; p_payload?: Json; p_tipo: string };
         Returns: string;

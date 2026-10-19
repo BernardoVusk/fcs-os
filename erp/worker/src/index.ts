@@ -6,7 +6,7 @@ import { ConectorBaileys } from "./conector-baileys";
 import { GerenciadorSessoes } from "./sessoes";
 import { processarComando } from "./comandos";
 import { iniciarDespacho } from "./despacho";
-import { iniciarCopiador } from "./copiador";
+import { BancoCopiadorPg, iniciarCopiador } from "./copiador";
 import { log, mensagemDeErro, registrarSegredo } from "./log";
 
 /**
@@ -72,7 +72,7 @@ async function principal() {
       parando: () => parando,
     }),
   );
-  iniciarCopiador({ banco, envios, sessoes, chaves });
+  iniciarCopiador({ banco, envios, sessoes, chaves, copiador: new BancoCopiadorPg(pool) });
 }
 
 async function encerrar(sinal: string) {

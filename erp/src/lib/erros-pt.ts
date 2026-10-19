@@ -223,6 +223,11 @@ const ERROS: Record<string, string> = {
     "O arquivo não tem a coluna de link (Offer Link). Use o CSV de Oferta de Produto > Obter Link do portal da Shopee.",
   csv_grande: "Arquivo com mais de 500 linhas. Divida em partes.",
   envio_sem_texto: "Envio sem texto preparado.",
+  origem_obrigatoria: "Escolha o grupo de origem.",
+  origem_nao_autorizada:
+    "Esse grupo não está marcado como origem autorizada (o dono registra a autorização em Grupos).",
+  plataforma_obrigatoria: "Escolha pelo menos uma plataforma.",
+  sem_destino: "A automação não tem grupo de destino ativo.",
   cupom_incompativel: "O cupom é de outra plataforma e não vale para esta oferta.",
 };
 

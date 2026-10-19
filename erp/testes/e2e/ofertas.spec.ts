@@ -191,3 +191,10 @@ test("fila manual: cria, recebe link e a ativação mostra os problemas sem ativ
   for (const i of itens ?? [])
     if (i.oferta_id) await a!.from("ofe_ofertas").delete().eq("id", i.oferta_id);
 });
+
+test("copiador abre e explica o requisito de origem autorizada", async ({ page }) => {
+  await entrar(page);
+  await page.goto("/ofertas/copiador");
+  await expect(page.getByRole("heading", { name: "Copiador" })).toBeVisible({ timeout: 60_000 });
+  await expect(page.getByText(/autorização para usar/)).toBeVisible();
+});

@@ -586,17 +586,15 @@ export async function prepararManuais(): Promise<{ preparados: number; falhas: n
     );
     if (r.ok) {
       if (r.linkNovo && r.link && ctx.publicacao.oferta_id)
-        await supabase
-          .from("ofe_links")
-          .upsert(
-            {
-              oferta_id: ctx.publicacao.oferta_id,
-              grupo_id: ctx.grupo.id,
-              url: r.link.url,
-              origem: r.link.origem,
-            },
-            { onConflict: "oferta_id,grupo_id" },
-          );
+        await supabase.from("ofe_links").upsert(
+          {
+            oferta_id: ctx.publicacao.oferta_id,
+            grupo_id: ctx.grupo.id,
+            url: r.link.url,
+            origem: r.link.origem,
+          },
+          { onConflict: "oferta_id,grupo_id" },
+        );
       await supabase.rpc("ofe_preparar_envio", {
         p_envio: id,
         p_texto: r.texto,
