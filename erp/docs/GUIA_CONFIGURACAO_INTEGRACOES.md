@@ -161,7 +161,7 @@ O modo assistido (seção 1) funciona sempre. A tela **Números de WhatsApp** mo
 
 Leia antes: a conexão por QR Code usa uma biblioteca não oficial (Baileys). Os termos do WhatsApp proíbem uso não pessoal e mensagens automáticas, e o número pode ser suspenso ou banido a qualquer momento. Nenhum intervalo ou limite garante proteção contra bloqueio. Use só um número dedicado que a empresa aceite perder.
 
-1. Publique o worker na Fly.io seguindo `erp/docs/implantacao.md`, seção "Worker do WhatsApp na Fly.io". Ele precisa de `OFERTAS_WORKER_DB_URL` (gerada por `node ferramentas/papel-worker.mjs --alvo dev`), `OFERTAS_CHAVE_CRIPTO` e `SUPABASE_URL`.
+1. Ligue o worker. Sem custo, no seu computador: dois cliques em `erp/worker/iniciar-worker.cmd` (a janela precisa ficar aberta e o computador ligado). Ou na Fly.io, ligado o dia todo. Passo a passo das duas opções em `erp/docs/implantacao.md`, seção "Worker do WhatsApp na Fly.io". A tela Números de WhatsApp mostra "Worker no ar" quando ele está funcionando.
 2. Em **Números de WhatsApp** (só o dono): **Adicionar número**.
 
    | Campo | Regra |

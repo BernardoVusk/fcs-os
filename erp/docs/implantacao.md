@@ -60,7 +60,19 @@ O banco de produção é o projeto `fcs-os` (o mesmo de desenvolvimento) e está
 
 O ERP funciona sem o worker: o modo assistido (tela Publicar) monta a postagem e você publica pelo celular. O worker só é preciso para conectar número, sincronizar grupos, medir membros, enviar sozinho pela fila e rodar o copiador. Ele roda fora da Vercel porque precisa de uma conexão aberta o tempo todo com o WhatsApp.
 
-O que está no repositório: `erp/worker/` com `package.json` próprio (Baileys 7.0.0-rc14, `pg`, `qrcode`, versões exatas), `build.mjs` (esbuild junta o código compartilhado de `erp/src`), `Dockerfile` (Node 22, `npm ci --omit=dev --ignore-scripts`), `fly.toml` (app `fcs-ofertas-worker`, região `gru`, sem porta de entrada, `kill_timeout = 30`). Situação em 18/10/2026: **ainda não publicado**; o login do papel `ofe_worker` só foi ligado no projeto de teste.
+O que está no repositório: `erp/worker/` com `package.json` próprio (Baileys 7.0.0-rc14, `pg`, `qrcode`, versões exatas), `build.mjs` (esbuild junta o código compartilhado de `erp/src`), `Dockerfile` (Node 22, `npm ci --omit=dev --ignore-scripts`), `fly.toml` (app `fcs-ofertas-worker`, região `gru`, sem porta de entrada, `kill_timeout = 30`). Situação em 19/10/2026: rodando no computador do dono (opção sem custo, abaixo), login do papel `ofe_worker` ligado em produção; Fly.io não usada.
+
+### Opção sem custo: no seu computador
+
+Desde 19/10/2026 o worker roda no computador do dono, sem Fly.io:
+
+1. Uma vez: `cd erp && node ferramentas/papel-worker.mjs --alvo dev` (feito em 19/10/2026; rodar de novo troca a senha e derruba o worker até ele ser reiniciado). O `.env` da raiz precisa ter também `OFERTAS_CHAVE_CRIPTO` (a mesma da Vercel) e `SUPABASE_URL`.
+2. Para ligar: dois cliques em `erp/worker/iniciar-worker.cmd` (ou `npm run local` dentro de `erp/worker`). Abre uma janela com o log; fechar a janela ou Ctrl+C desliga.
+3. `erp/worker/local.mjs` passa ao worker só `OFERTAS_WORKER_DB_URL`, `OFERTAS_CHAVE_CRIPTO` (e a anterior), `SUPABASE_URL` e `OFERTAS_WORKER_ID` (padrão `pc-<nome do computador>`); service role e token do Supabase ficam fora. Se o worker cair, ele sobe de novo sozinho.
+4. Com o computador desligado ou em suspensão, os envios automáticos esperam (nada se perde), o alerta de worker parado abre e a coleta de membros registra lacuna. Ao religar, a sessão volta sem QR novo. Para ligar junto com o Windows: atalho do `iniciar-worker.cmd` na pasta que abre com `shell:startup` (Win+R).
+5. Não rodar no computador e na Fly ao mesmo tempo, nem em dois computadores: a trava por número segura, mas os dois disputam os comandos.
+
+### Opção na Fly.io
 
 Antes de começar: conta na Fly.io com cartão (uma máquina `shared-cpu-1x` de 512 MB), `flyctl` instalado e `fly auth login`; um número de celular dedicado ao WhatsApp das ofertas e um grupo de teste. Usar a Baileys viola os termos do WhatsApp e pode levar ao banimento do número: não use o seu número pessoal nem o da loja.
 

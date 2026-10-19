@@ -4,10 +4,13 @@
   "private": true,
   "type": "module",
   "description": "Worker do WhatsApp do módulo Grupos de Ofertas (FCS ERP). Fala com o ERP só pelo banco.",
-  "engines": { "node": ">=22" },
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "build": "node build.mjs",
     "start": "node dist/index.mjs",
+    "local": "node build.mjs && node local.mjs",
     "typecheck": "node ../node_modules/typescript/bin/tsc --noEmit -p tsconfig.json"
   },
   "dependencies": {
