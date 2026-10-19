@@ -97,15 +97,15 @@ export default async function PaginaHistorico({ searchParams }: { searchParams: 
         className="flex flex-wrap items-end gap-2 rounded-2xl bg-card p-4 shadow-painel"
         aria-label="Filtros"
       >
-        <label className="space-y-1 text-xs">
+        <label className="flex flex-col gap-1 text-xs">
           <span className="text-texto-3">De</span>
           <Input type="date" name="de" defaultValue={sp.de} className="h-8 w-auto" />
         </label>
-        <label className="space-y-1 text-xs">
+        <label className="flex flex-col gap-1 text-xs">
           <span className="text-texto-3">Até</span>
           <Input type="date" name="ate" defaultValue={sp.ate} className="h-8 w-auto" />
         </label>
-        <label className="space-y-1 text-xs">
+        <label className="flex flex-col gap-1 text-xs">
           <span className="text-texto-3">Grupo</span>
           <SelectNativo name="grupo" defaultValue={sp.grupo ?? ""} className="h-8 w-auto max-w-48">
             <option value="">Todos</option>
@@ -116,7 +116,7 @@ export default async function PaginaHistorico({ searchParams }: { searchParams: 
             ))}
           </SelectNativo>
         </label>
-        <label className="space-y-1 text-xs">
+        <label className="flex flex-col gap-1 text-xs">
           <span className="text-texto-3">Número</span>
           <SelectNativo name="numero" defaultValue={sp.numero ?? ""} className="h-8 w-auto">
             <option value="">Todos</option>
@@ -127,7 +127,7 @@ export default async function PaginaHistorico({ searchParams }: { searchParams: 
             ))}
           </SelectNativo>
         </label>
-        <label className="space-y-1 text-xs">
+        <label className="flex flex-col gap-1 text-xs">
           <span className="text-texto-3">Resultado</span>
           <SelectNativo name="status" defaultValue={status ?? ""} className="h-8 w-auto">
             <option value="">Todos</option>
@@ -138,7 +138,7 @@ export default async function PaginaHistorico({ searchParams }: { searchParams: 
             ))}
           </SelectNativo>
         </label>
-        <label className="space-y-1 text-xs">
+        <label className="flex flex-col gap-1 text-xs">
           <span className="text-texto-3">Texto ou link</span>
           <Input name="busca" defaultValue={sp.busca} className="h-8 w-48" />
         </label>

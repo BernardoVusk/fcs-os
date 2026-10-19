@@ -490,7 +490,9 @@ export function BotoesStatusFila({
 
 export function FalhasEIncertos({
   envios,
+  escreve,
 }: {
+  escreve: boolean;
   envios: {
     id: string;
     status: string;
@@ -516,50 +518,54 @@ export function FalhasEIncertos({
     });
   return (
     <div className="space-y-3">
-      <div className="flex flex-wrap items-center gap-2">
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button size="sm" disabled={!sel.length}>
-              Tentar de novo ({sel.length})
-            </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Tentar de novo {sel.length} envio(s)?</DialogTitle>
-              <DialogDescription>
-                {incertos
-                  ? `${incertos} deles está(ão) incerto(s): a mensagem pode ter chegado. Confira no grupo antes, para não repetir a oferta.`
-                  : "Eles voltam para a fila e saem no próximo horário permitido."}
-              </DialogDescription>
-            </DialogHeader>
-            <DialogFooter>
-              <Button disabled={pendente} onClick={() => agir(reenviarEnvios)}>
-                Conferi, tentar de novo
+      {escreve && (
+        <div className="flex flex-wrap items-center gap-2">
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button size="sm" disabled={!sel.length}>
+                Tentar de novo ({sel.length})
               </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-        <Button
-          size="sm"
-          variant="outline"
-          disabled={!sel.length || pendente}
-          onClick={() => agir(descartarEnvios)}
-        >
-          Descartar
-        </Button>
-      </div>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Tentar de novo {sel.length} envio(s)?</DialogTitle>
+                <DialogDescription>
+                  {incertos
+                    ? `${incertos} deles está(ão) incerto(s): a mensagem pode ter chegado. Confira no grupo antes, para não repetir a oferta.`
+                    : "Eles voltam para a fila e saem no próximo horário permitido."}
+                </DialogDescription>
+              </DialogHeader>
+              <DialogFooter>
+                <Button disabled={pendente} onClick={() => agir(reenviarEnvios)}>
+                  Conferi, tentar de novo
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+          <Button
+            size="sm"
+            variant="outline"
+            disabled={!sel.length || pendente}
+            onClick={() => agir(descartarEnvios)}
+          >
+            Descartar
+          </Button>
+        </div>
+      )}
       <ul className="divide-y divide-borda overflow-hidden rounded-2xl bg-card text-sm shadow-painel">
         {envios.map((e) => (
           <li key={e.id} className="flex flex-wrap items-start gap-3 px-4 py-3">
-            <input
-              type="checkbox"
-              className="mt-1 size-4 accent-acao"
-              aria-label={`Selecionar envio para ${e.grupo}`}
-              checked={sel.includes(e.id)}
-              onChange={() =>
-                setSel((s) => (s.includes(e.id) ? s.filter((x) => x !== e.id) : [...s, e.id]))
-              }
-            />
+            {escreve && (
+              <input
+                type="checkbox"
+                className="mt-1 size-4 accent-acao"
+                aria-label={`Selecionar envio para ${e.grupo}`}
+                checked={sel.includes(e.id)}
+                onChange={() =>
+                  setSel((s) => (s.includes(e.id) ? s.filter((x) => x !== e.id) : [...s, e.id]))
+                }
+              />
+            )}
             <div className="min-w-0 flex-1">
               <p className="font-medium">
                 {e.item} <span className="text-texto-3">em {e.grupo}</span>

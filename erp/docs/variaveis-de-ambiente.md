@@ -2,7 +2,7 @@
 
 | Variável | Onde | Uso | Vai ao navegador? |
 |---|---|---|---|
-| `SUPABASE_URL` | `erp/.env.local`, host | URL do projeto | não (só servidor) |
+| `SUPABASE_URL` | `erp/.env.local`, host e worker (Fly) | URL do projeto; no worker, monta o endereço das imagens de oferta no Storage | não (só servidor) |
 | `SUPABASE_ANON_KEY` | `erp/.env.local`, host | cliente com sessão (RLS vale) | não |
 | `SUPABASE_SERVICE_ROLE_KEY` | `erp/.env.local`, host | criar usuário, listar e-mails | nunca |
 | `E2E_EMAIL`, `E2E_SENHA` | `erp/.env.local` | testes e2e | não |
@@ -14,6 +14,7 @@
 | `OFERTAS_CHAVE_CRIPTO_ANTERIOR` | mesmos lugares, só durante uma troca de chave | abre o que foi cifrado com a chave antiga | nunca |
 | `OFERTAS_WORKER_DB_URL` | só no worker (Fly) | conexão do papel `ofe_worker` pelo pooler do Supabase | nunca |
 | `OFERTAS_WORKER_ID` | só no worker (Fly) | nome da instância, gravado nas travas e no batimento | não |
+| `SUPABASE_TESTE_WORKER_DB_URL` | `.env` da raiz | conexão do papel `ofe_worker` no projeto de teste, para os testes de integração do worker; gravada por `ferramentas/papel-worker.mjs --alvo teste` | nunca |
 
 Para gerar a chave: `node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"`. Guarde uma cópia no cofre do dono: sem ela, credenciais e sessões salvas não abrem e precisam ser cadastradas de novo.
 

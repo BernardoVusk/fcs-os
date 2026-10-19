@@ -1,0 +1,103 @@
+[
+  {
+    "titulo": "Grupos de Ofertas: WhatsApp em modo assistido com worker próprio (Baileys) opcional na Fly.io",
+    "tipo": "decisao",
+    "categoria": "Decisões de arquitetura",
+    "modulo": "ofertas",
+    "tags": ["ofertas", "whatsapp", "baileys", "worker", "fly", "risco"],
+    "referencia": "erp/docs/superpowers/specs/2026-10-18-grupos-de-ofertas-design.md; erp/worker/; erp/docs/implantacao.md",
+    "resumo": "A API oficial do WhatsApp não publica em grupos comuns (Groups API limitada a 8 participantes e exige conta oficial). A base é o modo assistido: o ERP monta texto e imagem e o usuário publica. Automação só por worker próprio com Baileys, ligado por número dedicado com aceite de risco versionado.",
+    "estrutura": {
+      "contexto": "O módulo precisa publicar ofertas em grupos de WhatsApp com tráfego pago, operado por uma pessoa só. A Vercel não mantém conexão aberta e a API oficial não atende grupos existentes.",
+      "alternativas": [
+        "Só API oficial (Cloud API Groups): não alcança os grupos existentes",
+        "Provedor terceiro de WhatsApp não oficial: mesmo risco de banimento e dado de sessão fora de controle",
+        "Só modo assistido: sem fila automática nem coleta de membros",
+        "Worker próprio com Baileys na Fly.io, sem porta de entrada, falando com o ERP só pelo banco"
+      ],
+      "decisao": "Modo assistido sempre disponível e worker próprio opcional (Baileys 7.0.0-rc14 fixada, npm ci --ignore-scripts, uma máquina em gru). Liga por número com aceite de risco registrado (ofe_numeros.aceite_risco_versao). Sem rotação de números e sem intervalo anti-detecção; limites por hora, por dia e intervalo mínimo são operacionais e a tela diz que não garantem proteção contra bloqueio.",
+      "consequencias": "Usar a Baileys viola os termos do WhatsApp: risco de banimento aceito pelo usuário em 18/10/2026, só com números dedicados. Visualizações por mensagem ficam 'não disponível pela integração'. O spike com número real e o deploy na Fly dependem do usuário."
+    },
+    "conteudo": "## Onde está\n\n- Worker: `erp/worker/src/` (sessões e travas, comandos, despacho, copiador, log sem segredo).\n- Barramento: `ofe_comandos`, `ofe_numeros_estado`, `ofe_qr`, `ofe_worker_estado` (migração 0024).\n- Modo assistido: `/ofertas/publicar` (`componentes/ofertas/CartaoPublicar.tsx`).\n- Implantação: `erp/docs/implantacao.md`, seção do worker."
+  },
+  {
+    "titulo": "Grupos de Ofertas: papel Postgres ofe_worker no lugar da service role",
+    "tipo": "decisao",
+    "categoria": "Decisões de arquitetura",
+    "modulo": "ofertas",
+    "tags": ["ofertas", "seguranca", "rls", "worker", "postgres"],
+    "referencia": "supabase/migrations/0021_ofertas_fundacao.sql; 0024_ofertas_whatsapp.sql; erp/ferramentas/papel-worker.mjs; testes/integracao/ofertas-whatsapp.test.ts",
+    "resumo": "O worker conecta pelo pooler do Supabase (porta 5432, modo sessão) com o papel ofe_worker, que só tem grant nas tabelas e funções ofe_. A senha é gerada por ferramentas/papel-worker.mjs e nunca versionada. Comprometer a biblioteca do WhatsApp não alcança financeiro, clientes nem usuários.",
+    "estrutura": {
+      "contexto": "O worker roda código de terceiros (Baileys) com conexão permanente. Com a service role ele leria e alteraria o banco inteiro, ignorando RLS.",
+      "alternativas": [
+        "Service role no worker",
+        "Usuário do Auth para o worker (JWT expira e mistura com usuários reais)",
+        "Papel Postgres próprio com login pelo pooler"
+      ],
+      "decisao": "Papel ofe_worker criado na migração sem senha (nologin); login ligado à parte com senha aleatória. Policies to ofe_worker e grants por tabela e por coluna; funções só do worker em security invoker com revoke de public, anon e authenticated. app.origem_atual() devolve 'worker' quando session_user = 'ofe_worker', e a auditoria registra essa origem.",
+      "consequencias": "Testado na integração: o papel não lê lancamentos, clientes nem usuarios_app. Inserção com identity funciona sem grant de sequência. A auditoria de 18/10/2026 sugeriu restringir as colunas de ofe_grupos que o worker grava (achado baixo)."
+    },
+    "conteudo": "## Como operar\n\n- `node ferramentas/papel-worker.mjs --alvo dev|teste` troca a senha e grava a URL no `.env` da raiz (`OFERTAS_WORKER_DB_URL` ou `SUPABASE_TESTE_WORKER_DB_URL`).\n- Rodar de novo invalida a senha anterior: atualizar o segredo na Fly em seguida."
+  },
+  {
+    "titulo": "Grupos de Ofertas: credenciais e sessões cifradas com AES-256-GCM na aplicação, não no Vault",
+    "tipo": "decisao",
+    "categoria": "Decisões de arquitetura",
+    "modulo": "ofertas",
+    "tags": ["ofertas", "seguranca", "cripto", "segredos"],
+    "referencia": "erp/src/lib/cripto.ts; erp/src/integracoes/segredo.ts; erp/src/integracoes/credenciais.ts; erp/docs/variaveis-de-ambiente.md",
+    "resumo": "Segredos da Shopee e da Awin e o estado de sessão da Baileys ficam cifrados com AES-256-GCM (node:crypto), formato v1.<id da chave>.<iv>.<tag>.<dados>, com o contexto da linha como dado autenticado. Chave em OFERTAS_CHAVE_CRIPTO (Vercel e Fly), com OFERTAS_CHAVE_CRIPTO_ANTERIOR durante a troca.",
+    "estrutura": {
+      "contexto": "ERP e worker precisam abrir os mesmos segredos; o backup semanal (pg_dump) precisa continuar restaurável.",
+      "alternativas": [
+        "Supabase Vault (pgsodium): a chave fica no projeto e o dump restaurado em outro projeto não abre",
+        "Segredo em variável de ambiente por plataforma: o dono não consegue trocar pela tela",
+        "Cifra na aplicação com chave guardada fora do banco"
+      ],
+      "decisao": "Cifra na aplicação. ofe_integracoes_segredos não tem policy para a sessão; grava só por ofe_salvar_segredo (dono) e lê só pelo módulo server-only credenciais.ts (service role) e pelo worker. A tela mostra só 'configurado em'.",
+      "consequencias": "Perder a chave perde as credenciais e as sessões (refazer e reconectar). Cópia da chave fica no cofre do dono. Não há recifragem em lote: na troca de chave, salvar de novo as credenciais."
+    },
+    "conteudo": "## Onde está\n\n- `src/lib/cripto.ts` (`cifrar`, `decifrar`, `chavesDoAmbiente`, `idDaChave`) com testes de adulteração e troca de chave.\n- `src/integracoes/segredo.ts` (`fecharSegredo`, `abrirSegredo`, `redigir`)."
+  },
+  {
+    "titulo": "Grupos de Ofertas: atribuição só por parâmetros oficiais, sem redirecionador de clique próprio",
+    "tipo": "decisao",
+    "categoria": "Regras de negócio",
+    "modulo": "ofertas",
+    "tags": ["ofertas", "afiliados", "shopee", "amazon", "awin", "mercado-livre", "cliques"],
+    "referencia": "erp/src/dominio/ofertas/links-afiliado.ts; erp/src/integracoes/conversor.ts; supabase/migrations/0028_ofertas_relatorios.sql; erp/docs/regras-de-negocio.md",
+    "resumo": "Link por grupo com sub IDs da Shopee (g<grupo>, c<campanha>, o<oferta>), clickref da Awin e tag da Amazon por grupo; Mercado Livre sempre pelo link do portal. Cliques e conversões só de relatório oficial importado (API da Awin e da Shopee ou CSV), nunca de contador próprio. Sem link de afiliado válido, o envio falha com motivo.",
+    "estrutura": {
+      "contexto": "Os programas da Amazon e do Mercado Livre proíbem encurtador e redirecionamento próprio; a Shopee não confirma; na Awin depende do anunciante.",
+      "alternativas": [
+        "Redirecionador próprio contando cliques",
+        "Encurtador de terceiros",
+        "Parâmetros oficiais e relatórios importados"
+      ],
+      "decisao": "Parâmetros oficiais. Trava de conformidade por plataforma (canal WhatsApp cadastrado ou confirmado no programa): fechada, a plataforma só gera rascunho; a Amazon nasce fechada. Nunca publicar silenciosamente um link sem afiliação.",
+      "consequencias": "Sem importação, cliques e comissões aparecem como 'não disponível'. Atribuição ao grupo depende de o código voltar no relatório da plataforma."
+    },
+    "conteudo": "## Onde está\n\n- Conversão: `src/integracoes/conversor.ts` (Shopee generateShortLink, Awin Link Builder, Amazon tag, ML colado).\n- Atribuição: `app.ofe_grupo_do_codigo` e `app.ofe_oferta_do_codigo` (0028).\n- Telas: `/ofertas/integracoes` (trava), `/ofertas/relatorios` (importação e colunas separadas)."
+  },
+  {
+    "titulo": "Grupos de Ofertas: camada src/integracoes para HTTP de saída com proteção de SSRF",
+    "tipo": "decisao",
+    "categoria": "Decisões de arquitetura",
+    "modulo": "ofertas",
+    "tags": ["ofertas", "seguranca", "ssrf", "arquitetura", "http"],
+    "referencia": "erp/src/integracoes/http.ts; erp/docs/arquitetura.md; saidas/seguranca/2026-10-18-auditoria.md",
+    "resumo": "Toda chamada de saída do módulo (APIs de afiliado, link curto, imagem) passa por src/integracoes/http.ts: só https e porta 443, host da lista da plataforma, IP privado recusado depois do DNS, redirecionamento manual com cada salto revalidado (no máximo 3), tempo limite e corpo limitado. ERP e worker usam o mesmo código.",
+    "estrutura": {
+      "contexto": "O usuário cola URLs e o copiador lê links de mensagens de terceiros; sem controle, o servidor poderia ser usado para alcançar a rede interna.",
+      "alternativas": [
+        "fetch direto em cada adaptador",
+        "Proxy de saída dedicado",
+        "Cliente único com lista de hosts e checagem de IP"
+      ],
+      "decisao": "Cliente único em src/integracoes, nova camada registrada em docs/arquitetura.md, com credenciais lidas só por src/integracoes/credenciais.ts. Dado de produto vem só de API; HTML de página de produto não é lido.",
+      "consequencias": "A janela de DNS rebinding entre a checagem e o fetch fica aceita e documentada, porque só passam hosts de marketplaces conhecidos. Host novo exige mudar a lista no domínio."
+    },
+    "conteudo": "## Onde está\n\n- `src/integracoes/http.ts` (`validarUrl`, `ipPrivado`, `resolverLinkCurto`, `requisitarJson`, `baixarArquivo`) e `http.test.ts`.\n- Lista de hosts: `src/dominio/ofertas/plataformas.ts`."
+  }
+]

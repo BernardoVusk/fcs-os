@@ -50,6 +50,11 @@ describe("navegacao", () => {
     const operador = gruposVisiveis("operador", 19).find((g) => g.rotulo === "Grupos de Ofertas");
     expect(operador?.itens.some((i) => i.rota === "/ofertas/integracoes")).toBe(false);
     expect(trilha("/ofertas/filas").map((t) => t.rotulo)).toEqual(["Painel de ofertas", "Filas"]);
+    expect(trilha("/ofertas/grupos/comparar").map((t) => t.rotulo)).toEqual([
+      "Painel de ofertas",
+      "Grupos",
+      "Comparar",
+    ]);
   });
   it("marca o item ativo pela rota", () => {
     expect(itemAtivo("/configuracoes/canais/abc", "/configuracoes/canais")).toBe(true);

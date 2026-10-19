@@ -244,6 +244,7 @@ export default async function PaginaFila({
           />
         ) : (
           <FalhasEIncertos
+            escreve={escreve}
             envios={problemas.map((e) => ({
               id: e.id,
               status: e.status,

@@ -50,7 +50,7 @@ export default async function PaginaGrupos({
         )}
       </div>
       <form method="get" className="flex flex-wrap items-end gap-2" aria-label="Filtros">
-        <label className="space-y-1 text-xs">
+        <label className="flex flex-col gap-1 text-xs">
           <span className="text-texto-3">Função</span>
           <SelectNativo name="funcao" defaultValue={filtroFuncao ?? ""} className="h-8 w-auto">
             <option value="">Todas</option>
@@ -61,7 +61,7 @@ export default async function PaginaGrupos({
             ))}
           </SelectNativo>
         </label>
-        <label className="space-y-1 text-xs">
+        <label className="flex flex-col gap-1 text-xs">
           <span className="text-texto-3">Número que coleta</span>
           <SelectNativo name="numero" defaultValue={numero ?? ""} className="h-8 w-auto">
             <option value="">Todos</option>

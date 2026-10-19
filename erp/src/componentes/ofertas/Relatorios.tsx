@@ -59,7 +59,7 @@ export function ImportarApi({ awin, shopee }: { awin: boolean; shopee: boolean }
     );
   return (
     <div className="flex flex-wrap items-end gap-2">
-      <label className="space-y-1 text-xs">
+      <label className="flex flex-col gap-1 text-xs">
         <span className="text-texto-3">De</span>
         <Input
           type="date"
@@ -68,7 +68,7 @@ export function ImportarApi({ awin, shopee }: { awin: boolean; shopee: boolean }
           className="h-8 w-auto"
         />
       </label>
-      <label className="space-y-1 text-xs">
+      <label className="flex flex-col gap-1 text-xs">
         <span className="text-texto-3">Até</span>
         <Input
           type="date"
@@ -164,7 +164,7 @@ export function ImportarCsv() {
           </p>
           <div className="grid gap-2 sm:grid-cols-2">
             {CAMPOS[tipo].map((c) => (
-              <label key={c.chave} className="space-y-1 text-xs">
+              <label key={c.chave} className="flex flex-col gap-1 text-xs">
                 <span className="text-texto-3">
                   {c.rotulo}
                   {c.obrigatorio ? " (obrigatório)" : ""}

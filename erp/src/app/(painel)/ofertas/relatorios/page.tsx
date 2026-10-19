@@ -103,11 +103,11 @@ export default async function PaginaRelatorios({ searchParams }: { searchParams:
         className="flex flex-wrap items-end gap-2 rounded-2xl bg-card p-4 shadow-painel"
         aria-label="Filtros"
       >
-        <label className="space-y-1 text-xs">
+        <label className="flex flex-col gap-1 text-xs">
           <span className="text-texto-3">De</span>
           <Input type="date" name="de" defaultValue={sp.de} className="h-8 w-auto" />
         </label>
-        <label className="space-y-1 text-xs">
+        <label className="flex flex-col gap-1 text-xs">
           <span className="text-texto-3">Até</span>
           <Input type="date" name="ate" defaultValue={sp.ate} className="h-8 w-auto" />
         </label>
@@ -121,7 +121,7 @@ export default async function PaginaRelatorios({ searchParams }: { searchParams:
           { nome: "fila", rotulo: "Fila", opcoes: filas.map((f) => [f.id, f.nome]) },
           { nome: "numero", rotulo: "Número", opcoes: numeros.map((n) => [n.id, n.rotulo]) },
         ].map((f) => (
-          <label key={f.nome} className="space-y-1 text-xs">
+          <label key={f.nome} className="flex flex-col gap-1 text-xs">
             <span className="text-texto-3">{f.rotulo}</span>
             <SelectNativo
               name={f.nome}
@@ -137,7 +137,7 @@ export default async function PaginaRelatorios({ searchParams }: { searchParams:
             </SelectNativo>
           </label>
         ))}
-        <label className="space-y-1 text-xs">
+        <label className="flex flex-col gap-1 text-xs">
           <span className="text-texto-3">Campanha</span>
           <Input name="campanha" defaultValue={sp.campanha} className="h-8 w-40" />
         </label>

@@ -35,3 +35,21 @@ npm run test:integracao
 npm run e2e
 node ferramentas/capturas.mjs
 ```
+
+## Grupos de Ofertas (Fases 11 a 19): critérios de aceite do plano
+
+Conferido em 18/10/2026, na branch `erp-ofertas`, com `npm run lint`, `npm run typecheck` (ERP e worker), `npm test` (230 unitários, inclusive os do worker), `npm run build` (ERP e pacote do worker), `npm run test:integracao` (89 de 93; as 4 falhas são a sobra de `parametros_custo` v44 no projeto de teste, em `alertas`, `custos` e `producao`, anterior ao módulo) e `npm run e2e` (33 fluxos, 8 deles do módulo).
+
+| Fase | Critério | Situação | Evidência |
+|---|---|---|---|
+| 11 | Painel sem dado fictício; papéis testados; cifra com teste de adulteração; SSRF recusado | feito | `src/lib/cripto.test.ts`, `src/integracoes/http.test.ts`, `src/lib/auth/papeis.test.ts`, `testes/integracao/ofertas-fundacao.test.ts`; painel com "Sem dados" e "não disponível" nas capturas |
+| 12 | "Conectada" só depois de chamada real; segredo nunca volta; assinatura da Shopee com vetor fixo | feito no código, **sem teste real** | `src/integracoes/conversor.test.ts` (assinatura, erro vira motivo), e2e "segredo nunca aparece na página"; a conexão real com Shopee e Awin depende das credenciais do usuário |
+| 13 | Operação completa à mão sem WhatsApp; "não informado" em campo sem fonte; dado desatualizado avisado; cupom vencido bloqueado | feito | `testes/e2e/ofertas.spec.ts` (oferta do Mercado Livre até o rascunho, Publicar assistido, cupom vencido), `testes/integracao/ofertas-publicacao.test.ts` |
+| 14 | Tela reflete a sessão real; desconexão abre alerta; nada de QR ou sessão em log; evasão com nulos e lacunas | feito no código, **spike real pendente** | `worker/src/sessoes.test.ts` (conector falso), `testes/integracao/ofertas-whatsapp.test.ts` (aceite de risco, trava do número, QR só dono, papel do worker, alertas de número desconectado e worker parado), `src/dominio/ofertas/evasao.test.ts`, `worker/src/log.ts`; conexão por QR com número dedicado e grupo de teste não foi feita |
+| 15 | Duas reservas paralelas nunca pegam o mesmo envio; retentativa não duplica; agenda, janela e limites respeitados | feito | `testes/integracao/ofertas-fila.test.ts` (reservas simultâneas, reserva vencida com e sem despacho, limite por hora, janela, rodadas), `worker/src/despacho.test.ts` |
+| 16 | Link não elegível não sai; link da origem nunca sai; informação essencial preservada | feito | `src/dominio/ofertas/copiador.test.ts`, `limpeza.test.ts`, `worker/src/copiador.test.ts`, `testes/integracao/ofertas-copiador.test.ts` (duplicidade, origem autorizada) |
+| 17 | Validade visível; "validade não confirmada" no cupom sem data | feito | `src/dominio/ofertas/cupons.test.ts`, `testes/integracao/ofertas-cupons.test.ts` (registro idempotente dos cupons da Awin, regra da fila, alerta de vencimento) |
+| 18 | Envio, clique e conversão separados; origem e data de cada número | feito | `testes/integracao/ofertas-relatorios.test.ts` (atribuição, arquivo repetido, papel leitura), `src/dominio/ofertas/conversoes.test.ts`, e2e de relatórios e histórico |
+| 19 | Auditoria sem achado alto aberto; capturas nos dois temas; guia confere com as telas | feito | `saidas/seguranca/2026-10-18-auditoria.md` (0 crítico, 0 alto, 0 médio, 4 baixos, correções aguardando decisão); capturas das 12 telas em `testes/relatorios/capturas/` (1440, 1024 e 390, escuro e claro); `docs/GUIA_CONFIGURACAO_INTEGRACOES.md` escrito a partir do inventário de rótulos das telas; valor da chave de cifra e da service role ausentes de `.next/static` |
+
+Ficou de fora desta entrega, por depender de terceiros: conexão real com a Open API da Shopee e com a Awin, spike com número dedicado e deploy do worker na Fly, Creators API da Amazon e feeds da Awin. A lista completa está na seção 12 do guia.

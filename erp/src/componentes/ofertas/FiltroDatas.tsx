@@ -20,11 +20,11 @@ export function FiltroDatas({
           <input key={`${k}-${i}`} type="hidden" name={k} value={x} />
         )),
       )}
-      <label className="space-y-1 text-xs">
+      <label className="flex flex-col gap-1 text-xs">
         <span className="text-texto-3">De</span>
         <Input type="date" name="de" defaultValue={de} className="h-8 w-auto" />
       </label>
-      <label className="space-y-1 text-xs">
+      <label className="flex flex-col gap-1 text-xs">
         <span className="text-texto-3">Até</span>
         <Input type="date" name="ate" defaultValue={ate} className="h-8 w-auto" />
       </label>

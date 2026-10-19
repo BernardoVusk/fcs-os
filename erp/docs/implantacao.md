@@ -27,6 +27,7 @@ Ainda falta (só o dono faz): plano Pro na Vercel (o time está no Hobby), domí
    - `SUPABASE_URL` = `https://jdjbyxysxtnyhztypeai.supabase.co`
    - `SUPABASE_ANON_KEY` = chave anon do projeto `fcs-os` (Supabase > Project Settings > API)
    - `SUPABASE_SERVICE_ROLE_KEY` = chave service role do mesmo projeto (só servidor; nunca `NEXT_PUBLIC_`)
+   - `OFERTAS_CHAVE_CRIPTO` = a mesma chave do `erp/.env.local` (Grupos de Ofertas; sem ela as credenciais de afiliado não salvam nem abrem). Marcar como Sensitive.
    - Nada de `E2E_*` em produção.
 4. **Deploy.** O primeiro build leva uns 2 minutos. A URL `*.vercel.app` já funciona.
 5. **Supabase, depois do primeiro deploy:** Authentication > URL Configuration: `Site URL` = a URL de produção; adicionar a mesma em `Redirect URLs` (e a de preview `https://*-<time>.vercel.app` se for usar previews com login).
@@ -36,7 +37,7 @@ Ainda falta (só o dono faz): plano Pro na Vercel (o time está no Hobby), domí
 
 ## Migrações em produção
 
-O banco de produção é o projeto `fcs-os` (o mesmo de desenvolvimento) e já está na migração 0019. A cada migração nova: `npm run migrar -- --alvo dev` e `--alvo teste` antes de publicar o código que depende dela. A Vercel não roda migração.
+O banco de produção é o projeto `fcs-os` (o mesmo de desenvolvimento) e está na migração 0028 desde 18/10/2026. A cada migração nova: `npm run migrar -- --alvo dev` e `--alvo teste` antes de publicar o código que depende dela. A Vercel não roda migração.
 
 ## Limites da Vercel que importam aqui
 
@@ -54,6 +55,32 @@ O banco de produção é o projeto `fcs-os` (o mesmo de desenvolvimento) e já e
 - Catálogo > produto > Arquivos: enviar um STL de verdade (acima de 5 MB) e abrir pela URL assinada.
 - Relatórios > XLSX abre no Excel com acento.
 - CI verde no GitHub; backup rodado uma vez com restauração no projeto de teste.
+
+## Worker do WhatsApp na Fly.io (Grupos de Ofertas)
+
+O ERP funciona sem o worker: o modo assistido (tela Publicar) monta a postagem e você publica pelo celular. O worker só é preciso para conectar número, sincronizar grupos, medir membros, enviar sozinho pela fila e rodar o copiador. Ele roda fora da Vercel porque precisa de uma conexão aberta o tempo todo com o WhatsApp.
+
+O que está no repositório: `erp/worker/` com `package.json` próprio (Baileys 7.0.0-rc14, `pg`, `qrcode`, versões exatas), `build.mjs` (esbuild junta o código compartilhado de `erp/src`), `Dockerfile` (Node 22, `npm ci --omit=dev --ignore-scripts`), `fly.toml` (app `fcs-ofertas-worker`, região `gru`, sem porta de entrada, `kill_timeout = 30`). Situação em 18/10/2026: **ainda não publicado**; o login do papel `ofe_worker` só foi ligado no projeto de teste.
+
+Antes de começar: conta na Fly.io com cartão (uma máquina `shared-cpu-1x` de 512 MB), `flyctl` instalado e `fly auth login`; um número de celular dedicado ao WhatsApp das ofertas e um grupo de teste. Usar a Baileys viola os termos do WhatsApp e pode levar ao banimento do número: não use o seu número pessoal nem o da loja.
+
+1. **Senha do papel do worker no banco de produção:** `cd erp && node ferramentas/papel-worker.mjs --alvo dev`. Gera senha nova, liga o login do `ofe_worker` e grava `OFERTAS_WORKER_DB_URL` no `.env` da raiz, sem mostrar a senha. Rodar de novo troca a senha (o worker em produção para até receber a nova).
+2. **Pacote:** `cd erp && npm ci`, depois `cd worker && npm ci --ignore-scripts && npm run build` (gera `worker/dist/`, que o Dockerfile copia).
+3. **App:** `fly apps create fcs-ofertas-worker`.
+4. **Segredos**, lidos do `.env` da raiz sem passar pelo histórico do terminal:
+   `grep -E '^(OFERTAS_WORKER_DB_URL|OFERTAS_CHAVE_CRIPTO|SUPABASE_URL)=' ../../.env | fly secrets import --app fcs-ofertas-worker`
+   `OFERTAS_WORKER_ID` é opcional (padrão `fly-<hostname>`). Não colocar `SUPABASE_SERVICE_ROLE_KEY` na Fly: o worker não usa.
+5. **Publicar:** dentro de `erp/worker`, `fly deploy --app fcs-ofertas-worker` e depois `fly scale count 1 --app fcs-ofertas-worker` (uma máquina só; a trava por número impede duas sessões iguais, mas duas máquinas só disputariam a trava).
+6. **Conferir:** `fly logs --app fcs-ofertas-worker` mostra uma linha JSON com `"evento":"iniciando"`; no ERP, `/ofertas` passa a mostrar o worker em funcionamento.
+7. **Primeiro número:** `/ofertas/numeros` (só dono): cadastrar, aceitar o termo de risco, conectar por QR ou código de pareamento, sincronizar os grupos e mandar o envio de teste para o grupo de teste.
+
+Parar tudo: `fly scale count 0 --app fcs-ofertas-worker`. Os envios automáticos esperam, o alerta de worker parado abre em até 15 minutos (5 sem batimento mais o intervalo do job, se houver número já conectado alguma vez) e o modo assistido continua.
+
+Atualizar: repetir os passos 2 e 5. O SIGTERM do deploy libera as travas dos números antes de a máquina sair.
+
+Troca da chave de cifra: colocar a chave antiga em `OFERTAS_CHAVE_CRIPTO_ANTERIOR` e a nova em `OFERTAS_CHAVE_CRIPTO`, na Vercel e na Fly. As duas abrem; o que for salvo de novo sai com a nova. Não há ferramenta de recifragem em lote: salvar de novo as credenciais em `/ofertas/integracoes` e, se preciso, reconectar os números. Só depois tirar a anterior.
+
+Recomendações da auditoria de 18/10/2026 (`saidas/seguranca/2026-10-18-auditoria.md`) para antes do primeiro deploy: fixar o digest da imagem `node:22-slim` no Dockerfile e ativar a verificação em duas etapas do dono.
 
 ## Previews
 

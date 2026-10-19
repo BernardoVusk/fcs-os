@@ -16,11 +16,19 @@ jobs:
         with:
           node-version: 24
           cache: npm
-          cache-dependency-path: erp/package-lock.json
+          cache-dependency-path: |
+            erp/package-lock.json
+            erp/worker/package-lock.json
       - run: npm ci
+      - name: dependências do worker do WhatsApp (sem scripts de instalação)
+        run: npm ci --prefix worker --ignore-scripts
       - run: npm run lint
       - run: npm run typecheck
       - run: npm test
+      - name: tipos e pacote do worker
+        run: |
+          npm run typecheck --prefix worker
+          npm run build --prefix worker
       - run: npm run build
         env:
           SUPABASE_URL: https://exemplo.supabase.co

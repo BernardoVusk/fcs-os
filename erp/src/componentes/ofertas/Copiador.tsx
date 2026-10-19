@@ -326,7 +326,7 @@ export function RevisarMensagem({
         </pre>
       </div>
       <div className="space-y-2">
-        <label className="space-y-1 text-xs">
+        <label className="flex flex-col gap-1 text-xs">
           <span className="text-texto-3">
             Texto que vai sair ({"{{link}}"} vira o nosso link de cada grupo)
           </span>
