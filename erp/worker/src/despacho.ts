@@ -7,6 +7,7 @@ import { baixarArquivo } from "@/integracoes/http";
 import { prepararEnvio } from "@/integracoes/preparo";
 import { credenciaisDasLinhas, type CredenciaisCarregadas } from "@/integracoes/segredo";
 import { buscarProdutoShopee } from "@/integracoes/shopee";
+import { listarCuponsAwin } from "@/integracoes/awin";
 import { lerUrlOferta } from "@/dominio/ofertas/urls";
 import type { Banco } from "./banco";
 import type { BancoEnvios, Reservado } from "./banco-envios";
@@ -132,6 +133,30 @@ export class Despachante {
     return { dados: b.dados, tipo: b.tipo };
   }
 
+  /** Cupons da Awin (Promotions API), a cada 6 horas, se a integração tiver credencial. */
+  async sincronizarCupons(): Promise<number> {
+    const cred = await this.credenciais();
+    if (!cred.awin) return 0;
+    const r = await listarCuponsAwin(cred.awin);
+    if (!r.ok) {
+      log("aviso", "cupons_awin", { erro: r.erro });
+      return 0;
+    }
+    return this.d.envios.registrarCuponsAwin(
+      r.dados.map((c) => ({
+        referencia: String(c.promotionId),
+        codigo: c.codigo,
+        titulo: c.titulo,
+        anunciante: c.anunciante,
+        termos: c.termos,
+        inicio: c.inicio,
+        fim: c.fim,
+        url: c.urlRastreio,
+        advertiser_id: c.advertiserId,
+      })),
+    );
+  }
+
   /** Um envio por número por vez, até não haver mais reservável. */
   async despachar(): Promise<number> {
     let n = 0;
@@ -198,5 +223,6 @@ export function iniciarDespacho(d: Deps): ReturnType<typeof setInterval>[] {
     laco("filas", 30_000, () => d.envios.avancarFilas()),
     laco("preparo", 5_000, () => despachante.preparar()),
     laco("despacho", 3_000, () => despachante.despachar()),
+    laco("cupons", 6 * 3_600_000, () => despachante.sincronizarCupons()),
   ];
 }

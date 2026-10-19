@@ -137,3 +137,17 @@ export async function plataformasLiberadas(): Promise<Plataforma[]> {
     .not("conformidade_em", "is", null);
   return (data ?? []).map((d) => lerPlataforma(d.plataforma)).filter((p): p is Plataforma => !!p);
 }
+
+export async function regraCupons(): Promise<{
+  enviar_awin: boolean;
+  fila_awin_id: string | null;
+  sincronizado_em: string | null;
+}> {
+  const supabase = await clienteServidor();
+  const { data } = await supabase
+    .from("ofe_cupons_regras")
+    .select("enviar_awin, fila_awin_id, sincronizado_em")
+    .eq("id", true)
+    .maybeSingle();
+  return data ?? { enviar_awin: false, fila_awin_id: null, sincronizado_em: null };
+}

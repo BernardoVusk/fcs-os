@@ -184,6 +184,11 @@ export class BancoEnviosFalso implements BancoEnvios {
     this.links.push({ oferta, grupo, link });
   }
   async atualizarOferta() {}
+  cuponsRegistrados: Record<string, unknown>[] = [];
+  async registrarCuponsAwin(c: Record<string, unknown>[]) {
+    this.cuponsRegistrados.push(...c);
+    return c.length;
+  }
   async reservar() {
     return this.fila.shift() ?? null;
   }

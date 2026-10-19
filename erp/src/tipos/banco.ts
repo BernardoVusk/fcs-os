@@ -2010,6 +2010,38 @@ export type Database = {
         };
         Relationships: [];
       };
+      ofe_cupons_regras: {
+        Row: {
+          atualizado_em: string;
+          enviar_awin: boolean;
+          fila_awin_id: string | null;
+          id: boolean;
+          sincronizado_em: string | null;
+        };
+        Insert: {
+          atualizado_em?: string;
+          enviar_awin?: boolean;
+          fila_awin_id?: string | null;
+          id?: boolean;
+          sincronizado_em?: string | null;
+        };
+        Update: {
+          atualizado_em?: string;
+          enviar_awin?: boolean;
+          fila_awin_id?: string | null;
+          id?: boolean;
+          sincronizado_em?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "ofe_cupons_regras_fila_awin_id_fkey";
+            columns: ["fila_awin_id"];
+            isOneToOne: false;
+            referencedRelation: "ofe_filas";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       ofe_envios: {
         Row: {
           agendado_para: string;
@@ -5785,6 +5817,7 @@ export type Database = {
         Returns: undefined;
       };
       ofe_reenviar: { Args: { p_envios: string[] }; Returns: number };
+      ofe_registrar_cupons_awin: { Args: { p_cupons: Json }; Returns: number };
       ofe_remover_segredo: {
         Args: { p_plataforma: string };
         Returns: undefined;

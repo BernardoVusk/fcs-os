@@ -1,7 +1,12 @@
 import { exigirLeitura } from "@/lib/auth/sessao";
 import { podeEscrever } from "@/lib/auth/papeis";
-import { gruposDestino, listarCupons, plataformasLiberadas } from "@/dados/ofertas/cadastros";
-import { mudarStatusCupom } from "@/acoes/ofertas/cadastros";
+import {
+  gruposDestino,
+  listarCupons,
+  plataformasLiberadas,
+  regraCupons,
+} from "@/dados/ofertas/cadastros";
+import { mudarStatusCupom, sincronizarCuponsAwin } from "@/acoes/ofertas/cadastros";
 import { PLATAFORMA_ROTULO } from "@/dominio/ofertas/plataformas";
 import {
   cupomPodeSair,
@@ -19,6 +24,9 @@ import { Banner } from "@/componentes/painel/Banner";
 import { Selo } from "@/componentes/ofertas/Selo";
 import { FormCupom } from "@/componentes/ofertas/FormsCadastro";
 import { PublicarCupom } from "@/componentes/ofertas/PublicarCupom";
+import { ImportarCupons, RegraCupons } from "@/componentes/ofertas/CuponsExtras";
+import { listarFilas } from "@/dados/ofertas/filas";
+import { listarIntegracoes } from "@/dados/ofertas/integracoes";
 
 export const metadata = { title: "Cupons" };
 
@@ -29,11 +37,17 @@ export default async function PaginaCupons({
 }) {
   const usuario = await exigirLeitura("ofertas");
   const { vence } = await searchParams;
-  const [todos, grupos, liberadas] = await Promise.all([
+  const [todos, grupos, liberadas, regra, filas, integracoes] = await Promise.all([
     listarCupons(),
     gruposDestino(),
     plataformasLiberadas(),
+    regraCupons(),
+    listarFilas(),
+    listarIntegracoes(),
   ]);
+  const awinConectada = integracoes.some(
+    (i) => i.plataforma === "awin" && i.status === "conectada",
+  );
   const cupons = vence === "7d" ? todos.filter((c) => venceEmBreve(c, 7)) : todos;
   const escreve = podeEscrever(usuario.papel, "ofertas");
   const opcoesGrupos = grupos.map((g) => ({ id: g.id, nome: g.nome, funcao: g.funcao }));
@@ -54,6 +68,38 @@ export default async function PaginaCupons({
           </DialogoNovo>
         )}
       </div>
+      {escreve && (
+        <section
+          className="space-y-4 rounded-2xl bg-card p-5 shadow-painel"
+          aria-label="Cupons automáticos e importação"
+        >
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <h2 className="text-base font-semibold">Cupons da Awin</h2>
+              <p className="text-xs text-texto-3">
+                {awinConectada
+                  ? regra.sincronizado_em
+                    ? `Última sincronização ${formatarDataHora(regra.sincronizado_em)}. O worker também sincroniza a cada 6 horas.`
+                    : "Ainda não sincronizado."
+                  : "Conecte a Awin em Integrações de afiliados para sincronizar."}
+              </p>
+            </div>
+            {awinConectada && (
+              <BotaoAcao acao={sincronizarCuponsAwin} variant="secondary">
+                Sincronizar agora
+              </BotaoAcao>
+            )}
+          </div>
+          <RegraCupons
+            enviar={regra.enviar_awin}
+            fila={regra.fila_awin_id}
+            filas={filas
+              .filter((f) => f.status !== "encerrada")
+              .map((f) => ({ id: f.id, nome: f.nome }))}
+          />
+          <ImportarCupons />
+        </section>
+      )}
       {vence === "7d" && (
         <Banner tipo="info">Mostrando só cupons que vencem nos próximos 7 dias.</Banner>
       )}

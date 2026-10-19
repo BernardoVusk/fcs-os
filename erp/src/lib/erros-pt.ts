@@ -228,6 +228,7 @@ const ERROS: Record<string, string> = {
     "Esse grupo não está marcado como origem autorizada (o dono registra a autorização em Grupos).",
   plataforma_obrigatoria: "Escolha pelo menos uma plataforma.",
   sem_destino: "A automação não tem grupo de destino ativo.",
+  fila_obrigatoria: "Escolha a fila que vai receber os cupons novos.",
   cupom_incompativel: "O cupom é de outra plataforma e não vale para esta oferta.",
 };
 

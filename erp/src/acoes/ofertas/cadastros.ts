@@ -4,7 +4,6 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { exigirEscrita } from "@/lib/auth/sessao";
 import { clienteServidor } from "@/lib/supabase/servidor";
-import { chaveDoErro } from "@/lib/erros-pt";
 import {
   campoValor,
   errosDoZod,
@@ -15,6 +14,12 @@ import {
 import { localParaIso } from "@/lib/formatos/data";
 import { PLATAFORMAS } from "@/dominio/ofertas/plataformas";
 import { validarModelo } from "@/dominio/ofertas/modelos";
+import { carregarCredenciais } from "@/integracoes/credenciais";
+import { listarCuponsAwin } from "@/integracoes/awin";
+import { lerCsvCupons } from "@/dominio/ofertas/cupons";
+import { separar } from "@/dominio/ofertas/fila";
+import { chaveDoErro, erroPt } from "@/lib/erros-pt";
+import { redigir } from "@/integracoes/segredo";
 
 async function escrita(area: "ofertas" | "usuarios" = "ofertas") {
   try {
@@ -315,4 +320,107 @@ export async function alternarModeloAtivo(id: string, ativo: boolean): Promise<R
   if (!data?.length) return { ok: false, erro: "modelo_padrao_ativo" };
   revalidatePath("/ofertas/modelos");
   return { ok: true, mensagem: ativo ? "Modelo reativado." : "Modelo desativado." };
+}
+
+// Cupons automáticos e importação ----------------------------------------------------------
+
+/** Puxa os cupons (voucher) ativos dos anunciantes Awin com parceria, região BR. */
+export async function sincronizarCuponsAwin(): Promise<ResultadoAcao> {
+  const u = await escrita();
+  if (!u || u === "mfa_pendente") return { ok: false, erro: u ?? "sem_permissao" };
+  const cred = await carregarCredenciais();
+  if (!cred.awin) return { ok: false, erro: "credencial_ausente" };
+  const r = await listarCuponsAwin(cred.awin);
+  if (!r.ok)
+    return {
+      ok: false,
+      erro: redigir(
+        `${erroPt(r.erro) ?? r.erro}${r.detalhe ? ` (${r.detalhe})` : ""}`,
+        cred.segredos,
+      ),
+    };
+  const supabase = await clienteServidor();
+  const { data, error } = await supabase.rpc("ofe_registrar_cupons_awin", {
+    p_cupons: r.dados.map((c) => ({
+      referencia: String(c.promotionId),
+      codigo: c.codigo,
+      titulo: c.titulo,
+      anunciante: c.anunciante,
+      termos: c.termos,
+      inicio: c.inicio,
+      fim: c.fim,
+      url: c.urlRastreio,
+      advertiser_id: c.advertiserId,
+    })),
+  });
+  if (error) return { ok: false, erro: chaveDoErro(error) };
+  revalidatePath("/ofertas/cupons");
+  return {
+    ok: true,
+    mensagem: `${r.dados.length} cupom(ns) lido(s) da Awin, ${data ?? 0} novo(s).`,
+  };
+}
+
+export async function salvarRegraCupons(fd: FormData): Promise<EstadoForm> {
+  const u = await escrita();
+  if (!u || u === "mfa_pendente") return { erros: { _form: u ?? "sem_permissao" } };
+  const enviar = fd.get("enviar_awin") === "on";
+  const fila = String(fd.get("fila_awin_id") ?? "").trim() || null;
+  if (enviar && !fila) return { erros: { fila_awin_id: "fila_obrigatoria" } };
+  if (fila && !z.uuid().safeParse(fila).success)
+    return { erros: { fila_awin_id: "nao_encontrado" } };
+  const supabase = await clienteServidor();
+  const { error } = await supabase
+    .from("ofe_cupons_regras")
+    .update({ enviar_awin: enviar, fila_awin_id: fila })
+    .eq("id", true);
+  if (error) return { erros: { _form: chaveDoErro(error) } };
+  revalidatePath("/ofertas/cupons");
+  return {
+    erros: {},
+    ok: true,
+    mensagem: enviar
+      ? "Cupons novos da Awin entram na fila escolhida."
+      : "Envio automático de cupons desligado.",
+  };
+}
+
+export async function importarCuponsCsv(
+  texto: string,
+): Promise<ResultadoAcao & { detalhes?: string[] }> {
+  const u = await escrita();
+  if (!u || u === "mfa_pendente") return { ok: false, erro: u ?? "sem_permissao" };
+  const matriz = separar(String(texto ?? "").slice(0, 1_000_000));
+  if (matriz.length < 2) return { ok: false, erro: "csv_vazio" };
+  if (matriz.length > 501) return { ok: false, erro: "csv_grande" };
+  const r = lerCsvCupons(matriz);
+  const supabase = await clienteServidor();
+  let n = 0;
+  const detalhes = r.ignoradas.map((i) => `Linha ${i.linha}: ${i.motivo}`);
+  for (const l of r.linhas) {
+    const { error } = await supabase.from("ofe_cupons").insert({
+      plataforma: l.plataforma,
+      codigo: l.codigo,
+      descricao: l.descricao,
+      beneficio: l.beneficio,
+      valor_minimo: l.valor_minimo,
+      inicio_em: l.inicio,
+      fim_em: l.fim,
+      validade_confirmada: false,
+      url_referencia: l.url,
+      regras: l.regras,
+      fonte: "csv",
+      verificacao: "manual",
+      verificado_em: new Date().toISOString(),
+    });
+    if (error) detalhes.push(`Linha ${l.linha}: ${erroPt(chaveDoErro(error))}`);
+    else n += 1;
+  }
+  revalidatePath("/ofertas/cupons");
+  return {
+    ok: n > 0,
+    erro: n ? undefined : "nenhum_link_valido",
+    mensagem: `${n} cupom(ns) importado(s).`,
+    detalhes,
+  };
 }

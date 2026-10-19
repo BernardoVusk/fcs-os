@@ -39,7 +39,8 @@ export function previaLote(p: {
   return { itens: p.itens, grupos: p.grupos, mensagens, terminaEm, dias };
 }
 
-function separar(texto: string): string[][] {
+/** Separa CSV com vírgula ou ponto e vírgula (detecta pela primeira linha), com aspas. */
+export function separar(texto: string): string[][] {
   const t = texto.replace(/^﻿/, "");
   const primeira = t.split(/\r?\n/, 1)[0] ?? "";
   const sep = (primeira.match(/;/g)?.length ?? 0) > (primeira.match(/,/g)?.length ?? 0) ? ";" : ",";

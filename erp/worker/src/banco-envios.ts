@@ -50,6 +50,7 @@ export interface BancoEnvios {
       fontes: Record<string, string>;
     },
   ): Promise<void>;
+  registrarCuponsAwin(cupons: Record<string, unknown>[]): Promise<number>;
   reservar(worker: string): Promise<Reservado | null>;
   marcarDespacho(envio: string, worker: string): Promise<boolean>;
   concluir(
@@ -237,6 +238,14 @@ export class BancoEnviosPg implements BancoEnvios {
       d.variavel,
       JSON.stringify(d.fontes),
     ]);
+  }
+
+  async registrarCuponsAwin(cupons: Record<string, unknown>[]) {
+    const [r] = await this.q<{ n: number }>(
+      "select public.ofe_registrar_cupons_awin($1::jsonb) as n",
+      [JSON.stringify(cupons)],
+    );
+    return r?.n ?? 0;
   }
 
   async reservar(worker: string) {

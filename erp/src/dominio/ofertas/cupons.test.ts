@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { cupomPodeSair, situacaoCupom, venceEmBreve } from "./cupons";
+import { cupomPodeSair, dataCupom, lerCsvCupons, situacaoCupom, venceEmBreve } from "./cupons";
 import { statusExibido } from "./status";
 
 const agora = new Date("2026-10-18T12:00:00Z");
@@ -30,5 +30,23 @@ describe("cupons", () => {
     expect(statusExibido("aguardando", "2026-10-18T13:00:00Z", agora)).toBe("programado");
     expect(statusExibido("aguardando", "2026-10-18T11:00:00Z", agora)).toBe("aguardando");
     expect(statusExibido("enviado", "2026-10-18T13:00:00Z", agora)).toBe("enviado");
+  });
+});
+
+describe("CSV de cupons", () => {
+  it("lê plataforma, datas nos dois formatos e ignora linha inválida", () => {
+    const r = lerCsvCupons([
+      ["plataforma", "codigo", "descricao", "fim", "valor_minimo"],
+      ["Shopee", "fcs10", "10% off", "31/10/2026", "50,00"],
+      ["Mercado Livre", "", "Frete grátis", "2026-11-05", ""],
+      ["Outra", "X", "y", "", ""],
+      ["amazon", "Y", "z", "31-10-2026", ""],
+    ]);
+    expect(r.linhas.map((l) => [l.plataforma, l.codigo, l.valor_minimo])).toEqual([
+      ["shopee", "FCS10", 50],
+      ["mercado_livre", null, null],
+    ]);
+    expect(r.ignoradas.map((i) => i.motivo)).toEqual(["plataforma inválida", "data inválida"]);
+    expect(dataCupom("31/10/2026", true)).toBe("2026-11-01T02:59:59.000Z");
   });
 });
