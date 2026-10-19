@@ -157,3 +157,75 @@ export async function buscarProdutoShopee(
   if (!no) return { ok: false, erro: "produto_nao_encontrado" };
   return { ok: true, dados: produtoDoNoShopee(no) };
 }
+
+export type ConversaoShopee = {
+  ref: string;
+  data: string;
+  status: string | null;
+  comissao: string | null;
+  codigos: string[];
+};
+
+type NoConversao = {
+  conversionId?: string | number;
+  purchaseTime?: number;
+  conversionStatus?: string;
+  totalCommission?: string | number;
+  utmContent?: string;
+};
+
+/**
+ * Relatório de conversões da Open API (conversionReport), paginado por scrollId. Nomes de campos
+ * conferidos em SDKs públicos; a primeira importação real confirma. Sem valor de venda: a API
+ * entrega a comissão, e o valor do pedido fica nulo em vez de estimado.
+ */
+export async function listarConversoesShopee(
+  cred: CredShopee,
+  inicio: Date,
+  fim: Date,
+  opcoes: Partial<Opcoes> = {},
+): Promise<ResultadoShopee<ConversaoShopee[]>> {
+  const saida: ConversaoShopee[] = [];
+  let scroll: string | null = null;
+  for (let pagina = 0; pagina < 20; pagina++) {
+    const args: string = [
+      `purchaseTimeStart: ${Math.floor(inicio.getTime() / 1000)}`,
+      `purchaseTimeEnd: ${Math.floor(fim.getTime() / 1000)}`,
+      "limit: 500",
+      scroll ? `scrollId: ${JSON.stringify(scroll)}` : "",
+    ]
+      .filter(Boolean)
+      .join(", ");
+    type Resposta = {
+      conversionReport?: {
+        nodes?: NoConversao[];
+        pageInfo?: { hasNextPage?: boolean; scrollId?: string };
+      };
+    };
+    const r: ResultadoShopee<Resposta> = await chamar<Resposta>(
+      cred,
+      `{ conversionReport(${args}) { nodes { conversionId purchaseTime conversionStatus totalCommission utmContent } pageInfo { hasNextPage scrollId } } }`,
+      opcoes,
+    );
+    if (!r.ok) return r;
+    for (const n of r.dados.conversionReport?.nodes ?? []) {
+      if (n.conversionId === undefined || !n.purchaseTime) continue;
+      saida.push({
+        ref: String(n.conversionId),
+        data: new Date(n.purchaseTime * 1000).toISOString(),
+        status: n.conversionStatus ?? null,
+        comissao: decimalOuNulo(n.totalCommission),
+        codigos: (n.utmContent ?? "")
+          .split(/[-,|]/)
+          .map((x: string) => x.trim())
+          .filter((x: string) => x.length >= 2)
+          .slice(0, 10),
+      });
+    }
+    const info: { hasNextPage?: boolean; scrollId?: string } | undefined =
+      r.dados.conversionReport?.pageInfo;
+    if (!info?.hasNextPage || !info.scrollId) break;
+    scroll = info.scrollId;
+  }
+  return { ok: true, dados: saida };
+}

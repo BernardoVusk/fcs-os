@@ -198,3 +198,27 @@ test("copiador abre e explica o requisito de origem autorizada", async ({ page }
   await expect(page.getByRole("heading", { name: "Copiador" })).toBeVisible({ timeout: 60_000 });
   await expect(page.getByText(/autorização para usar/)).toBeVisible();
 });
+
+test("relatórios separam envio, clique e venda; histórico abre com filtros", async ({ page }) => {
+  await entrar(page);
+  await page.goto("/ofertas/relatorios");
+  await expect(page.getByRole("heading", { name: "Relatórios de ofertas" })).toBeVisible({
+    timeout: 60_000,
+  });
+  await expect(
+    page.getByRole("heading", { name: /Mensagens publicadas pelo sistema/ }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: /Cliques reportados pelas plataformas/ }),
+  ).toBeVisible();
+  await expect(page.getByRole("heading", { name: /Vendas e comissões reportadas/ })).toBeVisible();
+  const csv = await page.request.get("/ofertas/relatorios/exportar?tipo=envios");
+  expect(csv.status()).toBe(200);
+  expect(csv.headers()["content-type"]).toContain("text/csv");
+  await page.goto("/ofertas/historico");
+  await expect(page.getByRole("heading", { name: "Histórico de envios" })).toBeVisible({
+    timeout: 60_000,
+  });
+  await page.goto("/ofertas");
+  await expect(page.getByRole("region", { name: "Cliques reportados (30 dias)" })).toBeVisible();
+});

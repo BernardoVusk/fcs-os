@@ -229,6 +229,8 @@ const ERROS: Record<string, string> = {
   plataforma_obrigatoria: "Escolha pelo menos uma plataforma.",
   sem_destino: "A automação não tem grupo de destino ativo.",
   fila_obrigatoria: "Escolha a fila que vai receber os cupons novos.",
+  periodo_longo:
+    "Período longo demais para esta plataforma (Awin: até 31 dias por vez; Shopee: até 90).",
   cupom_incompativel: "O cupom é de outra plataforma e não vale para esta oferta.",
 };
 
