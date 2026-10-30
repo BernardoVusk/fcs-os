@@ -2,8 +2,8 @@ import { NextResponse, type NextRequest } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 
 const LOGIN = "/login";
-// /sorteio é a página pública do panfleto (docs/arquitetura.md, seção Sessão).
-const LIVRES = ["/login", "/sem-acesso", "/sorteio"];
+// /sorteio (panfleto) e /portfolio (catálogo sob demanda) são públicas (docs/arquitetura.md, seção Sessão).
+const LIVRES = ["/login", "/sem-acesso", "/sorteio", "/portfolio"];
 
 /** Renova o cookie de sessão e manda deslogado para /login. Permissão por área fica nas páginas. */
 export async function atualizarSessao(request: NextRequest) {

@@ -320,6 +320,89 @@ export type Database = {
           },
         ];
       };
+      catalogo_categorias: {
+        Row: {
+          ativa: boolean;
+          atualizado_em: string;
+          criado_em: string;
+          id: string;
+          nome: string;
+          ordem: number;
+          slug: string;
+        };
+        Insert: {
+          ativa?: boolean;
+          atualizado_em?: string;
+          criado_em?: string;
+          id?: string;
+          nome: string;
+          ordem?: number;
+          slug: string;
+        };
+        Update: {
+          ativa?: boolean;
+          atualizado_em?: string;
+          criado_em?: string;
+          id?: string;
+          nome?: string;
+          ordem?: number;
+          slug?: string;
+        };
+        Relationships: [];
+      };
+      catalogo_itens: {
+        Row: {
+          ativo: boolean;
+          atualizado_em: string;
+          autor: string | null;
+          categoria_id: string;
+          colecoes: string[];
+          criado_em: string;
+          fonte_url: string | null;
+          id: string;
+          imagem: string;
+          licenca: string | null;
+          makerworld_id: number | null;
+          nome: string;
+        };
+        Insert: {
+          ativo?: boolean;
+          atualizado_em?: string;
+          autor?: string | null;
+          categoria_id: string;
+          colecoes?: string[];
+          criado_em?: string;
+          fonte_url?: string | null;
+          id?: string;
+          imagem: string;
+          licenca?: string | null;
+          makerworld_id?: number | null;
+          nome: string;
+        };
+        Update: {
+          ativo?: boolean;
+          atualizado_em?: string;
+          autor?: string | null;
+          categoria_id?: string;
+          colecoes?: string[];
+          criado_em?: string;
+          fonte_url?: string | null;
+          id?: string;
+          imagem?: string;
+          licenca?: string | null;
+          makerworld_id?: number | null;
+          nome?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "catalogo_itens_categoria_id_fkey";
+            columns: ["categoria_id"];
+            isOneToOne: false;
+            referencedRelation: "catalogo_categorias";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       categorias: {
         Row: {
           ativo: boolean;

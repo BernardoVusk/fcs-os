@@ -4,7 +4,7 @@ Aplicação Next.js 16 do sistema de gestão da FCS 3D STUDIO. Spec aprovada: `d
 
 ## Comandos
 
-`npm run dev`, `npm run build`, `npm run lint`, `npm run typecheck`, `npm test`, `npm run test:integracao` (projeto de teste), `npm run e2e`, `npm run migrar -- --alvo dev|teste`, `npm run tipos`, `node ferramentas/otimizar-fotos-sorteio.mjs <pasta>` (fotos do carrossel da página pública), `npm run formatar` (rodar antes de commitar; toda a base já está formatada), `node ferramentas/sql.mjs "select ..."`.
+`npm run dev`, `npm run build`, `npm run lint`, `npm run typecheck`, `npm test`, `npm run test:integracao` (projeto de teste), `npm run e2e`, `npm run migrar -- --alvo dev|teste`, `npm run tipos`, `node ferramentas/otimizar-fotos-sorteio.mjs <pasta>` (fotos do carrossel da página pública), `node ferramentas/importar-catalogo.mjs <catalogo.json> --alvo dev|teste` (catálogo público a partir da coleta no MakerWorld), `npm run formatar` (rodar antes de commitar; toda a base já está formatada), `node ferramentas/sql.mjs "select ..."`.
 
 ## Regras de camadas
 
@@ -12,7 +12,7 @@ Aplicação Next.js 16 do sistema de gestão da FCS 3D STUDIO. Spec aprovada: `d
 - `src/acoes/`: server actions, sempre `exigirEscrita(area)` antes de qualquer coisa, zod depois, `revalidatePath` no fim. Arquivo `"use server"` só exporta funções assíncronas; constantes vão para `dominio/`.
 - `src/dados/`: só consultas, `import "server-only"`, cliente com sessão (`clienteServidor`). Service role só em `lib/supabase/admin.ts` e `ferramentas/`.
 - `src/app/`: composição. Nenhuma regra de negócio em componente.
-- Exceção única às duas regras acima: `acoes/publico/` e `dados/publico/` servem a página pública `/sorteio` sem sessão; a escrita passa por limite por IP, campo armadilha, zod e `rpc` pela service role a `inscrever_sorteio`, executável só por `service_role`; a leitura é só id e nome de produtos ativos. Nada mais entra nessas pastas sem decisão registrada. A página tem cores fixas (não segue o cookie de tema) e não usa `Campo` nem `SelectNativo`.
+- Exceção única às duas regras acima: `acoes/publico/` e `dados/publico/` servem as páginas públicas `/sorteio` e `/portfolio` sem sessão; a escrita passa por limite por IP, campo armadilha, zod e `rpc` pela service role a `inscrever_sorteio`, executável só por `service_role`; a leitura é só id e nome de produtos ativos e, no catálogo, nome, slug e foto de categorias e itens ativos. Nada mais entra nessas pastas sem decisão registrada. As páginas têm cores fixas (não seguem o cookie de tema) e não usam `Campo` nem `SelectNativo`.
 
 ## Banco
 

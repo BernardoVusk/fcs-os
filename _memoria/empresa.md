@@ -40,6 +40,12 @@ Dois pontos a corrigir, identificados nesse retrato:
 - Nome da loja: FCS 3D STUDIO
 - Central do vendedor: seller-br.tiktok.com
 
+### Portfólio próprio (site)
+- Endereço: https://fcs-erp.vercel.app/portfolio (página pública do ERP, desde 29/10/2026)
+- 943 peças sob demanda em 8 categorias, vindas das coleções do MakerWorld (conta @BernardoBusk); cada peça tem botão que abre o WhatsApp (31) 99253-7279 com o nome da peça na mensagem
+- Licenças: 770 das 943 usam a licença padrão do MakerWorld, que proíbe vender a peça impressa; só 46 permitem venda. Risco assumido pelo dono; a licença fica anotada no banco
+- Peças novas entram com a skill `/portfolio-atualizar`
+
 ## Como os dados dos canais chegam aqui
 
 As três plataformas bloqueiam acesso automatizado de fora, testado e confirmado em 21/08/2026: a Shopee devolve página vazia e 403 nos endpoints de catálogo, o Mercado Livre devolve 403 no site e passou a exigir token OAuth na API pública, o TikTok Shop exige login.
