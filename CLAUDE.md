@@ -73,6 +73,7 @@ Detalhe completo em `_memoria/preferencias.md`.
 
 ## Regras do sistema
 
+- Commit e deploy deste repositório saem sempre com a conta do Bernardo: autor `Bernardo Vusk <89705221+BernardoVusk@users.noreply.github.com>`, já gravado no `git config` local do repositório. Nunca com `focusarq.equipe@gmail.com` (é o global da máquina): a Vercel bloqueia ("Blocked") o deploy de commit com esse autor. Antes de commitar, conferir `git config user.email`
 - Toda peça visual respeita `identidade/design-guide.md`: fundo preto, destaque ciano, sem emoji, sem travessão
 - Dado de marketplace entra em `dados/marketplace/<data>/<canal>/` antes de qualquer análise
 - Achados de pesquisa de produto ficam em `pesquisa/`, um arquivo por rodada, com data no nome
