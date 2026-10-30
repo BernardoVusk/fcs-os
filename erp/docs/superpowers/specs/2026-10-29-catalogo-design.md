@@ -21,6 +21,10 @@ Decisões do dono (29/10/2026):
 - Leitura da página em `dados/publico/catalogo.ts` pela service role (exceção documentada em `docs/arquitetura.md`), só nome, slug e foto de itens e categorias ativos.
 - Link do WhatsApp em `dominio/catalogo/whatsapp.ts`: `https://wa.me/5531992537279?text=Olá! Vi no catálogo da FCS 3D STUDIO a peça "<nome>" (<categoria>) e quero um orçamento.`
 
+## Selo do dono (link do MakerWorld)
+
+Quem está logado no ERP vê, no canto de cada foto em `/portfolio/[categoria]`, um selo "MakerWorld" com a licença (e "pode vender" quando é BY, BY-SA, BY-ND ou CC0) que abre o modelo. A consulta fica em `dados/catalogo.ts` com o cliente da sessão, não na exceção pública: para o visitante a RLS de `catalogo_itens` devolve vazio, então o link não vai no HTML. Só `https://makerworld.com/` vira href. Rótulos em `dominio/catalogo/licenca.ts`.
+
 ## Coleta e importação
 
 1. **Coleta (Chrome logado).** A API `/api/v1/design-service/favorites/<colecao>/designs` só responde no navegador (fora dele, 403 do Cloudflare). O resultado sobe do navegador para o bucket privado `arquivos-produto` por URL assinada de envio único, é baixado para `dados/makerworld/<data>/colecoes.json` e apagado do bucket.

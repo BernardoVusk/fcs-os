@@ -1,11 +1,13 @@
 import { expect, test } from "@playwright/test";
+import { CREDENCIAIS, entrar } from "./apoio";
 
 // Página pública /portfolio: abre sem login, navega até a categoria e o botão leva ao WhatsApp
-// com a peça na mensagem.
+// com a peça na mensagem. O link do MakerWorld só aparece para quem está logado no ERP.
 const marca = Date.now();
 const slug = `e2e-catalogo-${marca}`;
 const nomeCategoria = `E2E Categoria ${marca}`;
 const nomePeca = `Peça E2E & "Teste" ${marca}`;
+const fonteUrl = `https://makerworld.com/pt/models/${marca}-e2e`;
 let categoriaId = "";
 
 async function servico() {
@@ -26,9 +28,13 @@ test.beforeAll(async () => {
       .select("id")
       .single()
   ).data!.id;
-  await admin
-    .from("catalogo_itens")
-    .insert({ categoria_id: categoriaId, nome: nomePeca, imagem: "e2e-inexistente.webp" });
+  await admin.from("catalogo_itens").insert({
+    categoria_id: categoriaId,
+    nome: nomePeca,
+    imagem: "e2e-inexistente.webp",
+    fonte_url: fonteUrl,
+    licenca: "BY",
+  });
 });
 
 test.afterAll(async () => {
@@ -62,6 +68,21 @@ test("catálogo abre sem login e o botão leva ao WhatsApp com a peça", async (
   expect(url.searchParams.get("text")).toBe(
     `Olá! Vi no catálogo da FCS 3D STUDIO a peça "${nomePeca}" (${nomeCategoria}) e quero um orçamento.`,
   );
+
+  // Visitante sem login: o link do MakerWorld não vai nem no HTML.
+  expect(await page.content()).not.toContain(fonteUrl);
+  await expect(card.getByRole("link", { name: /MakerWorld/ })).toHaveCount(0);
+});
+
+test("logado no ERP, o card mostra o link do MakerWorld e a licença", async ({ page }) => {
+  test.skip(!CREDENCIAIS.email, "defina E2E_EMAIL e E2E_SENHA em erp/.env.local");
+  test.skip(!categoriaId, "defina SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY em erp/.env.local");
+  await entrar(page);
+  await page.goto(`/portfolio/${slug}`);
+  const card = page.getByRole("article").filter({ hasText: nomePeca });
+  const selo = card.getByRole("link", { name: /MakerWorld/ });
+  await expect(selo).toHaveAttribute("href", fonteUrl);
+  await expect(selo).toContainText("BY · pode vender");
 });
 
 test("categoria inexistente responde 404", async ({ page }) => {

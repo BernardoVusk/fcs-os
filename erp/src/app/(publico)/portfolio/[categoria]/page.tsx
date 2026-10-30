@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { listarCategoriasCatalogo, listarItensCategoria } from "@/dados/publico/catalogo";
+import { fontesDaCategoria } from "@/dados/catalogo";
 import {
   CabecalhoCatalogo,
   CardProduto,
@@ -25,9 +26,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function PaginaCategoria({ params }: Props) {
   const { categoria } = await params;
-  const [dados, categorias] = await Promise.all([
+  // fontes: link do MakerWorld e licença, só para quem está logado no ERP (vazio para o visitante).
+  const [dados, categorias, fontes] = await Promise.all([
     listarItensCategoria(categoria),
     listarCategoriasCatalogo(),
+    fontesDaCategoria(categoria),
   ]);
   if (!dados) notFound();
 
@@ -55,6 +58,7 @@ export default async function PaginaCategoria({ params }: Props) {
                 key={item.id}
                 item={item}
                 categoria={dados.categoria.nome}
+                fonte={fontes[item.id]}
                 prioridade={i < 4}
               />
             ))}

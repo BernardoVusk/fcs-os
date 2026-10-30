@@ -1,7 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import { linkOrcamento, linkOrcamentoGeral } from "@/dominio/catalogo/whatsapp";
+import { permiteVenda, rotuloLicenca } from "@/dominio/catalogo/licenca";
 import type { CategoriaCatalogo, ItemCatalogo } from "@/dados/publico/catalogo";
+import type { FonteItem } from "@/dados/catalogo";
 import { FaixaCategorias } from "./FaixaCategorias";
 
 /*
@@ -73,13 +75,35 @@ export function NavCategorias({
   );
 }
 
+/** Selo só para quem está logado no ERP: abre o modelo no MakerWorld e mostra a licença. */
+function SeloMakerworld({ fonte }: { fonte: FonteItem }) {
+  const venda = permiteVenda(fonte.licenca);
+  return (
+    <a
+      href={fonte.url}
+      target="_blank"
+      rel="noopener noreferrer"
+      title={`Abrir no MakerWorld. Licença: ${fonte.licenca ?? "não coletada"}`}
+      className="absolute top-2 right-2 z-10 flex flex-col items-end rounded-[3px] border border-[#00D8FF] bg-[#0A0A0A]/85 px-2 py-1 text-right leading-tight backdrop-blur-sm transition-colors hover:bg-[#00D8FF] hover:text-[#0A0A0A] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+    >
+      <span className="text-[10px] font-bold tracking-wider uppercase">MakerWorld ↗</span>
+      <span className={`text-[10px] ${venda ? "text-[#00D8FF]" : "text-[#A3AAB3]"}`}>
+        {rotuloLicenca(fonte.licenca)}
+        {venda ? " · pode vender" : ""}
+      </span>
+    </a>
+  );
+}
+
 export function CardProduto({
   item,
   categoria,
+  fonte,
   prioridade = false,
 }: {
   item: ItemCatalogo;
   categoria: string;
+  fonte?: FonteItem;
   prioridade?: boolean;
 }) {
   return (
@@ -87,7 +111,8 @@ export function CardProduto({
       className={`group bg-[#1F1F1F] p-px transition-colors hover:bg-[rgba(0,216,255,0.45)] ${CHANFRO}`}
     >
       <article className={`flex h-full flex-col bg-[#141414] ${CHANFRO}`}>
-        <div className="aspect-square overflow-hidden bg-[#0F0F0F]">
+        <div className="relative aspect-square overflow-hidden bg-[#0F0F0F]">
+          {fonte && <SeloMakerworld fonte={fonte} />}
           <Image
             src={item.imagem}
             alt={item.nome}
