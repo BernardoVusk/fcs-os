@@ -1,5 +1,6 @@
 import {
   ArrowLeftRight,
+  BadgeDollarSign,
   BadgePercent,
   Bell,
   BookOpen,
@@ -51,6 +52,7 @@ export const ICONES = {
   produtos: Package,
   sorteio: Gift,
   calculadora: Calculator,
+  marketplace: BadgeDollarSign,
   producao: Factory,
   impressoras: Printer,
   pedidos: Receipt,

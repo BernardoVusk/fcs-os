@@ -45,6 +45,13 @@ Casos de referência: Anexo A da spec (B1, B2), reproduzidos em `src/dominio/est
 - O custo do filamento vem de `custoDeReposicao` do insumo (média, última compra ou manual) ou de um valor por quilo digitado na hora; o snapshot guarda o custo por grama e a origem fica implícita no insumo escolhido.
 - Salvar cálculo: o servidor recalcula a partir das entradas e grava entradas, resultado, versão do motor e dos parâmetros. Nada é alterado depois; o histórico compara o custo do filamento do snapshot com o atual e marca o que vale revisar. Recálculo em lote e alerta `margem_reduzida` por produto chegam na Fase 5, com BOM e preço por canal.
 
+## Calculadora de marketplace (`/calculadora`, 03/11/2026)
+
+- Versão rápida da Precificação, no formato da planilha "Custo De Impressão": custo de produção somado em reais, preço por plataforma com slider de margem, ROAS mínimo e ideal. Não grava nada no banco; o último preenchimento fica só no `localStorage` do navegador. Área `catalogo`, leitura.
+- As taxas vêm de `src/dominio/precos/tabelas-marketplace.ts`, por faixa de preço, cada plataforma com `fonte` e `conferido_em` mostrados na tela. É a exceção à regra "taxa sem valor padrão" de Canais e taxas: aqui o número é de referência pública com origem e data, editável na tela, e não alimenta pedido nem financeiro. Para atualizar: conferir na central do vendedor, mudar a faixa, a `fonte` e a `conferido_em`, rodar `npm test` (os testes de `marketplace.test.ts` usam a tabela real e acusam a mudança).
+- Mercado Livre: comissão da categoria editável (padrão no teto da faixa publicada); o fixo abaixo de R$ 79 só vale em Flex ou envio próprio. Custo de envio por peso não está na tabela: entra em "Frete e outros por pedido".
+- Filamento, impressora e itens de embalagem do estoque só preenchem os campos; tudo pode ser digitado. Impressora aparece só com custos completos e tarifa de energia nos parâmetros.
+
 ## Produtos (Fase 5)
 
 - Variação herda da ficha tudo que deixar em branco; atributos se somam. BOM por peça entra no custo da peça (C); por pedido entra nos fixos por venda (F). O material de impressão vem da ficha (peso e filamento), não da BOM.

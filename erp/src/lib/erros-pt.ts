@@ -57,6 +57,7 @@ const ERROS: Record<string, string> = {
   pecas_por_ciclo_invalido: "Peças por ciclo precisa ser um inteiro a partir de 1.",
   taxa_falha_invalida: "Taxa de falha entre 0 e 99,9 %.",
   desperdicio_invalido: "Desperdício não pode ser negativo.",
+  valor_negativo: "Nenhum valor pode ser negativo.",
   custo_g_invalido: "Custo por grama inválido.",
   mao_de_obra_invalida: "Custo da hora de mão de obra inválido.",
   fixo_sem_horas: "Rateio por hora exige custo fixo mensal e horas produtivas por mês.",

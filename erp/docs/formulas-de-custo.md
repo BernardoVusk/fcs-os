@@ -75,6 +75,44 @@ Parâmetros comuns (Anexo A): impressora 4500,00 com residual 500,00 e vida 8000
 | A4 | entradas de A1; markup 50 % contra margem 50 % | markup: 30,57, lucro 6,6166, 50,02 % do custo, 21,64 % do preço; margem: 61,53, lucro 30,7654, 232,58 % do custo, 50,00 % do preço |
 | REF 7.4 | filamento 0,06/g, 50 g, w 5 %, f 5 %, impressora 2000 sem residual e 4000 h, 120 W, manutenção 300/ano em 1500 h, 240 min, 1 peça, preparo 10, acabamento 10, mão de obra 30, complementar 1,50, fixo 600/mês em 200 h; canal 20 % + 6 %, fixa 4,00; margem 25 %; markup 25 % | material 3,3158; máquina 2,9474; energia 0,4800; preparo 5,2632; acabamento 5,0000; complementares 1,5000; fixo 12,6316; C 31,1379 (31,137894 exato); P0 47,49; Pm 71,71 (margem 25,0 %); Pk 58,01 (margem 13,4 %) |
 
+## Calculadora de marketplace (`/calculadora`)
+
+Custo rápido (`src/dominio/custos/custo-rapido.ts`), no formato da planilha "Custo De Impressão":
+
+```
+material   = R$/kg / 1000 x gramas
+energia    = R$/h de energia x horas
+maquina    = R$/h de máquina x horas       (retorno do investimento, manutenção e consumíveis)
+falhas     = (material + energia + maquina) x f / (1 - f)
+C          = material + energia + maquina + falhas + acabamento + pintura + fixação + extras
+             + soma(quantidade x custo unitário da embalagem)
+```
+
+Mesma regra anti-dupla-contagem do motor: a falha repõe só o que se perde na tentativa; acabamento, pintura, fixação, extras e embalagem acontecem em peça boa.
+
+Preço com faixas de taxa (`src/dominio/precos/marketplace.ts`, tabelas em `tabelas-marketplace.ts`): cada faixa vira um `TaxasCanal` com comissão, imposto, fixo da faixa e frete por pedido (F); faixa "metade do preço" entra como +0,50 em t e fixo zero. Percorre as faixas da mais barata para a mais cara:
+
+```
+Pm = (C + F) / (1 - t - m) com as taxas da faixa (precoPorMargem, para cima a 2 casas)
+Pm dentro da faixa            -> resposta
+Pm abaixo do piso da faixa    -> o piso (caiu no vão entre faixas; a margem real passa da meta)
+Pm acima do teto ou t + m >= 1 -> próxima faixa
+nenhuma faixa fecha           -> { viavel: false, preco: null }
+equilíbrio = mesma busca com m = 0
+```
+
+ROAS sobre o preço de venda, com L = lucro por venda sem anúncio = P x (1 - t) - C - F e mA = margem que se quer manter depois do anúncio:
+
+```
+ROAS mínimo = P / L               (= 1 / margem; anúncio come todo o lucro)
+ROAS ideal  = P / (L - mA x P)    (= 1 / (margem - mA))
+ACOS        = 1 / ROAS
+gasto por venda: L no mínimo, L - mA x P no ideal
+L <= 0 ou mA >= margem: sem número
+```
+
+Caso de conferência (planilha atual): 3 h, 104,58 g, R$ 57/kg, energia R$ 0,80/h, extras 0,20, caixa 1,38, plástico bolha 0,50: C 10,4411 (10,44106 exato). Shopee até R$ 79,99 (20 % + R$ 4,50), imposto 4 %, margem 30 %: Pm 32,4806, preço 32,49, lucro 9,7513; ROAS mínimo 3,33; com mA 10 %, ROAS ideal 5,00. Mercado Livre Clássico 14 %, custo 40, margem 30 %: a faixa de R$ 6,75 pediria 83,48 e a faixa sem fixo pediria 71,43, então o preço é o piso, R$ 79,00.
+
 ## Bugs prováveis com teste de regressão
 
 Aplicar falha a acabamento, embalagem ou complementares; compor desperdício como 1/(1-w) ou aplicá-lo ao tempo; taxa fixa fora do denominador ou margem aplicada depois das taxas; preço arredondado para baixo da meta; snapshot que muda quando o filamento muda de preço. Cada um está em `custo-peca.test.ts`, `preco.test.ts` ou `motor.test.ts`.

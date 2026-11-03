@@ -79,6 +79,13 @@ export const GRUPOS: GrupoNav[] = [
         area: "catalogo",
         fase: 4,
       },
+      {
+        rota: "/calculadora",
+        rotulo: "Calculadora",
+        icone: "marketplace",
+        area: "catalogo",
+        fase: 19,
+      },
     ],
   },
   {
@@ -382,6 +389,7 @@ const ROTULOS_SEGMENTO: Record<string, string> = {
   nova: "Nova",
   historico: "Histórico",
   precificacao: "Precificação",
+  calculadora: "Calculadora",
   "parametros-custo": "Parâmetros de custo",
   produtos: "Produtos",
   importar: "Importar",
